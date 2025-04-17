@@ -8,11 +8,9 @@ import java.util.ArrayList;
 
 public class Player extends Rectangle{
     double v;
-    double[] vy = {0,0};
-    double[] vx = {0,0};
     int width, height;
     double  x, y;
-    boolean stop = false;
+    int inventory;
 
     ArrayList<Player> shadows =  new ArrayList<Player>();
     //Timer timer = new Timer(10, this);
@@ -26,6 +24,7 @@ public class Player extends Rectangle{
         this.width = w;
         this.height = h;
         this.c = c;
+        this.inventory = 0;
        // timer.start();
         //timer.addActionListener(this::actionPerformed);
     }
@@ -37,6 +36,16 @@ public class Player extends Rectangle{
         this.height = h;
         this.c =new Color(0f,0f,0f,.03f );
     }
+    void addInventory(){
+        this.inventory++;
+    }
+    void removeInventory(){
+        this.inventory--;
+    }
+    int getInventory(){
+        return this.inventory;
+    }
+
     void drawSingle(Graphics g){
         g.setColor(this.c);
         g.fillRect((int)this.x,(int)this.y,this.width,this.height);
