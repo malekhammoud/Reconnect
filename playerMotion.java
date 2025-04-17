@@ -84,6 +84,9 @@ public class playerMotion extends JFrame implements KeyListener{
             super.paintComponent(g);
             player.draw(g);
             mainMap.draw(g);
+
+            g.setColor(Color.BLACK);
+            g.drawString("Materials Count: " + player.getInventory() , 10, 15);
             //drawmap(g, main_map);
         }
     }
