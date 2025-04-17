@@ -1,11 +1,37 @@
 import java.awt.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
-public class Map extends Player{
+public class Map{
+    double v;
+    double[] vy = {0,0};
+    double v_normal;
+    double v_slow;
+    double[] vx = {0,0};
+    int width, height;
+    double  x, y;
+    int size;
 
     int[][] map;
-    Map(int x, int y, int w, int h, double v) {
-       super(x, y, w, h, v);
-       this.map = new int[][] {
+    Map(double x, double y, int size, double v, int[][] map) {
+        this.x = x;
+        this.y = y;
+        this.size= size;
+        this.v = v;
+        this.map = map;
+    }
+    Map(double x, double y, int size, double v) {
+        this.x = x;
+        this.y = y;
+        this.size= size;
+        this.v = v;
+        this.map = new int[][] {
                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0},
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0},
@@ -56,22 +82,71 @@ public class Map extends Player{
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0},
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0},
                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+
+        }
+    void moveup(){
+        this.vy[0] = -this.v;
     }
-    boolean draw(Graphics g, Player player){
-        int size = 10;
-        boolean collision = false;
-        for (int y = 0; y < this.map.length; y++){
-            for (int x = 0; x < this.map[y].length; x++){
-                if (this.map[y][x] == 0){
-                    g.setColor(Color.BLACK);
-                    Rectangle tempRect = new Rectangle((int) (x*size+this.x), (int) (y*size+this.y), size, size);
-                    if(player.checkCollision(tempRect)){
-                        collision = true;
-                    }
-                    g.fillRect((int) (x*size+this.x), (int) (y*size+this.y), size,size);
-                };
+    void movedown(){
+        this.vy[1] =this.v;
+    }
+    void moveleft(){
+        this.vx[0] = -this.v;
+    }
+    void moveright(){
+        this.vx[1] =this.v;
+    }
+    void move(Player player){
+        boolean stop = false;
+        for(Rectangle wall : getWalls()) {
+            //if (player.getrect().intersects(wall)) {
+            if (this.checkCollision(player, wall)) {
+                stop = false;
             }
         }
-        return collision;
+        if (!stop){
+            this.x += this.vx[0] + this.vx[1];
+            this.y += this.vy[0] + this.vy[1];
+        }
+    }
+    ArrayList<Rectangle> getWalls(){
+        ArrayList<Rectangle> walls = new ArrayList<Rectangle>();
+        for (int c = 0; c < this.map.length; c++){
+            for (int r = 0; r < this.map[c].length; r++){
+                if (this.map[c][r] == 0){
+                    walls.add( new Rectangle((int) (r*size+this.x), (int) (c*size+this.y), size, size));
+                }
+            }
+        }
+        return walls;
+    }
+    void draw(Graphics g){
+        for(Rectangle wall : getWalls()){
+            g.setColor(Color.black);
+            g.fillRect(wall.x,wall.y,size,size);
+        }
+    }
+    boolean checkCollision(Player p, Rectangle r){
+        if (p.getTop().intersects(r)) {
+            this.vy[1]=0;
+            this.y -= this.v;
+            return true;
+        }
+        if (p.getBottom().intersects(r)) {
+            this.vy[0]=0;
+            this.y += this.v;
+            return true;
+        }
+        if (p.getLeft().intersects(r)) {
+            this.vx[1]=-0;
+            this.x -= this.v;
+            return true;
+        }
+        if (p.getRight().intersects(r)) {
+            this.vx[0]=0;
+            this.x += this.v;
+            return true;
+        }
+        return false;
     }
 }
