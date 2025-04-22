@@ -4,18 +4,16 @@ import java.awt.event.KeyEvent;
 import java.util.*;
 
 public class Enemy extends Rectangle {
-	int width, height;
-	double v;
+	double v = 0.5, x, y;
+	int width, height, counter;
 	
-	Enemy(int x, int y, int w, int h, double v) {
+	Enemy(double x, double y, int w, int h, double v) {
 		this.x = x;
 		this.y = y;
 		this.v = v;
 		this.width = w;
 		this.height = h;
 	}
-
-
 	
 	void draw(Graphics g) {
 		g.setColor(Color.red);
@@ -23,10 +21,13 @@ public class Enemy extends Rectangle {
 	}
 	
 	public void move(double pX, double pY) {
-		if(pX > x) {x++;}
-		if(pX < x) {x--;}
-		if(pY > y) {y++;}
-		if(pY < y) {y--;}
+		if(counter % 2 == 0) {
+			if(pX > this.x) {this.x+= v;}
+			if(pX < this.x) {this.x-= v;}
+			if(pY > this.y) { this.y+= v;}
+			if(pY < this.y) {this.y-= v;}
+		}
+		counter++;
 			
 		}
 	}
