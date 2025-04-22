@@ -14,6 +14,8 @@ public class playerMotion extends JFrame implements KeyListener{
 
     Map mainMap = new Map(-100, -100, 10,  1);
     Player player = new Player(WIDTH/2-10, HEIGHT/2-10, 20, 20, 0.3, new Color(0,0,0), new Rectangle(WIDTH/2-bounds/2, HEIGHT/2-bounds/2, bounds, bounds));
+    Enemy enemy = new Enemy(100, 100, 20, 20, 5);
+    ArrayList<Enemy> enemies = new ArrayList<Enemy>();
     public static void main(String[] args) {
         new playerMotion();
     }
@@ -51,7 +53,7 @@ public class playerMotion extends JFrame implements KeyListener{
     public void keyTyped(KeyEvent e) {}
     playerMotion(){
         //Create the Jframe
-        this.setTitle("HELLOW WORLD");
+        this.setTitle("goodbye world");
         this.setSize(500,500);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -64,6 +66,12 @@ public class playerMotion extends JFrame implements KeyListener{
         this.pack();
         this.setVisible(true);
         this.playAnimation();
+    }
+    
+    void moveEnemy() {
+    	for(Enemy n: enemies) {
+    		n.move(player.x, player.y);
+    	}
     }
 
     public void pause(int ms) {
@@ -84,6 +92,7 @@ public class playerMotion extends JFrame implements KeyListener{
             super.paintComponent(g);
             player.draw(g);
             mainMap.draw(g);
+            enemy.draw(g);
 
             g.setColor(Color.BLACK);
             g.drawString("Materials Count: " + player.getInventory() , 10, 15);

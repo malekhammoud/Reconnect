@@ -34,7 +34,7 @@ public class Player extends Rectangle{
         this.y = y;
         this.width = w;
         this.height = h;
-        this.c =new Color(0f,0f,0f,.03f );
+        this.c = new Color(0f,0f,0f,.03f );
     }
     void addInventory(){
         this.inventory++;
