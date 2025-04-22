@@ -1,86 +1,111 @@
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-public class Player extends Rectangle{
+public class Player extends Rectangle {
     double v;
     int width, height;
-    double  x, y;
+    double x, y;
     int inventory;
-
-    ArrayList<Player> shadows =  new ArrayList<Player>();
-    //Timer timer = new Timer(10, this);
+    List<Player> shadows = new ArrayList<>();
+    List<Bullet> bullets = new ArrayList<>();
+    Color c;
     Rectangle centerBoundary;
     Rectangle centerBoundarySm;
-    Color c;
-    Player(double x, double y, int w, int h, double v, Color c, Rectangle centerBoundary) {
-        this.v = v;
+
+    public Player(double x, double y, int w, int h, double v, Color c) {
+        super((int) x, (int) y, w, h);
         this.x = x;
         this.y = y;
+        this.v = v;
         this.width = w;
         this.height = h;
         this.c = c;
-        this.inventory = 0;
-       // timer.start();
-        //timer.addActionListener(this::actionPerformed);
+        this.centerBoundary = new Rectangle();
+        this.centerBoundarySm = new Rectangle();
     }
-    Player(int x, int y, int w, int h, double v) {
-        this.v = v;
+
+    public Player(double x, double y, int w, int h, double v,
+                  Color c, Rectangle centerBoundary) {
+        this(x, y, w, h, v, c);
+        this.centerBoundary     = centerBoundary;
+        this.centerBoundarySm   = new Rectangle(
+                centerBoundary.x + centerBoundary.width  / 4,
+                centerBoundary.y + centerBoundary.height / 4,
+                centerBoundary.width  / 2,
+                centerBoundary.height / 2);
+    }
+
+    public Player(int x, int y, int w, int h, double v) {
+        super(x, y, w, h);
         this.x = x;
         this.y = y;
+        this.v = v;
         this.width = w;
         this.height = h;
-        this.c =new Color(0f,0f,0f,.03f );
-    }
-    void addInventory(){
-        this.inventory++;
-    }
-    void removeInventory(){
-        this.inventory--;
-    }
-    int getInventory(){
-        return this.inventory;
+        this.c = new Color(0f, 0f, 0f, .03f);
+        this.centerBoundary = new Rectangle();
+        this.centerBoundarySm = new Rectangle();
     }
 
-    void drawSingle(Graphics g){
-        g.setColor(this.c);
-        g.fillRect((int)this.x,(int)this.y,this.width,this.height);
-    }
-    void draw(Graphics g){
-        for(int i = 0; i<this.shadows.size(); i++){
-            this.shadows.get(i).drawSingle(g);
-        }
-        g.setColor(this.c);
-        g.fillRect((int)this.x,(int)this.y,this.width,this.height);
-    }
-    Rectangle getTop(){
-        return new Rectangle((int)this.x+this.width/5,(int)this.y,this.width-this.width/5 *2,this.height/2);
-    }
-    Rectangle getBottom(){
-        return new Rectangle((int)this.x+this.width/5,(int)this.y+this.height/2,this.width-this.width/5*2,this.height/2);
-    }
-    Rectangle getRight(){
-        return new Rectangle((int)this.x+this.width/2,(int)this.y+this.height/5,this.width/2,this.height-this.height/5 *2 );
-    }
-    Rectangle getLeft(){
-        return new Rectangle((int)this.x,(int)this.y+this.height/5,this.width/2,this.height-this.height/5 *2 );
-    }
-    Rectangle getrect(){
-        return new Rectangle((int)this.x,(int)this.y,this.width,this.height);
+    void addInventory()       { inventory++; }
+    void removeInventory()    { inventory--; }
+    int  getInventory()       { return inventory; }
+
+    void shoot(double mx, double my) {
+        double cx = x + width  / 2.0;
+        double cy = y + height / 2.0;
+        bullets.add(new Bullet(cx, cy, mx - cx, my - cy, Color.ORANGE));
     }
 
-    //Removing the blur feature, will add it later if have time
-    /*
-    @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-        this.shadows.add(new Player((int)this.x,(int) this.y, 20, 20, 0.000001));
-        if(this.shadows.size()>25){
-            this.shadows.remove(0);
+    void update(int w, int h) {
+        Iterator<Bullet> it = bullets.iterator();
+        while (it.hasNext()) {
+            Bullet b = it.next();
+            b.update();
+            if (b.offScreen(w, h)) it.remove();
         }
+        setLocation((int) x, (int) y);
     }
-     */
+
+    void drawSingle(Graphics g) {
+        g.setColor(c);
+        g.fillRect((int) x, (int) y, width, height);
+    }
+
+    void draw(Graphics g) {
+        for (Bullet b : bullets) b.draw((Graphics2D) g);
+        for (Player sh : shadows) sh.drawSingle(g);
+        g.setColor(c);
+        g.fillRect((int) x, (int) y, width, height);
+    }
+
+    Rectangle getTop()    { return new Rectangle((int) x + width/5,         (int) y,              width - width/5*2, height/2); }
+    Rectangle getBottom() { return new Rectangle((int) x + width/5,         (int) y + height/2,   width - width/5*2, height/2); }
+    Rectangle getRight()  { return new Rectangle((int) x + width/2,         (int) y + height/5,   width/2,           height - height/5*2); }
+    Rectangle getLeft()   { return new Rectangle((int) x,                   (int) y + height/5,   width/2,           height - height/5*2); }
+    Rectangle getrect()   { return new Rectangle((int) x,                   (int) y,              width,             height); }
+
+    private static class Bullet {
+        private double x, y;
+        private final double vx, vy;
+        private static final int R = 6;
+        private static final double SPEED = 8;
+        private final Color color;
+
+        Bullet(double sx, double sy, double dx, double dy, Color c) {
+            double len = Math.hypot(dx, dy);
+            vx = (dx / len) * SPEED;
+            vy = (dy / len) * SPEED;
+            x  = sx;
+            y  = sy;
+            color = c;
+        }
+
+        void update() { x += vx; y += vy; }
+        boolean offScreen(int w,int h) { return x < -R || x > w+R || y < -R || y > h+R; }
+        void draw(Graphics2D g)        { g.setColor(color); g.fill(new Ellipse2D.Double(x-R, y-R, R*2, R*2)); }
+    }
 }
