@@ -28,6 +28,8 @@ public class playerMotion extends JFrame
         if (key == KeyEvent.VK_DOWN)  mainMap.moveup();
         if (key == KeyEvent.VK_RIGHT) mainMap.moveleft();
         if (key == KeyEvent.VK_SPACE) player.shoot(mouseX, mouseY); // ← fire bullet
+        if (key == KeyEvent.VK_P) {mainMap.payGate = true;}
+        if (key == KeyEvent.VK_O) {mainMap.openGate = true;}
     }
 
     public void keyReleased(KeyEvent e) {
@@ -36,7 +38,10 @@ public class playerMotion extends JFrame
         if (key == KeyEvent.VK_LEFT)  mainMap.vx[1] = 0;
         if (key == KeyEvent.VK_DOWN)  mainMap.vy[0] = 0;
         if (key == KeyEvent.VK_RIGHT) mainMap.vx[0] = 0;
+        if (key == KeyEvent.VK_P) mainMap.payGate = false;
+        if (key == KeyEvent.VK_O) mainMap.openGate = false;
     }
+
     public void keyTyped(KeyEvent e) {}
 
     playerMotion() {

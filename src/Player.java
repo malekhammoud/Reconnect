@@ -106,6 +106,8 @@ public class Player extends Rectangle {
 
         void update() { x += vx; y += vy; }
         boolean offScreen(int w,int h) { return x < -R || x > w+R || y < -R || y > h+R; }
-        void draw(Graphics2D g)        { g.setColor(color); g.fill(new Ellipse2D.Double(x-R, y-R, R*2, R*2)); }
+        void draw(Graphics2D g){
+            g.setColor(color); g.fill(new Ellipse2D.Double(x-R, y-R, R*2, R*2));
+        }
     }
 }
