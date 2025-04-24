@@ -87,6 +87,10 @@ public class Player extends Rectangle {
     Rectangle getRight()  { return new Rectangle((int) x + width/2,         (int) y + height/5,   width/2,           height - height/5*2); }
     Rectangle getLeft()   { return new Rectangle((int) x,                   (int) y + height/5,   width/2,           height - height/5*2); }
     Rectangle getrect()   { return new Rectangle((int) x,                   (int) y,              width,             height); }
+    Rectangle getView()   {
+        int vs = 80;
+        return new Rectangle((int) x -vs/2,(int) y-vs/2,width+vs,height+vs);
+    }
 
     private static class Bullet {
         private double x, y;

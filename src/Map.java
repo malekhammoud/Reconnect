@@ -157,11 +157,32 @@ public class Map{
         if (allOpen){
             circuitColor = Color.CYAN;
         }
+        for (int c = 0; c < this.map.length; c++){
+            for (int r = 0; r < this.map[c].length; r++){
+                if (this.map[c][r] == 1){
+                    Rectangle tempr = new Rectangle((int) (r*size+this.x), (int) (c*size+this.y), size, size);
+                    if(player.getView().intersects(tempr)){
+                        map[c][r] = 5;
+                    }
+                }
+            }
+        }
     }
 
     /**
      * LOTS OF REPITITION BELLOW, NEED TO FIX:
      */
+    ArrayList<Rectangle> getOpen(){
+        ArrayList<Rectangle> walls = new ArrayList<Rectangle>();
+        for (int c = 0; c < this.map.length; c++){
+            for (int r = 0; r < this.map[c].length; r++){
+                if (this.map[c][r] == 1){
+                    walls.add( new Rectangle((int) (r*size+this.x), (int) (c*size+this.y), size, size));
+                }
+            }
+        }
+        return walls;
+    }
     ArrayList<Rectangle> getWalls(){
         ArrayList<Rectangle> walls = new ArrayList<Rectangle>();
         for (int c = 0; c < this.map.length; c++){
@@ -220,6 +241,10 @@ public class Map{
         }
         for(Gate gate: gates){
             gate.draw(g, this.x, this.y, this.size);
+        }
+        for(Rectangle open: getOpen()){
+            g.setColor(Color.black);
+            g.fillRect(open.x,open.y,size,size);
         }
     }
     boolean checkCollision(Player p, Rectangle r){

@@ -73,8 +73,8 @@ public class playerMotion extends JFrame
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-            player.draw(g);
             mainMap.draw(g);
+            player.draw(g);
             g.setColor(Color.BLACK);
             g.drawString("Materials Count: " + player.getInventory(), 10, 15);
         }
