@@ -21,13 +21,12 @@ public class Enemy extends Rectangle {
 	}
 	
 	public void move(double pX, double pY) {
-		if(counter % 2 == 0) {
+		if(counter % 5 == 0) {
 			if(pX > this.x) {this.x+= v;}
 			if(pX < this.x) {this.x-= v;}
 			if(pY > this.y) { this.y+= v;}
 			if(pY < this.y) {this.y-= v;}
 		}
-		counter++;
-			
+		counter++;	
 		}
 	}
