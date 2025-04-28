@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -17,8 +18,15 @@ public class Map{
     int width, height;
     double  x, y;
     int size;
+    ArrayList<Gate> gates  =new ArrayList<Gate>();
+	int counter = 1;
+	int eX = 1, eY;
+
 
     int[][] map;
+    boolean payGate = false;
+    boolean openGate= false;
+    Color circuitColor = Color.BLUE;
     Map(double x, double y, int size, double v, int[][] map) {
         this.x = x;
         this.y = y;
@@ -58,13 +66,38 @@ public class Map{
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0},
-               {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-               {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+               {0,1,1,1,1,1,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4,3,3,3,3,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+               {0,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+               {0,1,1,1,1,1,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+               {0,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+               {0,0,0,0,0,0,3,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+               {0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+               {0,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+               {0,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+               {0,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+               {0,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+               {0,1,1,1,1,1,3,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+               {0,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0},
+               {0,1,1,1,1,1,3,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0},
+               {0,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,4,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,0,0,0},
+               {0,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,0,0,0,1,1,1,0,0,0,0,0,0,0},
+               {0,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
+               {0,1,1,1,1,1,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,2,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0},
+               {0,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0},
+               {0,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0},
+               {0,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0},
+               {0,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0},
+               {0,1,1,1,1,1,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0},
+               {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+               {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+               {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+               {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+               {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
                {0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
-               {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+               {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,7,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
@@ -83,6 +116,13 @@ public class Map{
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0},
                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
 
+            for (int c = 0; c < this.map.length; c++){
+                for (int r = 0; r < this.map[c].length; r++){
+                    if (this.map[c][r] == 4){
+                        gates.add(new Gate(r, c, 10));
+                    }
+                }
+            }
         }
     void moveup(){
         this.vy[0] = -this.v;
@@ -107,6 +147,7 @@ public class Map{
             this.y += this.vy[0] + this.vy[1];
         }
 
+        //Check material collision(need to change to collisin like above
         for (int c = 0; c < this.map.length; c++){
             for (int r = 0; r < this.map[c].length; r++){
                 if (this.map[c][r] == 2){
@@ -118,6 +159,58 @@ public class Map{
                 }
             }
         }
+        for(Gate gate: gates) {
+            //if (player.getrect().intersects(wall)) {
+            if(this.checkCollision(player, gate.getrect(this.x, this.y, this.size))){
+                if (this.payGate){
+                    player.removeInventory();
+                    this.payGate = false;
+                    gate.working = true;
+                }
+                else if(this.openGate){
+                    this.openGate = false;
+                    if (gate.open){
+                        gate.open = false;
+                    }else{
+                        gate.open = true;
+                    }
+                }
+            }
+        }
+        boolean allOpen = true;
+        for(Gate gate: gates) {
+            if (!gate.working || !gate.open){
+                allOpen = false;
+            }
+        }
+        if (allOpen){
+            circuitColor = Color.CYAN;
+        }
+        for (int c = 0; c < this.map.length; c++){
+            for (int r = 0; r < this.map[c].length; r++){
+                if (this.map[c][r] == 1){
+                    Rectangle tempr = new Rectangle((int) (r*size+this.x), (int) (c*size+this.y), size, size);
+                    if(player.getView().intersects(tempr)){
+                        map[c][r] = 5;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * LOTS OF REPITITION BELLOW, NEED TO FIX:
+     */
+    ArrayList<Rectangle> getOpen(){
+        ArrayList<Rectangle> walls = new ArrayList<Rectangle>();
+        for (int c = 0; c < this.map.length; c++){
+            for (int r = 0; r < this.map[c].length; r++){
+                if (this.map[c][r] == 1){
+                    walls.add( new Rectangle((int) (r*size+this.x), (int) (c*size+this.y), size, size));
+                }
+            }
+        }
+        return walls;
     }
     ArrayList<Rectangle> getWalls(){
         ArrayList<Rectangle> walls = new ArrayList<Rectangle>();
@@ -130,6 +223,18 @@ public class Map{
         }
         return walls;
     }
+    ArrayList<Rectangle> getCircuit(){
+        ArrayList<Rectangle> wall= new ArrayList<Rectangle>();
+        for (int c = 0; c < this.map.length; c++){
+            for (int r = 0; r < this.map[c].length; r++){
+                if (this.map[c][r] == 3){
+                    wall.add(new Rectangle((int) (r*size+this.x), (int) (c*size+this.y), 10, 10));
+                }
+            }
+        }
+        return wall;
+    }
+
     ArrayList<Rectangle> getMaterials(){
         ArrayList<Rectangle> walls = new ArrayList<Rectangle>();
         for (int c = 0; c < this.map.length; c++){
@@ -141,6 +246,47 @@ public class Map{
         }
         return walls;
     }
+    void updateGate(){
+        for (int c = 0; c < this.map.length; c++){
+            for (int r = 0; r < this.map[c].length; r++){
+                if (this.map[c][r] == 4){
+                    gates.add( new Gate((int) (r*size+this.x), (int) (c*size+this.y), size));
+                }
+            }
+        }
+    }
+
+
+    ArrayList<Rectangle> getEnemy(){
+        ArrayList<Rectangle> enemies = new ArrayList<Rectangle>();
+        for (int c = 0; c < this.map.length; c++){
+            for (int r = 0; r < this.map[c].length; r++){
+                if (this.map[c][r] == 7){
+                    enemies.add( new Rectangle((int) (r*size+this.x), (int) (c*size+this.y), size, size));
+                    counter++;
+                    if(this.map[c][r + 1] == 0 || this.map[c + 1][r + 1] == 0) {eX = -1;}
+                    if(this.map[c][r - 1] == 0){eX = 1;}
+                    if(this.map[c + 1][r] == 0) {eY = -1;}
+                    if(this.map[c - 1][r] == 0) {eY = 1;}
+
+                    if((counter % 30) == 0) {
+                        this.map[c][r] = 1;
+                    	this.map[c + eY][r + eX] = 4;
+                    }
+                    //Enemy movement relative to player
+                    for(Rectangle n: enemies) {
+                    	if(n.x > 240) eX = -1;
+                    	if(n.x < 240) eX = 1;
+                    	if(n.y > 240) eY = -1;
+                    	if(n.y < 240) eY = 1;
+                    }
+
+                }
+            }
+        }
+        return enemies;
+    }
+
     void draw(Graphics g){
         for(Rectangle wall : getWalls()){
             g.setColor(Color.black);
@@ -149,6 +295,21 @@ public class Map{
         for(Rectangle material: getMaterials()){
             g.setColor(Color.green);
             g.fillRect(material.x,material.y,size,size);
+        }
+        for(Rectangle wall : getCircuit()){
+            g.setColor(circuitColor);
+            g.fillRect(wall.x,wall.y,size,size);
+        }
+        for(Gate gate: gates){
+            gate.draw(g, this.x, this.y, this.size);
+        }
+        for(Rectangle open: getOpen()){
+            g.setColor(Color.black);
+            g.fillRect(open.x,open.y,size,size);
+        }
+        for(Rectangle enemies: getEnemy()) {
+        	g.setColor(Color.red);
+        	g.fillRect(enemies.x, enemies.y, size, size);
         }
     }
     boolean checkCollision(Player p, Rectangle r){
