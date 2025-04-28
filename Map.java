@@ -153,16 +153,16 @@ public class Map{
                 if (this.map[c][r] == 4){
                     enemies.add( new Rectangle((int) (r*size+this.x), (int) (c*size+this.y), size, size));
                     counter++;
-                    if(this.map[c][r + 1] == 0) {eX = -1;}
+                    if(this.map[c][r + 1] == 0 || this.map[c + 1][r + 1] == 0) {eX = -1;}
                     if(this.map[c][r - 1] == 0){eX = 1;}
                     if(this.map[c + 1][r] == 0) {eY = -1;}
                     if(this.map[c - 1][r] == 0) {eY = 1;}
-                  //  if(this.map[c + 1][r] != 0) {eY = 1;}
                     
                     if((counter % 30) == 0) {
                         this.map[c][r] = 1;
                     	this.map[c + eY][r + eX] = 4;
                     }
+                    //Enemy movement relative to player
                     for(Rectangle n: enemies) {
                     	if(n.x > 240) eX = -1;
                     	if(n.x < 240) eX = 1;
