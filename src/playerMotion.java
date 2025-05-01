@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class playerMotion extends JFrame
-        implements KeyListener, MouseMotionListener {             // ← added MouseMotionListener
+        implements KeyListener, MouseMotionListener, ActionListener{             // ← added MouseMotionListener
     public int WIDTH = 500;
     public int HEIGHT = 500;
     static final int bounds = 70;
@@ -19,7 +19,8 @@ public class playerMotion extends JFrame
     int mouseX = WIDTH / 2;
     int mouseY = HEIGHT / 2;
 
-    public static void main(String[] args) { new playerMotion(); }
+    public static void main(String[] args) { 
+    	new playerMotion(); }
 
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
@@ -93,4 +94,10 @@ public class playerMotion extends JFrame
     /* MouseMotionListener methods */
     public void mouseMoved(MouseEvent e)  { mouseX = e.getX(); mouseY = e.getY(); }
     public void mouseDragged(MouseEvent e){ mouseMoved(e); }
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
