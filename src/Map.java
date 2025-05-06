@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class Map{
+public class Map implements ActionListener{
     double v;
     double[] vy = {0,0};
     double v_normal;
@@ -23,6 +23,9 @@ public class Map{
 	int eX = 1, eY;
 	int prev = 1;
 
+    Timer powerupTimer;
+    int POWERUPSPEED = 1;
+    int powerupcount = 0;
 
     int[][] map;
     boolean payGate = false;
@@ -40,6 +43,15 @@ public class Map{
         this.y = y;
         this.size= size;
         this.v = v;
+
+        /*
+        * 0 = empty
+        * 1 = wall
+        * 2 = gate
+        * 3 = circuit
+        * 7 = enemy
+        * 10 = cookie
+         */
         this.map = new int[][] {
                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0},
@@ -48,7 +60,7 @@ public class Map{
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
-               {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+               {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,10,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
                {0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
@@ -160,6 +172,16 @@ public class Map{
                 }
             }
         }
+
+        for(Square powerup: getSquares(10)){
+            if(player.getrect().intersects(powerup)){
+               map[powerup.yNum][powerup.xNum] = 1;
+                powerupTimer= new Timer(POWERUPSPEED, this);
+                powerupTimer.start();
+               this.v += 5;
+            }
+        }
+
         for(Gate gate: gates) {
             //if (player.getrect().intersects(wall)) {
             if(this.checkCollision(player, gate.getrect(this.x, this.y, this.size))){
@@ -247,6 +269,18 @@ public class Map{
         }
         return walls;
     }
+
+    ArrayList<Square> getSquares(int code){
+        ArrayList<Square> squares= new ArrayList<Square>();
+        for (int c = 0; c < this.map.length; c++){
+            for (int r = 0; r < this.map[c].length; r++){
+                if (this.map[c][r] == code){
+                    squares.add(new Square((int) (r*size+this.x), (int) (c*size+this.y), size, size, r, c));
+                }
+            }
+        }
+        return squares;
+    }
     void updateGate(){
         for (int c = 0; c < this.map.length; c++){
             for (int r = 0; r < this.map[c].length; r++){
@@ -315,6 +349,10 @@ public class Map{
         	g.setColor(Color.red);
         	g.fillRect(enemies.x, enemies.y, size, size);
         }
+        for(Rectangle powerup: getSquares(10)){
+            g.setColor(Color.yellow);
+            g.fillRect(powerup.x,powerup.y, powerup.width,powerup.height);
+        }
     }
     boolean checkCollision(Player p, Rectangle r){
         if (p.getTop().intersects(r)) {
@@ -338,5 +376,19 @@ public class Map{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        if (actionEvent.getSource() == powerupTimer) {
+            this.powerupcount+=1;
+            if(this.powerupcount >= 10000){
+                this.v -= 5;
+                powerupTimer.stop();
+                this.powerupcount = 0;
+
+            }
+
+        }
     }
 }
