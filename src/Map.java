@@ -316,6 +316,20 @@ public class Map{
         	g.fillRect(enemies.x, enemies.y, size, size);
         }
     }
+
+    boolean killEnemyAt(double bx, double by) {
+        int col = (int) ((bx - this.x) / size);
+        int row = (int) ((by - this.y) / size);
+
+        if (row >= 0 && row < map.length && col >= 0 && col < map[row].length) {
+            if (map[row][col] == 7) {           // 7 == enemy
+                map[row][col] = 1;              // 1 == walkable/open
+                return true;                    // bullet hit
+            }
+        }
+        return false;                           // nothing happened
+    }
+
     boolean checkCollision(Player p, Rectangle r){
         if (p.getTop().intersects(r)) {
             this.vy[1]=0;
