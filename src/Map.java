@@ -20,8 +20,9 @@ public class Map{
     int size;
     ArrayList<Gate> gates  = new ArrayList<Gate>();
 	int counter = 1;
-	int eX = 1, eY;
-	int prev = 1;
+    static boolean allOpen = false;
+    static boolean damage = false;
+    static int invinc;
 
 
     int[][] map;
@@ -178,7 +179,7 @@ public class Map{
                 }
             }
         }
-        boolean allOpen = true;
+        allOpen = true;
         for(Gate gate: gates) {
             if (!gate.working || !gate.open){
                 allOpen = false;
@@ -258,37 +259,58 @@ public class Map{
     }
 
 
-    ArrayList<Rectangle> getEnemy(){
-        ArrayList<Rectangle> enemies = new ArrayList<Rectangle>();
-        for (int c = 0; c < this.map.length; c++){
-            for (int r = 0; r < this.map[c].length; r++){
-                if (this.map[c][r] == 7){
-                    enemies.add( new Rectangle((int) (r*size+this.x), (int) (c*size+this.y), size, size));
-                    counter++;
-                    //Wall collision
-                    if(this.map[c][r + 1] == 0 || this.map[c + 1][r + 1] == 0) {eX = -1;}
-                    if(this.map[c][r - 1] == 0){eX = 1;}
-                    if(this.map[c + 1][r] == 0) {eY = -1;}
-                    if(this.map[c - 1][r] == 0) {eY = 1;}
-
-                    //Removing and re-adding enemy
-                    if((counter % 30) == 0) {
-                        this.map[c][r] = prev;
-                        prev = this.map[c + eY][r + eX];
-                    	this.map[c + eY][r + eX] = 7;
-                    }
-                    //Enemy movement relative to player
-                    for(Rectangle n: enemies) {
-                    	if(n.x > 240) eX = -1;
-                    	if(n.x < 240) eX = 1;
-                    	if(n.y > 240) eY = -1;
-                    	if(n.y < 240) eY = 1;
+    ArrayList<Enemy> getEnemy() {
+        ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+        for (int c = 0; c < this.map.length; c++) {
+            for (int r = 0; r < this.map[c].length; r++) {
+                if (this.map[c][r] == 7) {
+                    if (enemies.size() < 2) {
+                        enemies.add(new Enemy((int) (r * size + this.x), (int) (c * size + this.y), size, size, 0, 0, 1));
                     }
 
+                    for (Enemy n : enemies) {
+                        counter++;
+
+                        //Tracks tile enemy replaces
+                        n.prev = this.map[c + n.eY][r + n.eX];
+
+                        //Enemy movement relative to player
+                        if (n.x > 240) n.eX = -1;
+                        if (n.x < 240) n.eX = 1;
+                        if (n.y > 240) n.eY = -1;
+                        else if (n.y < 240) n.eY = 1;
+
+                        //Wall collision
+                        if (this.map[c][r + 1] == 0) {n.eX = -1;}
+                        if (this.map[c][r - 1] == 0) {n.eX = 1;}
+                        if (this.map[c + 1][r] == 0) {n.eY = -1;}
+                        if (this.map[c - 1][r] == 0) {n.eY = 1;}
+
+                        //Removing and re-adding enemy
+                        if ((counter % 50) == 0) {
+                            if (this.map[c + n.eY][r + n.eX] != 0) {
+                                this.map[c + n.eY][r + n.eX] = 7;
+                                this.map[c][r] = n.prev;
+                            }
+                        }
+}}}}
+        for (Enemy n: enemies) {
+            //Lose hp if enemy is where player is
+            if (Player.intersect(enemies) && n.x >= 230 && n.x <= 265 && n.y >= 230 && n.y <= 265 && invinc == 0) {
+                playerMotion.hp--;
+                damage = true;
+            }
+            //Invincibility frames
+            if(damage) {
+                invinc++;
+                if(invinc == 150) {
+                    invinc = 0;
+                    damage = false;
                 }
             }
         }
-        return enemies;
+            return enemies;
+
     }
 
     void draw(Graphics g){
@@ -311,9 +333,9 @@ public class Map{
             g.setColor(Color.black);
             g.fillRect(open.x,open.y,size,size);
         }
-        for(Rectangle enemies: getEnemy()) {
+        for(Rectangle n: getEnemy()) {
         	g.setColor(Color.red);
-        	g.fillRect(enemies.x, enemies.y, size, size);
+        	g.fillRect(n.x, n.y, size, size);
         }
     }
     boolean checkCollision(Player p, Rectangle r){

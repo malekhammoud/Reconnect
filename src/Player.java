@@ -9,6 +9,7 @@ public class Player extends Rectangle {
     int width, height;
     double x, y;
     int inventory;
+    int hp;
     List<Player> shadows = new ArrayList<>();
     List<Bullet> bullets = new ArrayList<>();
     Color c;
@@ -48,6 +49,10 @@ public class Player extends Rectangle {
         this.c = new Color(0f, 0f, 0f, .03f);
         this.centerBoundary = new Rectangle();
         this.centerBoundarySm = new Rectangle();
+    }
+
+    public static boolean intersect(ArrayList<Enemy> enemies) {
+        return true;
     }
 
     void addInventory()       { inventory++; }
