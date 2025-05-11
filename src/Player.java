@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Player extends Rectangle {
     double v;
+    int size;
     int width, height;
     double x, y;
     int inventory;
@@ -22,6 +23,7 @@ public class Player extends Rectangle {
         this.v = v;
         this.width = w;
         this.height = h;
+        this.size = w;
         this.c = c;
         this.centerBoundary = new Rectangle();
         this.centerBoundarySm = new Rectangle();
@@ -60,7 +62,7 @@ public class Player extends Rectangle {
         bullets.add(new Bullet(cx, cy, mx - cx, my - cy, Color.ORANGE));
     }
 
-    void update(int w, int h) {
+    void update(int w, int h, int mapScale) {
         Iterator<Bullet> it = bullets.iterator();
         while (it.hasNext()) {
             Bullet b = it.next();
@@ -68,6 +70,9 @@ public class Player extends Rectangle {
             if (b.offScreen(w, h)) it.remove();
         }
         setLocation((int) x, (int) y);
+        // may be removable but will help if we ever resize the main map or minimap on the fly
+        this.width = size * mapScale;
+        this.height = size * mapScale;
     }
 
     void drawSingle(Graphics g) {
@@ -88,7 +93,7 @@ public class Player extends Rectangle {
     Rectangle getLeft()   { return new Rectangle((int) x,                   (int) y + height/5,   width/2,           height - height/5*2); }
     Rectangle getrect()   { return new Rectangle((int) x,                   (int) y,              width,             height); }
     Rectangle getView()   {
-        int vs = 80;
+        int vs = 4*this.width;
         return new Rectangle((int) x -vs/2,(int) y-vs/2,width+vs,height+vs);
     }
 
