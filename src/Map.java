@@ -34,6 +34,7 @@ public class Map implements ActionListener{
     int[][] map;
     boolean payGate = false;
     boolean openGate= false;
+    boolean moving = false;
     Color circuitColor = Color.BLUE;
     Map(double x, double y, int size, double v, int[][] map) {
         this.x = x;
@@ -129,7 +130,7 @@ public class Map implements ActionListener{
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
@@ -165,74 +166,107 @@ public class Map implements ActionListener{
         this.vx[1] =this.v;
     }
     void move(Player player){
-        boolean stop = false;
-        for(Rectangle wall : getWalls()) {
-            //if (player.getrect().intersects(wall)) {
-            this.checkCollision(player, wall);
-        }
-        if (!stop){
-            this.x += this.vx[0] + this.vx[1];
-            this.y += this.vy[0] + this.vy[1];
-        }
+        if (!moving){
+            boolean stop = false;
+            for(Rectangle wall : getWalls()) {
+                //if (player.getrect().intersects(wall)) {
+                this.checkCollision(player, wall);
+            }
+            if (!stop){
+                this.x += this.vx[0] + this.vx[1];
+                this.y += this.vy[0] + this.vy[1];
+            }
 
-        //Check material collision(need to change to collisin like above
-        for (int c = 0; c < this.map.length; c++){
-            for (int r = 0; r < this.map[c].length; r++){
-                if (this.map[c][r] == 2){
-                    Rectangle tempr = new Rectangle((int) (r*size+this.x), (int) (c*size+this.y), size, size);
-                    if(player.getrect().intersects(tempr)){
-                        map[c][r] = 1;
-                        player.addInventory();
+            //Check material collision(need to change to collisin like above
+            for (int c = 0; c < this.map.length; c++){
+                for (int r = 0; r < this.map[c].length; r++){
+                    if (this.map[c][r] == 2){
+                        Rectangle tempr = new Rectangle((int) (r*size+this.x), (int) (c*size+this.y), size, size);
+                        if(player.getrect().intersects(tempr)){
+                            map[c][r] = 1;
+                            player.addInventory();
+                        }
                     }
                 }
             }
-        }
 
-        for(Square powerup: getSquares(10)){
-            if(player.getrect().intersects(powerup)){
-               map[powerup.yNum][powerup.xNum] = 1;
-                powerupTimer= new Timer(POWERUPSPEED, this);
-                powerupTimer.start();
-               this.v += 5;
-            }
-        }
-
-        for(Gate gate: gates) {
-            //if (player.getrect().intersects(wall)) {
-            if(this.checkCollision(player, gate.getrect(this.x, this.y, this.size))){
-                if (this.payGate){
-                    player.removeInventory();
-                    this.payGate = false;
-                    gate.working = true;
+            for(Square powerup: getSquares(10)){
+                if(player.getrect().intersects(powerup)){
+                   map[powerup.yNum][powerup.xNum] = 1;
+                   powerupTimer= new Timer(POWERUPSPEED, this);
+                   powerupTimer.start();
+                   this.v += 5;
                 }
-                else if(this.openGate){
-                    this.openGate = false;
-                    if (gate.open){
-                        gate.open = false;
-                    }else{
-                        gate.open = true;
+            }
+
+            for(Gate gate: gates) {
+                //if (player.getrect().intersects(wall)) {
+                if(this.checkCollision(player, gate.getrect(this.x, this.y, this.size))){
+                    if (this.payGate){
+                        player.removeInventory();
+                        this.payGate = false;
+                        gate.working = true;
+                    }
+                    else if(this.openGate){
+                        this.openGate = false;
+                        if (gate.open){
+                            gate.open = false;
+                        }else{
+                            gate.open = true;
+                        }
                     }
                 }
             }
-        }
-        allOpen = true;
-        for(Gate gate: gates) {
-            if (!gate.working || !gate.open){
-                allOpen = false;
+            allOpen = true;
+            for(Gate gate: gates) {
+                if (!gate.working || !gate.open){
+                    allOpen = false;
+                }
             }
-        }
-        if (allOpen){
-            circuitColor = Color.CYAN;
-        }
-        for (int c = 0; c < this.map.length; c++){
-            for (int r = 0; r < this.map[c].length; r++){
-                if (this.map[c][r] == 1){
-                    Rectangle tempr = new Rectangle((int) (r*size+this.x), (int) (c*size+this.y), size, size);
-                    if(player.getView().intersects(tempr)){
-                        map[c][r] = 5;
+            if (allOpen){
+                circuitColor = Color.CYAN;
+            }
+            for (int c = 0; c < this.map.length; c++){
+                for (int r = 0; r < this.map[c].length; r++){
+                    if (this.map[c][r] == 1){
+                        Rectangle tempr = new Rectangle((int) (r*size+this.x), (int) (c*size+this.y), size, size);
+                        if(player.getView().intersects(tempr)){
+                            map[c][r] = 5;
+                        }
                     }
                 }
             }
+            for (int c = 0; c < this.map.length; c++){
+                for (int r = 0; r < this.map[c].length; r++){
+                    if (this.map[c][r] == 11){
+                        Rectangle tempr = new Rectangle((int) (r*size+this.x), (int) (c*size+this.y), size, size);
+                        if(player.getrect().intersects(tempr)){
+                            this.moving = true;
+                        }
+                    }
+                }
+            }
+        }else{
+            this.moveTo(0, 0);
+        }
+    }
+    void moveTo(int x, int y){
+        this.moving = true;
+        if (this.x < x){
+            this.x += 1;
+        }
+        else if (this.x > x){
+            this.x -= 1;
+        }
+        if (this.y < y){
+            this.y += 1;
+        }
+        else if(this.y > y){
+            this.x -= 1;
+        }
+        if(Math.round(this.y) == y && Math.round(this.x) == x){
+            this.moving = false;
+            System.out.println(this.x + " " + this.y);
         }
     }
 
@@ -285,6 +319,7 @@ public class Map implements ActionListener{
         return walls;
     }
 
+    //this is how to do it:
     ArrayList<Square> getSquares(int code){
         ArrayList<Square> squares= new ArrayList<Square>();
         for (int c = 0; c < this.map.length; c++){
