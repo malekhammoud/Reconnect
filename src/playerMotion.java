@@ -190,6 +190,15 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                     g.setColor(Color.RED);
                 }
                 g.fillRect(15, 400, 40, 50);
+                if(mainMap.allOpen){
+                    g.setColor(Color.GREEN);
+                    g.fillRect(0, 0, 500, 500);
+                    g.setColor(Color.BLACK);
+                    g.drawString("You Win :)", 30, 35);
+                    g.setColor(Color.BLACK);
+                    g.drawString("Time :" + timeMin + ":" + timeSecString, 10, 60);
+
+                }
             }
             if (panel == 2){
                 //player.draw(g);
@@ -239,7 +248,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 	@Override
 	public void actionPerformed(ActionEvent e) {
         //Timer goes until all gates open
-        if(!Map.allOpen) {
+        if(!mainMap.allOpen) {
             if (timeSec >= 60) {
                 timeMin++;
                 timeSec = 0;
