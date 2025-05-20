@@ -1,5 +1,7 @@
 import java.awt.*;
 import javax.swing.*;
+import java.io.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,7 +46,7 @@ public class Map implements ActionListener{
         this.v = v;
         this.map = map;
     }
-    Map(double x, double y, int size, double v) {
+    Map(double x, double y, int size, double v, int mapLevel) {
         this.x = x;
         this.y = y;
         this.size = size;
@@ -53,6 +55,30 @@ public class Map implements ActionListener{
         /*
          * 0 = empty
          * 1 = wall
+         * 2 = gate
+         * 3 = circuit
+         * 7 = enemy
+         * 10 = cookie
+         */
+        this.map = this.read_map_from_file("" + mapLevel);
+
+        for (int c = 0; c < this.map.length; c++) {
+            for (int r = 0; r < this.map[c].length; r++) {
+                if (this.map[c][r] == 4) {
+                    gates.add(new Gate(r, c, this.size));
+                }
+            }
+        }
+    }
+    Map(double x, double y, int size, double v) {
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.Menusize = 4;
+        this.v = v * this.size;
+        /*
+         * 0 = wall
+         * 1 = empty
          * 2 = gate
          * 3 = circuit
          * 7 = enemy
@@ -143,6 +169,46 @@ public class Map implements ActionListener{
                 }
             }
         }
+    }
+    private static int[] convert_to_int(String[] arr){
+        int[] newarr = new int[arr.length];
+        for (int i = 0; i < arr.length; i++){
+            newarr[i] = Integer.parseInt(arr[i]);
+        }
+        return newarr;
+    }
+    static int[][] read_map_from_file(String filename) {
+        File textFile = new File("src/Levels/" + filename +".txt");
+        String lineOfText;
+        try {
+            FileReader in = new FileReader(textFile);
+            BufferedReader readFile = new BufferedReader(in);
+            lineOfText = readFile.readLine();
+            int [][] readmap = new int[lineOfText.split(" ").length][lineOfText.split(" ").length];
+            int count = 0;
+            readmap[count] = new int[lineOfText.split(" ").length];
+            while ((lineOfText = readFile.readLine()) != null){
+                count ++;
+                readmap[count] = convert_to_int(lineOfText.split(" "));
+            }
+            readFile.close();
+            in.close();
+            for(int i = 0; i < readmap.length; i++){
+                String line  = "";
+                for(int j = 0; j < readmap[i].length; j++){
+                    line += readmap[j][i] + " ";
+                }
+                System.out.println(line);
+            }
+            return readmap;
+        } catch (FileNotFoundException e) {
+            System.out.println("File does not exist or could not be found.");
+            System.err.println("FileNotFoundException: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Problem reading file.");
+            System.err.println("IOException: " + e.getMessage());
+        }
+        return null;
     }
 
     void mapScrub(){

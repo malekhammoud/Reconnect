@@ -18,7 +18,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     int timeMin;
     static int hp = 3;
 
-    Map mainMap = new Map(-40, -40, 10, 0.1);
+    static Map mainMap = new Map(-40, -40, 10, 0.1, 1);
     Map menuMap = new Map(128, 128, 4, 0.1);
     Player player = new Player(WIDTH / 2 - 10, HEIGHT / 2 - 10, 2, 2, 0.3,
             new Color(0, 0, 0),
@@ -33,7 +33,8 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     /* not used for shooting any more but kept for mouse look  */
     int mouseX = WIDTH / 2, mouseY = HEIGHT / 2;
 
-    public static void main(String[] args) { new playerMotion(); }
+    public static void main(String[] args) {
+        new playerMotion(); }
 
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();

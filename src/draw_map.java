@@ -5,31 +5,19 @@ import java.awt.event.*;
 public class draw_map extends JFrame  implements MouseListener, MouseMotionListener, KeyListener {
     int height = 50;
     int width= 50;
-    int value = 1;
-    /*
-    int[][] main_map= { {0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,1,1,0,0,0,0,0,0,0,0},
-            {0,0,0,0,1,1,0,0,0,0,0,0,0,0},
-            {0,0,0,0,1,1,0,0,0,0,0,0,0,0},
-            {0,0,0,0,1,1,0,0,0,0,0,0,0,0},
-            {0,0,0,0,1,1,0,0,0,0,0,0,0,0},
-            {0,0,0,0,1,1,0,0,0,0,0,0,0,0},
-            {0,0,0,0,1,1,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
-     */
+    int value = 0;
     int[][] main_map = new int[height][width];
+
     int size = 10;
     void drawmap(Graphics g, int[][] maps){
         for (int y = 0; y < maps.length; y++){
             for (int x = 0; x < maps[y].length; x++){
-                if (main_map[y][x] ==1){
+                if (main_map[y][x] ==0){
                     g.setColor(Color.BLACK);
                     g.fillRect(x*size, y*size-40, size,size);
                 };
             }
         }
-
     }
     public static void main(String[] args) {
         new draw_map();
@@ -37,7 +25,7 @@ public class draw_map extends JFrame  implements MouseListener, MouseMotionListe
     draw_map(){
         //Create the Jframe
         this.setTitle("HELLOW WORLD");
-        this.setSize(500,500);
+        this.setSize(1000,1000);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
 
@@ -51,6 +39,11 @@ public class draw_map extends JFrame  implements MouseListener, MouseMotionListe
         addMouseListener(this);
         addMouseMotionListener(this);
         addKeyListener(this);
+        for(int y = 0; y < main_map.length; y++){
+            for (int x = 0; x < main_map[y].length; x++){
+                main_map[y][x] = 1;
+            }
+        }
     }
 
     @Override
@@ -109,7 +102,6 @@ public class draw_map extends JFrame  implements MouseListener, MouseMotionListe
         else{
             value = 1;
         }
-
     }
 
     @Override
@@ -119,7 +111,7 @@ public class draw_map extends JFrame  implements MouseListener, MouseMotionListe
 
     private class DrawingPanel extends JPanel {
         DrawingPanel(){
-            this.setPreferredSize(new Dimension(500,500));
+            this.setPreferredSize(new Dimension(1000,1000));
         }
         @Override
         public void paintComponent(Graphics g){
