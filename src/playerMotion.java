@@ -4,6 +4,8 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.io.*;
+import java.util.Scanner;
 
 public class playerMotion extends JFrame implements KeyListener, MouseMotionListener, ActionListener{             // ← added MouseMotionListener
     public int WIDTH = 500;
@@ -18,7 +20,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     int timeMin;
     static int hp = 3;
 
-    static Map mainMap = new Map(-40, -40, 10, 0.1, 1);
+    static Map mainMap = new Map(-40, -40, 10, 0.1);
     Map menuMap = new Map(128, 128, 4, 0.1);
     Player player = new Player(WIDTH / 2 - 10, HEIGHT / 2 - 10, 2, 2, 0.3,
             new Color(0, 0, 0),
@@ -198,7 +200,44 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                     g.drawString("You Win :)", 30, 35);
                     g.setColor(Color.BLACK);
                     g.drawString("Time :" + timeMin + ":" + timeSecString, 10, 60);
+                            File scoreFile = new File("src/scores.txt");
+                            FileReader in;
+                            BufferedReader readFile;
 
+                            String line;
+                            String topScorer = "";
+                            float highScore = 0;
+
+                            try {
+                                in = new FileReader(scoreFile);
+                                readFile = new BufferedReader(in);
+
+                                while ((line = readFile.readLine()) != null) {
+                                    String[] parts = line.split(" ");
+                                    String name = parts[0];
+                                    float score = Float.parseFloat(parts[1]);
+
+                                    if (score > highScore) {
+                                        highScore = score;
+                                        topScorer = name;
+                                    }
+                                }
+
+                                readFile.close();
+                                in.close();
+
+                                if (!topScorer.isEmpty()) {
+                                    g.drawString("High score: " + topScorer + " with " + highScore, 10, 80);
+                                } else {
+                                    System.out.println("No scores found.");
+                                }
+
+                            } catch (FileNotFoundException e) {
+                                System.out.println("File not found.");
+                                System.err.println("FileNotFoundException: " + e.getMessage());
+                            } catch (IOException e) {
+                                System.out.println("Problem reading file.");
+                            }
                 }
             }
             if (panel == 2){
@@ -245,7 +284,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     /* MouseMotionListener methods */
     public void mouseMoved(MouseEvent e)  { mouseX = e.getX(); mouseY = e.getY(); }
     public void mouseDragged(MouseEvent e){ mouseMoved(e); }
-
+    boolean highscore_saved = false;
 	@Override
 	public void actionPerformed(ActionEvent e) {
         //Timer goes until all gates open
@@ -255,5 +294,33 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 timeSec = 0;
             }
             timeSec += 0.02;
+        }if(mainMap.allOpen){
+            if(!highscore_saved) {
+                System.out.println("HI");
+                highscore_saved = true;
+                File dataFile = new File("src/scores.txt");
+                FileWriter out;
+                BufferedWriter writeFile;
+                Scanner input = new Scanner(System.in);
+                String name;
+                int score;
+
+                try {
+                    out = new FileWriter(dataFile);  // Overwrites the file; use 'true' as second arg to append instead
+                    writeFile = new BufferedWriter(out);
+
+                    name = "Joe";
+                    writeFile.write(name + " " + timeSec);
+                    writeFile.newLine();
+
+                    writeFile.close();
+                    out.close();
+                    System.out.println("High scores written to file.");
+                } catch (IOException err) {
+                    System.out.println("Problem writing to file.");
+                    System.err.println("IOException: " + err.getMessage());
+                }
+            }
         }
-    }}
+    }
+}

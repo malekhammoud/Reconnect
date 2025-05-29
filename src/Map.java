@@ -22,6 +22,7 @@ public class Map implements ActionListener{
     int size;
     int Menusize;
     ArrayList<Gate> gates  = new ArrayList<Gate>();
+    ArrayList<Gate> gatesFake  = new ArrayList<Gate>();
 	int counter = 1;
     boolean allOpen = false;
     static boolean damage = false;
@@ -67,6 +68,9 @@ public class Map implements ActionListener{
                 if (this.map[c][r] == 4) {
                     gates.add(new Gate(r, c, this.size));
                 }
+                else if (this.map[c][r] == 5) {
+                    gatesFake.add(new Gate(r, c, this.size));
+                }
             }
         }
     }
@@ -80,6 +84,7 @@ public class Map implements ActionListener{
          * 0 = wall
          * 1 = empty
          * 2 = gate
+         * 5 = "dumb" gate
          * 3 = circuit
          * 7 = enemy
          * 10 = cookie
@@ -129,9 +134,9 @@ public class Map implements ActionListener{
                 {0, 0, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 2, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 3, 3, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 5, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
@@ -166,6 +171,9 @@ public class Map implements ActionListener{
             for (int r = 0; r < this.map[c].length; r++) {
                 if (this.map[c][r] == 4) {
                     gates.add(new Gate(r, c, this.size));
+                }
+                else if (this.map[c][r] == 5) {
+                    gatesFake.add(new Gate(r, c, this.size));
                 }
             }
         }
@@ -293,6 +301,24 @@ public class Map implements ActionListener{
                 }
             }
 
+            for(Gate gate: gatesFake) {
+                //if (player.getrect().intersects(wall)) {
+                if(this.checkCollision(player, gate.getrect(this.x, this.y, this.size))){
+                    if (this.payGate){
+                        player.removeInventory();
+                        this.payGate = false;
+                        gate.working = true;
+                    }
+                    else if(this.openGate){
+                        this.openGate = false;
+                        if (gate.open){
+                            gate.open = false;
+                        }else{
+                            gate.open = true;
+                        }
+                    }
+                }
+            }
             for(Gate gate: gates) {
                 //if (player.getrect().intersects(wall)) {
                 if(this.checkCollision(player, gate.getrect(this.x, this.y, this.size))){
@@ -426,6 +452,7 @@ public class Map implements ActionListener{
         }
         return squares;
     }
+
     void updateGate(){
         for (int c = 0; c < this.map.length; c++){
             for (int r = 0; r < this.map[c].length; r++){
@@ -488,7 +515,6 @@ public class Map implements ActionListener{
             }
         }
             return enemies;
-
     }
 
     void draw(Graphics g, int panel){
@@ -497,15 +523,15 @@ public class Map implements ActionListener{
                 g.setColor(Color.black);
                 g.fillRect(wall.x, wall.y, size, size);
             }
-            for (Rectangle material : getMaterials()) {
-                g.setColor(Color.green);
-                g.fillRect(material.x, material.y, size, size);
-            }
+
             for (Rectangle wall : getCircuit()) {
                 g.setColor(circuitColor);
                 g.fillRect(wall.x, wall.y, size, size);
             }
             for (Gate gate : gates) {
+                gate.draw(g, this.x, this.y, this.size);
+            }
+            for (Gate gate : gatesFake) {
                 gate.draw(g, this.x, this.y, this.size);
             }
             for (Rectangle open : getOpen()) {
@@ -516,8 +542,17 @@ public class Map implements ActionListener{
                 g.setColor(Color.red);
                 g.fillRect(n.x, n.y, size, size);
             }
+            for(Rectangle powerup: getSquares(2)){
+                g.setColor(Color.green);
+                g.setColor(Color.yellow);
+                g.fillRect(powerup.x,powerup.y, powerup.width,powerup.height);
+            }
             for(Rectangle powerup: getSquares(10)){
                 g.setColor(Color.yellow);
+                g.fillRect(powerup.x,powerup.y, powerup.width,powerup.height);
+            }
+            for(Rectangle powerup: getSquares(6)){
+                g.setColor(Color.pink);
                 g.fillRect(powerup.x,powerup.y, powerup.width,powerup.height);
             }
         }
