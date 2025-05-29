@@ -96,7 +96,7 @@ public class Map implements ActionListener{
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
                 {0, 0, 1, 1, 1, 10, 1, 1, 1, 1, 10, 1, 1, 1, 1, 1, 10, 1, 1, 1, 1, 1, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
-                {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+                {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 1, 1, 7, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
@@ -463,15 +463,51 @@ public class Map implements ActionListener{
         }
     }
 
+    int[] bfs(int[] start, int[] end)  {
+        boolean[][] visited = new boolean[map.length][map[0].length];
+        Queue queue = new Queue(10000);
 
-    ArrayList<Enemy> getEnemy() {
+        queue.enqueue(start);
+        visited[start[1]][start[0]] = true;
+
+        while (!queue.isEmpty()) {
+            int[] current = queue.dequeue();
+            int x = current[0];
+            int y = current[1];
+
+            if (x == end[0] && y == end[1]) {
+                System.out.println("Path found to the end of the map.");
+                return current;
+            }
+
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    if (Math.abs(dx) != Math.abs(dy)) { // Only allow horizontal and vertical moves
+                        int newX = x + dx;
+                        int newY = y + dy;
+
+                        if (newX >= 0 && newX < map[0].length && newY >= 0 && newY < map.length &&
+                                !visited[newY][newX] && map[newY][newX] != 0) {
+                            visited[newY][newX] = true;
+                            queue.enqueue(new int[]{newX, newY});
+                        }
+                    }
+                }
+            }
+        }
+        System.out.println("No path found to the end of the map.");
+        return null;
+    }
+
+    ArrayList<Enemy> getSmartEnemy() {
         ArrayList<Enemy> enemies = new ArrayList<Enemy>();
         for (int c = 0; c < this.map.length; c++) {
             for (int r = 0; r < this.map[c].length; r++) {
                 if (this.map[c][r] == 7) {
-                    if (enemies.size() < 2) {
-                        enemies.add(new Enemy((int) (r * size + this.x), (int) (c * size + this.y), size, size, 0, 0, 1));
-                    }
+
+                    // if (enemies.size() < 2) {
+                    enemies.add(new Enemy((int) (r * size + this.x), (int) (c * size + this.y), size, size, 0, 0, 1));
+                    // }
 
                     for (Enemy n : enemies) {
                         counter++;
@@ -498,7 +534,67 @@ public class Map implements ActionListener{
                                 this.map[c][r] = n.prev;
                             }
                         }
-}}}}
+
+                    }
+                }
+            }
+        }
+        for (Enemy n: enemies) {
+            //Lose hp if enemy is where player is
+            if (Player.intersect(enemies) && n.x >= 230 && n.x <= 265 && n.y >= 230 && n.y <= 265 && invinc == 0) {
+                playerMotion.hp--;
+                damage = true;
+            }
+            //Invincibility frames
+            if(damage) {
+                invinc++;
+                if(invinc == 150) {
+                    invinc = 0;
+                    damage = false;
+                }
+            }
+        }
+        return enemies;
+    }
+    ArrayList<Enemy> getEnemy() {
+        ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+        for (int c = 0; c < this.map.length; c++) {
+            for (int r = 0; r < this.map[c].length; r++) {
+                if (this.map[c][r] == 7) {
+                   // if (enemies.size() < 2) {
+                        enemies.add(new Enemy((int) (r * size + this.x), (int) (c * size + this.y), size, size, 0, 0, 1));
+                   // }
+
+                    for (Enemy n : enemies) {
+                        counter++;
+
+                        //Tracks tile enemy replaces
+                        n.prev = this.map[c + n.eY][r + n.eX];
+
+                        //Enemy movement relative to player
+                        if (n.x > 240) n.eX = -1;
+                        if (n.x < 240) n.eX = 1;
+                        if (n.y > 240) n.eY = -1;
+                        else if (n.y < 240) n.eY = 1;
+
+                        //Wall collision
+                        if (this.map[c][r + 1] == 0) {n.eX = -1;}
+                        if (this.map[c][r - 1] == 0) {n.eX = 1;}
+                        if (this.map[c + 1][r] == 0) {n.eY = -1;}
+                        if (this.map[c - 1][r] == 0) {n.eY = 1;}
+
+                        //Removing and re-adding enemy
+                        if ((counter % 50) == 0) {
+                            if (this.map[c + n.eY][r + n.eX] != 0) {
+                                this.map[c + n.eY][r + n.eX] = 7;
+                                this.map[c][r] = n.prev;
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
         for (Enemy n: enemies) {
             //Lose hp if enemy is where player is
             if (Player.intersect(enemies) && n.x >= 230 && n.x <= 265 && n.y >= 230 && n.y <= 265 && invinc == 0) {
@@ -516,6 +612,7 @@ public class Map implements ActionListener{
         }
             return enemies;
     }
+
 
     void draw(Graphics g, int panel){
         if (panel == 1) {
