@@ -8,7 +8,7 @@ public class Enemy extends Rectangle{
     int size;
 
 
-    public Enemy(int x, int y, int width, int length, int heigth, int eX, int eY) {
+    public Enemy(int x, int y, int width, int length, int height, int eX, int eY) {
         this.eX = eX;
         this.eY = eY;
         this.prev = prev;
