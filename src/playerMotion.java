@@ -38,11 +38,10 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if (currentMenu.equals("MainGame")){
-        if (key == KeyEvent.VK_UP) {mainMap.movedown();menuMap.movedown();}
-        if (key == KeyEvent.VK_LEFT) {mainMap.moveright();menuMap.moveright();}
-        if (key == KeyEvent.VK_DOWN) {mainMap.moveup();menuMap.moveup();}
-        if (key == KeyEvent.VK_RIGHT) {mainMap.moveleft();menuMap.moveleft();}
-
+        if (key == KeyEvent.VK_UP) {mainMap.movedown();menuMap.movedown(); dirX = 0;  dirY = -1; }
+        if (key == KeyEvent.VK_LEFT) {mainMap.moveright();menuMap.moveright();dirX = -1; dirY = 0;}
+        if (key == KeyEvent.VK_DOWN) {mainMap.moveup();menuMap.moveup();dirX = 0;  dirY = 1; }
+        if (key == KeyEvent.VK_RIGHT) {mainMap.moveleft();menuMap.moveleft();dirX = 1;  dirY = 0;}
         /* SPACE: shoot along last movement vector */
         if (key == KeyEvent.VK_SPACE) {
             double cx = player.x + player.width  / 2.0;
@@ -191,6 +190,15 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                     g.setColor(Color.RED);
                 }
                 g.fillRect(15, 400, 40, 50);
+                if(mainMap.allOpen){
+                    g.setColor(Color.GREEN);
+                    g.fillRect(0, 0, 500, 500);
+                    g.setColor(Color.BLACK);
+                    g.drawString("You Win :)", 30, 35);
+                    g.setColor(Color.BLACK);
+                    g.drawString("Time :" + timeMin + ":" + timeSecString, 10, 60);
+
+                }
             }
             if (panel == 2){
                 //player.draw(g);
@@ -240,7 +248,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 	@Override
 	public void actionPerformed(ActionEvent e) {
         //Timer goes until all gates open
-        if(!Map.allOpen) {
+        if(!mainMap.allOpen) {
             if (timeSec >= 60) {
                 timeMin++;
                 timeSec = 0;
