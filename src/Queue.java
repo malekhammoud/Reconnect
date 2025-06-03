@@ -1,27 +1,27 @@
 public class Queue {
-    private int[][] data;
+    private Map.BFSNode[] data; // Changed from int[][] to Map.BFSNode[]
     private int front, rear, max;
 
     public Queue(int maxItems) {
-        data = new int[maxItems][];
+        data = new Map.BFSNode[maxItems]; // Changed from int[][] to Map.BFSNode[]
         front = -1; //no items in data
         rear = -1;
         max = maxItems;
     }
 
     //look at the front of the queue
-    public int[] peek() {
+    public Map.BFSNode peek() { // Changed return type from int[] to Map.BFSNode
         return data[front];
     }
 
     //remove front item from Queue
-    public int[] dequeue() {
+    public Map.BFSNode dequeue() { // Changed return type from int[] to Map.BFSNode
         front = (front + 1) % max;
         return data[front - 1];
     }
 
     //add an item to front of Queue
-    public void enqueue(int[] item) {
+    public void enqueue(Map.BFSNode item) { // Changed parameter type from int[] to Map.BFSNode
         if (isEmpty()) { //first item queued
             front = 0;
             rear = 0;
