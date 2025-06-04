@@ -232,7 +232,7 @@ public class Map implements ActionListener{
             for(Gate gate: gates) {
                 //if (player.getrect().intersects(wall)) {
                 if(this.checkCollision(player, gate.getrect(this.x, this.y, this.size))){
-                    if (this.payGate){
+                    if (this.payGate && player.inventory > 0 && !gate.working){
                         player.removeInventory();
                         this.payGate = false;
                         gate.working = true;
@@ -389,10 +389,10 @@ public class Map implements ActionListener{
 
                         //Enemy movement relative to player
                         if(counter % 50 == 0) {
-                            if (n.x > 240) n.eX = -1;
-                            if (n.x < 240) n.eX = 1;
-                            if (n.y > 240) n.eY = -1;
-                            if (n.y < 240) n.eY = 1;
+                            if (n.x > 550) n.eX = -1;
+                            if (n.x < 550) n.eX = 1;
+                            if (n.y > 392) n.eY = -1;
+                            if (n.y < 392) n.eY = 1;
                         }
 
                         //Tracks tile enemy replaces
@@ -413,7 +413,7 @@ public class Map implements ActionListener{
 }}}}
         for (Enemy n: enemies) {
             //Lose hp if enemy is where player is
-            if (Player.intersect(enemies) && n.x >= 230 && n.x <= 265 && n.y >= 230 && n.y <= 265 && invinc == 0) {
+            if (Player.intersect(enemies) && n.x >= 505 && n.x <= 585 && n.y >= 372 && n.y <= 440 && invinc == 0) {
                 playerMotion.hp--;
                 damage = true;
             }
@@ -452,7 +452,7 @@ public class Map implements ActionListener{
                 g.fillRect(open.x, open.y, size, size);
             }
             for(Rectangle n: getEnemy()) {
-                g.setColor(Color.red);
+                g.setColor(Color.cyan);
                 g.fillRect(n.x, n.y, size, size);
             }
             for(Rectangle powerup: getSquares(10)){
