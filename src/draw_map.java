@@ -3,8 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class draw_map extends JFrame  implements MouseListener, MouseMotionListener, KeyListener {
-    int height = 50;
-    int width= 50;
+    int height = 200;
+    int width= 200;
     int value = 1;
     /*
     int[][] main_map= { {0,0,0,0,0,0,0,0,0,0,0,0,0,0},

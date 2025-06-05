@@ -10,17 +10,17 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     public int HEIGHT = 500;
     static final int bounds = 70;
     CardLayout card;
-    JPanel menus;
+    JPanel menus, title;
     String currentMenu;
     Timer timer;
     static int TIMESPEED = 10;
     double timeSec;
     int timeMin;
-    static int hp = 3;
+    static int hp = 3, setMain = 0;
 
-    Map mainMap = new Map(-40, -40, 10, 0.1);
+    Map mainMap = new Map(-40, -40, 25, 0.1);
     Map menuMap = new Map(128, 128, 4, 0.1);
-    Player player = new Player(WIDTH / 2 - 10, HEIGHT / 2 - 10, 2, 2, 0.3,
+    Player player = new Player(525, 393, 2, 2, 0.3,
             new Color(0, 0, 0),
             new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
     Player Ghost = new Player(WIDTH / 2 - 10, HEIGHT / 2 - 10, 2, 2, 0.3,
@@ -105,26 +105,46 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_UP)    {mainMap.vy[1] = 0;menuMap.vy[1] = 0;}
-        if (key == KeyEvent.VK_LEFT)  {mainMap.vx[1] = 0;menuMap.vx[1] = 0;}
-        if (key == KeyEvent.VK_DOWN)  {mainMap.vy[0] = 0;menuMap.vy[0] = 0;}
-        if (key == KeyEvent.VK_RIGHT) {mainMap.vx[0] = 0;menuMap.vx[0] = 0;}
-        if (key == KeyEvent.VK_P) mainMap.payGate = false;
-        if (key == KeyEvent.VK_O) mainMap.openGate = false;
+        if (key == KeyEvent.VK_UP) {
+            mainMap.vy[1] = 0;
+            menuMap.vy[1] = 0;
+        }
+        if (key == KeyEvent.VK_LEFT) {
+            mainMap.vx[1] = 0;
+            menuMap.vx[1] = 0;
+        }
+        if (key == KeyEvent.VK_DOWN) {
+            mainMap.vy[0] = 0;
+            menuMap.vy[0] = 0;
+        }
+        if (key == KeyEvent.VK_RIGHT) {
+            mainMap.vx[0] = 0;
+            menuMap.vx[0] = 0;
+        }
+        if (key == KeyEvent.VK_U) mainMap.payGate = false;
+        if (key == KeyEvent.VK_I) mainMap.openGate = false;
+        if (key == KeyEvent.VK_U && setMain == 0) setMain = 1;
+        if (key == KeyEvent.VK_I && setMain == 0) setMain = 2;
     }
 
-    public void keyTyped(KeyEvent e) {}
+        @Override
+        public void keyTyped(KeyEvent e) {}
 
     playerMotion() {
-        setTitle("HELLOW WORLD");
+        setTitle("Reconnect");
         setSize(500, 500);                    // frame stays 500×500
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setExtendedState(this.MAXIMIZED_BOTH);
         setLocationRelativeTo(null);
         card = new CardLayout();
         menus = new JPanel(card);
         JPanel panel = new JPanel();
         JPanel mapMenu = new JPanel();
         JPanel inventoryMenu = new JPanel();
+        JPanel title = new JPanel();
+
+        panel.setBackground(Color.BLACK);
+
 
         menus.add(panel,"MainGame");
         menus.add(mapMenu,"Map");
@@ -160,18 +180,37 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     private class DrawingPanel extends JPanel {
         int panel;
         Font font = new Font("Serif", Font.BOLD, 24);
-        DrawingPanel(int pan) { setPreferredSize(new Dimension(500, 500)); panel = pan;}
+        DrawingPanel(int pan) { setPreferredSize(new Dimension(1050, 785)); panel = pan;}
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             //Graphics2D g2 = (Graphics2D)g;
             //g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            if (panel == 1){
+
+            //Title screen
+           if(setMain == 0) {
+               g.setColor(Color.WHITE);
+               g.fillRect(0, 0, 1050, 785);
+               g.setColor(Color.BLACK);
+               g.drawString("Reconnect :)", 100, 100);
+               g.drawString("Press U(a) to continue", 100, 120);
+               g.drawString("Press I(b) to see highscores", 100, 140);
+           }
+
+           //Display highscores
+           if(setMain == 2) {
+
+           }
+
+            if (panel == 1 && setMain == 1){
                 mainMap.draw(g, 1);
                 player.draw(g);
-                g.setColor(Color.WHITE);
-                g.fillRect(10, 4, 110, 35);
                 g.setColor(Color.BLACK);
+                g.fillRect(0, 0, 410, 1050);
+                g.fillRect(705, 0, 670, 1050);
+                g.fillRect(0, 560, 1050, 500);
+                g.fillRect(0, 0, 1050, 280);
+                g.setColor(Color.WHITE);
                 g.drawString("Materials Count: " + player.getInventory(), 10, 15);
                 //Displays time
                 String timeSecString = String.format("%.2f", timeSec);
@@ -184,29 +223,33 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 if(hp <= 0) {
                     //Gameover
                     g.setColor(Color.RED);
-                    g.fillRect(0, 0, 500, 500);
+                    g.fillRect(0, 0, 1050, 785);
                     g.setColor(Color.BLACK);
                     g.drawString("Game Over :(", 30, 35);
                     g.setColor(Color.RED);
                 }
-                g.fillRect(15, 400, 40, 50);
+                g.fillRect(30, 650, 80, 100);
                 if(mainMap.allOpen){
                     g.setColor(Color.GREEN);
-                    g.fillRect(0, 0, 500, 500);
+                    g.fillRect(0, 0, 1050, 785);
                     g.setColor(Color.BLACK);
                     g.drawString("You Win :)", 30, 35);
                     g.setColor(Color.BLACK);
                     g.drawString("Time :" + timeMin + ":" + timeSecString, 10, 60);
 
+
                 }
             }
-            if (panel == 2){
+            //Display material count
+            if (panel == 2 && setMain == 1){
                 //player.draw(g);
                 g.setColor(Color.BLACK);
                 g.setFont(font);
                 g.drawString("Materials Count: " + player.getInventory(), 220, 238);
             }
-            if (panel == 3){
+
+            //Display minimap
+            if (panel == 3 && setMain == 1){
                 menuMap.draw(g,1);
                 Ghost.draw(g);
             }
