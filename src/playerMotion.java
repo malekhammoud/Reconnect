@@ -11,8 +11,9 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     public int WIDTH = 500;
     public int HEIGHT = 500;
     static final int bounds = 70;
-    CardLayout card;
+    static CardLayout card = new CardLayout();
     JPanel menus;
+    JPanel GateUi;
     String currentMenu;
     Timer timer;
     static int TIMESPEED = 10;
@@ -20,8 +21,10 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     int timeMin;
     static int hp = 3;
 
-    static Map mainMap = new Map(-40, -40, 10, 0.1);
-    Map menuMap = new Map(128, 128, 4, 0.1);
+    JLayeredPane layeredPane; // Added JLayeredPane
+
+    static Map mainMap = new Map(-40, -40, 10, 0.1, card);
+    Map menuMap = new Map(128, 128, 4, 0.1, card);
     Player player = new Player(WIDTH / 2 - 10, HEIGHT / 2 - 10, 2, 2, 0.3,
             new Color(0, 0, 0),
             new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
@@ -123,15 +126,21 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         setSize(500, 500);                    // frame stays 500×500
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        card = new CardLayout();
+
+        layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+
         menus = new JPanel(card);
+
         JPanel panel = new JPanel();
         JPanel mapMenu = new JPanel();
         JPanel inventoryMenu = new JPanel();
+        GateUi = mainMap.getGateUi();
 
         menus.add(panel,"MainGame");
         menus.add(mapMenu,"Map");
         menus.add(inventoryMenu,"Inventory");
+
         DrawingPanel Drawing_p = new DrawingPanel(1);
         DrawingPanel Drawing_q = new DrawingPanel(2);
         DrawingPanel Drawing_b = new DrawingPanel(3);
@@ -141,17 +150,24 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         panel.add(Drawing_p);
         inventoryMenu.add(Drawing_q);
         mapMenu.add(Drawing_b);
-        SwapMenuTo("MainGame");
 
-        add(menus);
-        // pack();                            // ← removed: keeps window from shrinking
+        menus.setBounds(0, 0, WIDTH, HEIGHT);
+        layeredPane.add(menus, JLayeredPane.DEFAULT_LAYER);
+
+        GateUi.setBounds(50, 50, 100, 100);
+        GateUi.setVisible(true);
+        layeredPane.add(GateUi, JLayeredPane.PALETTE_LAYER);
+
+        setContentPane(layeredPane);
+
+        SwapMenuTo("MainGame");
 
         addKeyListener(this);
         addMouseMotionListener(this);
         setFocusable(true);
-        setVisible(true);
-        Timer timer = new Timer(TIMESPEED, this);
-        timer.start();
+        this.timer = new Timer(TIMESPEED, this); // Initialize the class member timer
+        this.timer.start();
+        setVisible(true); // Call setVisible at the end
 
         playAnimation();
     }
@@ -276,9 +292,17 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
     /* MouseMotionListener */
     public void SwapMenuTo(String menu){
-        card.show(menus,menu);
-        currentMenu = menu;
-        System.out.println("swapping Menu to " + menu);
+        // GateUi is no longer managed by this CardLayout
+        if (!menu.equals("GateUi")) {
+            card.show(menus, menu);
+            currentMenu = menu;
+            System.out.println("swapping Menu to " + menu);
+        } else {
+            // If you need to specifically control GateUi visibility, do it here
+            // For example: GateUi.setVisible(true); or GateUi.setVisible(false);
+            // Currently, it's set to visible and positioned in the constructor.
+            System.out.println("Attempted to swap to GateUi, which is now an overlay.");
+        }
     }
 
     /* MouseMotionListener methods */

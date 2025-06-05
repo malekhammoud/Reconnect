@@ -43,6 +43,7 @@ public class Map implements ActionListener {
     boolean openGate = false;
     boolean moving = false;
     Color circuitColor = Color.BLUE;
+    CardLayout card;
 
     // Helper class for BFS state
     static class BFSNode {
@@ -87,15 +88,15 @@ public class Map implements ActionListener {
         for (int c = 0; c < this.map.length; c++) {
             for (int r = 0; r < this.map[c].length; r++) {
                 if (this.map[c][r] == 4) { // Gate type from file
-                    gates.add(new Gate(r, c, this.size));
+                    gates.add(new Gate(r, c, this.size, card));
                 } else if (this.map[c][r] == 5) { // Fake Gate type from file
-                    gatesFake.add(new Gate(r, c, this.size));
+                    gatesFake.add(new Gate(r, c, this.size, card));
                 }
             }
         }
     }
 
-    Map(double x, double y, int size, double v) {
+    Map(double x, double y, int size, double v, CardLayout card) {
         this.x = x;
         this.y = y;
         this.size = size;
@@ -184,12 +185,13 @@ public class Map implements ActionListener {
         for (int c = 0; c < this.map.length; c++) {
             for (int r = 0; r < this.map[c].length; r++) {
                 if (this.map[c][r] == 4) {
-                    gates.add(new Gate(r, c, this.size));
+                    gates.add(new Gate(r, c, this.size, card));
                 } else if (this.map[c][r] == 5) {
-                    gatesFake.add(new Gate(r, c, this.size));
+                    gatesFake.add(new Gate(r, c, this.size, card));
                 }
             }
         }
+        this.card = card;
     }
 
     private static int[] convert_to_int(String[] arr) {
@@ -852,7 +854,6 @@ public class Map implements ActionListener {
                 g.fillRect(powerup.x, powerup.y, powerup.width, powerup.height);
             }
 
-
         } else if (panel == 2) {
             // Panel 2 drawing logic
         } else if (panel == 3) {
@@ -897,6 +898,14 @@ public class Map implements ActionListener {
             return true;
         }
         return false;
+    }
+    JPanel getGateUi() {
+        for(Gate gate : gates) {
+            if (gate.x > 200 && gate.x < 280 && gate.y > 200 && gate.y < 280) {
+                return gate.getPanel();
+            }
+        }
+        return new JPanel();
     }
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
