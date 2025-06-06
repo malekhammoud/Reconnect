@@ -18,8 +18,8 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     int timeMin;
     static int hp = 3, setMain = 0;
 
-    Map mainMap = new Map(-40, -40, 25, 0.1);
-    Map menuMap = new Map(128, 128, 4, 0.1);
+    Map mainMap = new Map(-350, -650, 25, 0.1);
+    Map menuMap = new Map(100, 74, 4, 0.1);
     Player player = new Player(525, 393, 2, 2, 0.3,
             new Color(0, 0, 0),
             new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
@@ -125,6 +125,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         if (key == KeyEvent.VK_I) mainMap.openGate = false;
         if (key == KeyEvent.VK_U && setMain == 0) setMain = 1;
         if (key == KeyEvent.VK_I && setMain == 0) setMain = 2;
+
     }
 
         @Override
@@ -188,12 +189,13 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
             //g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             //Title screen
+
            if(setMain == 0) {
                g.setColor(Color.WHITE);
                g.fillRect(0, 0, 1050, 785);
                g.setColor(Color.BLACK);
                g.drawString("Reconnect :)", 100, 100);
-               g.drawString("Press U(a) to continue", 100, 120);
+               g.drawString("Press U(a) to start game", 100, 120);
                g.drawString("Press I(b) to see highscores", 100, 140);
            }
 
@@ -206,10 +208,10 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 mainMap.draw(g, 1);
                 player.draw(g);
                 g.setColor(Color.BLACK);
-                g.fillRect(0, 0, 410, 1050);
-                g.fillRect(705, 0, 670, 1050);
-                g.fillRect(0, 560, 1050, 500);
-                g.fillRect(0, 0, 1050, 280);
+                g.fillRect(0, 0, 390, 1050);
+                g.fillRect(685, 0, 690, 1050);
+                g.fillRect(0, 580, 1050, 520);
+                g.fillRect(0, 0, 1050, 260);
                 g.setColor(Color.WHITE);
                 g.drawString("Materials Count: " + player.getInventory(), 10, 15);
                 //Displays time
@@ -226,7 +228,9 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                     g.fillRect(0, 0, 1050, 785);
                     g.setColor(Color.BLACK);
                     g.drawString("Game Over :(", 30, 35);
+                    g.drawString("Press U(a) to return to title screen", 30, 60);
                     g.setColor(Color.RED);
+
                 }
                 g.fillRect(30, 650, 80, 100);
                 if(mainMap.allOpen){
@@ -253,6 +257,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 menuMap.draw(g,1);
                 Ghost.draw(g);
             }
+
         }
     }
 
