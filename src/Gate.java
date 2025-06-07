@@ -8,25 +8,21 @@ public class Gate {
     int y;
     int size;
     Color color;
-    JPanel panel; // Changed: initialized in constructor with BorderLayout
+    JPanel panel;
+    int materialsNeeded;
+    static int boundary = 30; // Boundary for collision detection
 
-
-    Gate(int x, int y, int size, CardLayout card) {
+    Gate(int x, int y, int size, int materialsNeeded) {
         this.working = false;
         this.open = false;
         this.x = x;
         this.y = y;
         this.size = size;
         this.color = Color.blue;
-        this.panel = new JPanel(new BorderLayout()); // Use BorderLayout
-        DrawingPanel Drawing = new DrawingPanel();
-        this.panel.add(Drawing, BorderLayout.CENTER); // Add DrawingPanel to center
-    }
-
-    void show() {
-        panel.setVisible(true);
-        panel.repaint();
-        panel.show();
+        this.materialsNeeded = materialsNeeded;
+        this.panel = new JPanel(new BorderLayout());
+        DrawingPanel Drawing = new DrawingPanel(this.materialsNeeded);
+        this.panel.add(Drawing); // Add DrawingPanel to center
     }
 
     void draw(Graphics g, double x, double y, int size) {
@@ -41,26 +37,37 @@ public class Gate {
         g.setColor(color);
         g.fillRect((int) (this.x * size + x), (int) (this.y * size + y), this.size, this.size);
     }
+    public Square getSquare(double x, double y) {
+        return new Square((int)(this.x * size + x),(int) (this.y * size + y), this.size, this.size, this.x, this.y);
+    }
+    public Rectangle getCollisionRect(double x, double y, int size) {
+        return new Rectangle((int)(this.x * size + x - boundary),(int) (this.y * size + y - boundary), this.size + boundary*2, this.size + boundary*2);
+    }
 
     Rectangle getrect(double x, double y, int size) {
         return new Rectangle((int) (this.x * size + x), (int) (this.y * size + y), size, size);
     }
 
     JPanel getPanel() {
-        return panel;
+        return this.panel;
     }
 
     private class DrawingPanel extends JPanel {
-        DrawingPanel() {
-            setPreferredSize(new Dimension(50, 50)); // Set preferred size for the panel
-            setBackground(Color.GRAY); // Set background color
+        int materialsNeeded;
+        DrawingPanel(int materialsNeeded) {
+            setBackground(Color.lightGray); // Set background color
+            this.materialsNeeded = materialsNeeded;
         }
 
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-            g.setColor(Color.red);
-            g.fillRect(0, 0, getWidth(), getHeight()); // Fill the component's actual bounds
+            g.setColor(Color.BLACK);
+            g.drawString("Materials needed: " + this.materialsNeeded, 10, 15);
+            g.drawString("I = Pay all" + this.materialsNeeded, 10, 30);
+            g.drawString("U = Pay 1" + this.materialsNeeded, 10, 45);
+            g.drawString("O = Open gate", 10, 55);
+            g.drawString("C = Close gate", 10, 70);
         }
     }
 }

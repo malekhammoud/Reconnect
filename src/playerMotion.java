@@ -23,8 +23,8 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
     JLayeredPane layeredPane; // Added JLayeredPane
 
-    static Map mainMap = new Map(-40, -40, 10, 0.1, card);
-    Map menuMap = new Map(128, 128, 4, 0.1, card);
+    static Map mainMap = new Map(-40, -40, 10, 0.1);
+    Map menuMap = new Map(128, 128, 4, 0.1);
     Player player = new Player(WIDTH / 2 - 10, HEIGHT / 2 - 10, 2, 2, 0.3,
             new Color(0, 0, 0),
             new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
@@ -109,6 +109,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         }
     }
 
+
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_UP)    {mainMap.vy[1] = 0;menuMap.vy[1] = 0;}
@@ -135,7 +136,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         JPanel panel = new JPanel();
         JPanel mapMenu = new JPanel();
         JPanel inventoryMenu = new JPanel();
-        GateUi = mainMap.getGateUi();
+        GateUi = mainMap.getGateUi(); // Use a layout manager
 
         menus.add(panel,"MainGame");
         menus.add(mapMenu,"Map");
@@ -144,22 +145,17 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         DrawingPanel Drawing_p = new DrawingPanel(1);
         DrawingPanel Drawing_q = new DrawingPanel(2);
         DrawingPanel Drawing_b = new DrawingPanel(3);
-
         menuMap.mapScrub();
 
         panel.add(Drawing_p);
         inventoryMenu.add(Drawing_q);
         mapMenu.add(Drawing_b);
 
+
         menus.setBounds(0, 0, WIDTH, HEIGHT);
         layeredPane.add(menus, JLayeredPane.DEFAULT_LAYER);
 
-        GateUi.setBounds(50, 50, 100, 100);
-        GateUi.setVisible(true);
-        layeredPane.add(GateUi, JLayeredPane.PALETTE_LAYER);
-
         setContentPane(layeredPane);
-
         SwapMenuTo("MainGame");
 
         addKeyListener(this);
@@ -271,6 +267,16 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
     public void playAnimation() {
         while (true) {
+            if (mainMap.gateUiClose())  {
+                layeredPane.remove(GateUi);
+                GateUi = mainMap.getGateUi();
+                GateUi.setBounds(100, 100, 150, 130);
+                layeredPane.add(GateUi, JLayeredPane.POPUP_LAYER);
+                GateUi.setVisible(true);
+                layeredPane.repaint();
+            }else{
+                GateUi.setVisible(false);
+            }
             mainMap.move(player);
             menuMap.move(Ghost);
             if (currentMenu.equals("MainGame")){
@@ -285,6 +291,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
             if (currentMenu.equals("Map"))Ghost.update(WIDTH, HEIGHT, menuMap.size);
             Toolkit.getDefaultToolkit().sync();
+            GateUi.repaint();
             repaint();
             pause(5);
         }

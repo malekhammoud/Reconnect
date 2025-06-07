@@ -43,7 +43,7 @@ public class Map implements ActionListener {
     boolean openGate = false;
     boolean moving = false;
     Color circuitColor = Color.BLUE;
-    CardLayout card;
+    boolean GateCollision = false;
 
     // Helper class for BFS state
     static class BFSNode {
@@ -88,15 +88,15 @@ public class Map implements ActionListener {
         for (int c = 0; c < this.map.length; c++) {
             for (int r = 0; r < this.map[c].length; r++) {
                 if (this.map[c][r] == 4) { // Gate type from file
-                    gates.add(new Gate(r, c, this.size, card));
+                    gates.add(new Gate(r, c, this.size,Math.round((long)(Math.random()*10))));
                 } else if (this.map[c][r] == 5) { // Fake Gate type from file
-                    gatesFake.add(new Gate(r, c, this.size, card));
+                    gatesFake.add(new Gate(r, c, this.size,Math.round((long)(Math.random()*10))));
                 }
             }
         }
     }
 
-    Map(double x, double y, int size, double v, CardLayout card) {
+    Map(double x, double y, int size, double v) {
         this.x = x;
         this.y = y;
         this.size = size;
@@ -120,7 +120,7 @@ public class Map implements ActionListener {
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0},
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
-                {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+                {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
@@ -184,14 +184,13 @@ public class Map implements ActionListener {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
         for (int c = 0; c < this.map.length; c++) {
             for (int r = 0; r < this.map[c].length; r++) {
-                if (this.map[c][r] == 4) {
-                    gates.add(new Gate(r, c, this.size, card));
-                } else if (this.map[c][r] == 5) {
-                    gatesFake.add(new Gate(r, c, this.size, card));
+                if (this.map[c][r] == 4) { // Gate type from file
+                    gates.add(new Gate(r, c, this.size,Math.round((long)(Math.random()*10))));
+                } else if (this.map[c][r] == 5) { // Fake Gate type from file
+                    gatesFake.add(new Gate(r, c, this.size,Math.round((long)(Math.random()*10))));
                 }
             }
         }
-        this.card = card;
     }
 
     private static int[] convert_to_int(String[] arr) {
@@ -318,9 +317,12 @@ public class Map implements ActionListener {
                 }
             }
 
+            this.GateCollision = false;
             for(Gate gate: gatesFake) {
                 //if (player.getrect().intersects(wall)) {
-                if(this.checkCollision(player, gate.getrect(this.x, this.y, this.size))){
+                this.checkCollision(player, gate.getrect(this.x, this.y, this.size));
+                if(this.checkInRect(player, gate.getCollisionRect(this.x, this.y, this.size))){
+                    this.GateCollision = true;
                     if (this.payGate){
                         player.removeInventory();
                         this.payGate = false;
@@ -337,8 +339,9 @@ public class Map implements ActionListener {
                 }
             }
             for(Gate gate: gates) {
-                //if (player.getrect().intersects(wall)) {
-                if(this.checkCollision(player, gate.getrect(this.x, this.y, this.size))){
+                this.checkCollision(player, gate.getrect(this.x, this.y, this.size));
+                if(this.checkInRect(player, gate.getCollisionRect(this.x, this.y, this.size))){
+                    this.GateCollision = true;
                     if (this.payGate){
                         player.removeInventory();
                         this.payGate = false;
@@ -876,6 +879,21 @@ public class Map implements ActionListener {
         }
         return false;
     }
+    boolean checkInRect(Player p, Rectangle r) {
+        if (p.getTop().intersects(r)) {
+            return true;
+        }
+        if (p.getBottom().intersects(r)) {
+            return true;
+        }
+        if (p.getLeft().intersects(r)) {
+            return true;
+        }
+        if (p.getRight().intersects(r)) {
+            return true;
+        }
+        return false;
+    }
     boolean checkCollision(Player p, Rectangle r) {
         if (p.getTop().intersects(r)) {
             this.vy[1] = 0;
@@ -899,12 +917,28 @@ public class Map implements ActionListener {
         }
         return false;
     }
+    boolean gateUiClose(){
+        /*
+        for(Gate gate : gates) {
+            if (gate.getSquare(this.x, this.y).x > 100 && gate.getSquare(this.x, this.y).x < 280 && gate.getSquare(this.x, this.y).y > 100 && gate.getSquare(this.x, this.y).y < 280) {
+                return true;
+            }
+        }
+
+        return false;
+         */
+        return this.GateCollision;
+    }
     JPanel getGateUi() {
         for(Gate gate : gates) {
-            if (gate.x > 200 && gate.x < 280 && gate.y > 200 && gate.y < 280) {
+            //if (gate.getSquare(this.x, this.y).x > 100 && gate.getSquare(this.x, this.y).x < 280 && gate.getSquare(this.x, this.y).y > 100 && gate.getSquare(this.x, this.y).y < 280) {
+            if (this.GateCollision){
+                System.out.println("Gate UI found at current position.");
                 return gate.getPanel();
             }
         }
+        System.out.println("No gate UI found at current position.");
+        //return gates.getFirst().getPanel();
         return new JPanel();
     }
     @Override
