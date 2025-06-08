@@ -206,7 +206,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         setContentPane(layeredPane);
         SwapMenuTo("MainGame");
 
-        add(menus);
+        //add(menus);
         // pack();                            // ← removed: keeps window from shrinking
 
         addKeyListener(this);
