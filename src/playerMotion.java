@@ -65,6 +65,10 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         if (key == KeyEvent.VK_N) {
             SwapMenuTo("Map");
         }
+        if (key == KeyEvent.VK_H) {
+            SwapMenuTo("Pause");
+            timer.stop();
+        }
         if (key == KeyEvent.VK_M) {
             SwapMenuTo("MainGame");
         }
@@ -105,6 +109,24 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
             if (key == KeyEvent.VK_X) {
                 SwapMenuTo("Inventory");
             }
+
+        }
+        if (currentMenu.equals("Pause")){
+
+            if (key == KeyEvent.VK_M) {
+                SwapMenuTo("MainGame");
+                timer.start();
+            }
+            if (key == KeyEvent.VK_B) {
+                setMain = 0;
+                SwapMenuTo("MainGame");
+                timer.start();
+                resetGame();
+            }
+            if (key == KeyEvent.VK_X) {
+
+            }
+
         }
     }
 
@@ -130,7 +152,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         if (key == KeyEvent.VK_I) mainMap.openGate = false;
         if (key == KeyEvent.VK_U && setMain == 0) setMain = 1;
         if (key == KeyEvent.VK_I && setMain == 0) setMain = 2;
-
+        if (key == KeyEvent.VK_O && setMain == 0) setMain = 3;
     }
 
         @Override
@@ -153,6 +175,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         JPanel panel = new JPanel();
         JPanel mapMenu = new JPanel();
         JPanel inventoryMenu = new JPanel();
+        JPanel pauseMenu = new JPanel();
         JPanel title = new JPanel();
 
         panel.setBackground(Color.BLACK);
@@ -162,16 +185,18 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         menus.add(panel,"MainGame");
         menus.add(mapMenu,"Map");
         menus.add(inventoryMenu,"Inventory");
-
+        menus.add(pauseMenu,"Pause");
         DrawingPanel Drawing_p = new DrawingPanel(1);
         DrawingPanel Drawing_q = new DrawingPanel(2);
         DrawingPanel Drawing_b = new DrawingPanel(3);
+        DrawingPanel Drawing_d = new DrawingPanel(4);
 
         menuMap.mapScrub();
 
         panel.add(Drawing_p);
         inventoryMenu.add(Drawing_q);
         mapMenu.add(Drawing_b);
+        pauseMenu.add(Drawing_d);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screenSize.width - WIDTH) / 2;
         int y = (screenSize.height - HEIGHT)/ 2;
@@ -180,6 +205,9 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
         setContentPane(layeredPane);
         SwapMenuTo("MainGame");
+
+        add(menus);
+        // pack();                            // ← removed: keeps window from shrinking
 
         addKeyListener(this);
         addMouseMotionListener(this);
@@ -193,6 +221,23 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
     public void pause(int ms) {
         try { Thread.sleep(ms); } catch (InterruptedException ignored) {}
+    }
+
+    void resetGame() {
+        mainMap = new Map(-40, -40, 25, 0.1);
+        menuMap = new Map(128, 128, 4, 0.1);
+        player = new Player(525, 393, 2, 2, 0.3,
+                new Color(0, 0, 0),
+                new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
+        Ghost = new Player(WIDTH / 2 - 10, HEIGHT / 2 - 10, 2, 2, 0.3,
+                new Color(253, 212, 6),
+                new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
+        timer.restart();
+        timeSec=0;
+        timeMin=0;
+        hp = 3;
+
+
     }
 
     private class DrawingPanel extends JPanel {
@@ -220,6 +265,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
            if(setMain == 2) {
 
            }
+
 
             if (panel == 1 && setMain == 1){
                 mainMap.draw(g, 1);
@@ -311,6 +357,12 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 Ghost.draw(g);
             }
 
+            if (panel == 4 && setMain == 1){
+                g.drawString("press b to go back to menu", 525, 500);
+                g.drawString("press m to resume game", 525, 450);
+                g.setFont(font);
+                g.drawString("!! PAUSED !!", 525, 400);
+            }
         }
     }
 
@@ -338,11 +390,15 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 }
             }
 
+
+
             if (currentMenu.equals("Map"))Ghost.update(WIDTH, HEIGHT, menuMap.size);
             Toolkit.getDefaultToolkit().sync();
             GateUi.repaint();
             repaint();
             pause(5);
+
+
         }
     }
 
