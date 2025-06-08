@@ -4,13 +4,16 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.io.*;
+import java.util.Scanner;
 
 public class playerMotion extends JFrame implements KeyListener, MouseMotionListener, ActionListener{             // ← added MouseMotionListener
     public int WIDTH = 500;
     public int HEIGHT = 500;
     static final int bounds = 70;
-    CardLayout card;
+    static CardLayout card = new CardLayout();
     JPanel menus, title;
+    JPanel GateUi;
     String currentMenu;
     Timer timer;
     static int TIMESPEED = 10;
@@ -18,6 +21,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     int timeMin;
     static int hp = 3, setMain = 0;
 
+    JLayeredPane layeredPane; // Added JLayeredPane
     Map mainMap = new Map(-350, -650, 25, 0.1);
     Map menuMap = new Map(100, 74, 4, 0.1);
     Player player = new Player(525, 393, 2, 2, 0.3,
@@ -33,7 +37,8 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     /* not used for shooting any more but kept for mouse look  */
     int mouseX = WIDTH / 2, mouseY = HEIGHT / 2;
 
-    public static void main(String[] args) { new playerMotion(); }
+    public static void main(String[] args) {
+        new playerMotion(); }
 
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
@@ -137,7 +142,10 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(this.MAXIMIZED_BOTH);
         setLocationRelativeTo(null);
-        card = new CardLayout();
+
+        layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+
         menus = new JPanel(card);
         JPanel panel = new JPanel();
         JPanel mapMenu = new JPanel();
@@ -145,11 +153,13 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         JPanel title = new JPanel();
 
         panel.setBackground(Color.BLACK);
+        GateUi = mainMap.getGateUi(); // Use a layout manager
 
 
         menus.add(panel,"MainGame");
         menus.add(mapMenu,"Map");
         menus.add(inventoryMenu,"Inventory");
+
         DrawingPanel Drawing_p = new DrawingPanel(1);
         DrawingPanel Drawing_q = new DrawingPanel(2);
         DrawingPanel Drawing_b = new DrawingPanel(3);
@@ -159,17 +169,20 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         panel.add(Drawing_p);
         inventoryMenu.add(Drawing_q);
         mapMenu.add(Drawing_b);
-        SwapMenuTo("MainGame");
 
-        add(menus);
-        // pack();                            // ← removed: keeps window from shrinking
+
+        menus.setBounds(0, 0, WIDTH, HEIGHT);
+        layeredPane.add(menus, JLayeredPane.DEFAULT_LAYER);
+
+        setContentPane(layeredPane);
+        SwapMenuTo("MainGame");
 
         addKeyListener(this);
         addMouseMotionListener(this);
         setFocusable(true);
-        setVisible(true);
-        Timer timer = new Timer(TIMESPEED, this);
-        timer.start();
+        this.timer = new Timer(TIMESPEED, this); // Initialize the class member timer
+        this.timer.start();
+        setVisible(true); // Call setVisible at the end
 
         playAnimation();
     }
@@ -240,8 +253,44 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                     g.drawString("You Win :)", 30, 35);
                     g.setColor(Color.BLACK);
                     g.drawString("Time :" + timeMin + ":" + timeSecString, 10, 60);
+                            File scoreFile = new File("src/scores.txt");
+                            FileReader in;
+                            BufferedReader readFile;
 
+                            String line;
+                            String topScorer = "";
+                            float highScore = 0;
 
+                            try {
+                                in = new FileReader(scoreFile);
+                                readFile = new BufferedReader(in);
+
+                                while ((line = readFile.readLine()) != null) {
+                                    String[] parts = line.split(" ");
+                                    String name = parts[0];
+                                    float score = Float.parseFloat(parts[1]);
+
+                                    if (score > highScore) {
+                                        highScore = score;
+                                        topScorer = name;
+                                    }
+                                }
+
+                                readFile.close();
+                                in.close();
+
+                                if (!topScorer.isEmpty()) {
+                                    g.drawString("High score: " + topScorer + " with " + highScore, 10, 80);
+                                } else {
+                                    System.out.println("No scores found.");
+                                }
+
+                            } catch (FileNotFoundException e) {
+                                System.out.println("File not found.");
+                                System.err.println("FileNotFoundException: " + e.getMessage());
+                            } catch (IOException e) {
+                                System.out.println("Problem reading file.");
+                            }
                 }
             }
             //Display material count
@@ -263,6 +312,16 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
     public void playAnimation() {
         while (true) {
+            if (mainMap.gateUiClose())  {
+                layeredPane.remove(GateUi);
+                GateUi = mainMap.getGateUi();
+                GateUi.setBounds(100, 100, 150, 130);
+                layeredPane.add(GateUi, JLayeredPane.POPUP_LAYER);
+                GateUi.setVisible(true);
+                layeredPane.repaint();
+            }else{
+                GateUi.setVisible(false);
+            }
             mainMap.move(player);
             menuMap.move(Ghost);
             if (currentMenu.equals("MainGame")){
@@ -277,6 +336,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
             if (currentMenu.equals("Map"))Ghost.update(WIDTH, HEIGHT, menuMap.size);
             Toolkit.getDefaultToolkit().sync();
+            GateUi.repaint();
             repaint();
             pause(5);
         }
@@ -284,15 +344,23 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
     /* MouseMotionListener */
     public void SwapMenuTo(String menu){
-        card.show(menus,menu);
-        currentMenu = menu;
-        System.out.println("swapping Menu to " + menu);
+        // GateUi is no longer managed by this CardLayout
+        if (!menu.equals("GateUi")) {
+            card.show(menus, menu);
+            currentMenu = menu;
+            System.out.println("swapping Menu to " + menu);
+        } else {
+            // If you need to specifically control GateUi visibility, do it here
+            // For example: GateUi.setVisible(true); or GateUi.setVisible(false);
+            // Currently, it's set to visible and positioned in the constructor.
+            System.out.println("Attempted to swap to GateUi, which is now an overlay.");
+        }
     }
 
     /* MouseMotionListener methods */
     public void mouseMoved(MouseEvent e)  { mouseX = e.getX(); mouseY = e.getY(); }
     public void mouseDragged(MouseEvent e){ mouseMoved(e); }
-
+    boolean highscore_saved = false;
 	@Override
 	public void actionPerformed(ActionEvent e) {
         //Timer goes until all gates open
@@ -302,5 +370,33 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 timeSec = 0;
             }
             timeSec += 0.02;
+        }if(mainMap.allOpen){
+            if(!highscore_saved) {
+                System.out.println("HI");
+                highscore_saved = true;
+                File dataFile = new File("src/scores.txt");
+                FileWriter out;
+                BufferedWriter writeFile;
+                Scanner input = new Scanner(System.in);
+                String name;
+                int score;
+
+                try {
+                    out = new FileWriter(dataFile);  // Overwrites the file; use 'true' as second arg to append instead
+                    writeFile = new BufferedWriter(out);
+
+                    name = "Joe";
+                    writeFile.write(name + " " + timeSec);
+                    writeFile.newLine();
+
+                    writeFile.close();
+                    out.close();
+                    System.out.println("High scores written to file.");
+                } catch (IOException err) {
+                    System.out.println("Problem writing to file.");
+                    System.err.println("IOException: " + err.getMessage());
+                }
+            }
         }
-    }}
+    }
+}
