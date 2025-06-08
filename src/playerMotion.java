@@ -144,7 +144,10 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         setLocationRelativeTo(null);
 
         layeredPane = new JLayeredPane();
-        layeredPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        //chaning to grey for debugging
+        layeredPane.setBackground(Color.GRAY);
+        layeredPane.setOpaque(true);
+        //layeredPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         menus = new JPanel(card);
         JPanel panel = new JPanel();
@@ -169,9 +172,10 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         panel.add(Drawing_p);
         inventoryMenu.add(Drawing_q);
         mapMenu.add(Drawing_b);
-
-
-        menus.setBounds(0, 0, WIDTH, HEIGHT);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (screenSize.width - WIDTH) / 2;
+        int y = (screenSize.height - HEIGHT)/ 2;
+        menus.setBounds(x, y, WIDTH, HEIGHT);
         layeredPane.add(menus, JLayeredPane.DEFAULT_LAYER);
 
         setContentPane(layeredPane);
@@ -184,7 +188,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         this.timer.start();
         setVisible(true); // Call setVisible at the end
 
-        playAnimation();
+       playAnimation();
     }
 
     public void pause(int ms) {
