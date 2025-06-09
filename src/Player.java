@@ -63,7 +63,7 @@ public class Player extends Rectangle {
     /* shoot toward an arbitrary screen point */
     void shoot(double mx, double my) {
         double cx = x + width / 2.0, cy = y + height / 2.0;
-        bullets.add(new Bullet(cx, cy, mx - cx, my - cy, Color.ORANGE));
+        bullets.add(new Bullet(cx, cy, mx, my));
     }
 
     void update(int w, int h, int mapScale) {
@@ -85,7 +85,7 @@ public class Player extends Rectangle {
     }
 
     void draw(Graphics g) {
-        for (Bullet b : bullets) b.draw((Graphics2D) g);
+        for (Bullet b : bullets) b.draw(g);
         for (Player sh : shadows) sh.drawSingle(g);
         g.setColor(c);
         g.fillRect((int) x, (int) y, width, height);
@@ -103,24 +103,35 @@ public class Player extends Rectangle {
 
     /* very small inner class – just added simple getters */
     static class Bullet {
-        private double x, y;
-        private final double vx, vy;
-        private static final int    R = 6;
-        private static final double SPEED = 8;
-        private final Color color;
+        double x, y, dx, dy, speed;
+        int size = 8; // Increased size for better visibility
+        Color color = Color.RED; // Make bullets more visible
 
-        Bullet(double sx, double sy, double dx, double dy, Color c) {
-            double len = Math.hypot(dx, dy);
-            vx = (dx / len) * SPEED;
-            vy = (dy / len) * SPEED;
-            x  = sx;
-            y  = sy;
-            color = c;
+        Bullet(double x, double y, double dirX, double dirY) {
+            this.x = x;
+            this.y = y;
+
+            // Set speed and direction directly using the passed direction vector
+            speed = 10.0;
+            dx = dirX * speed;
+            dy = dirY * speed;
         }
 
-        void update()                 { x += vx; y += vy; }
-        boolean offScreen(int w,int h){ return x < -R || x > w+R || y < -R || y > h+R; }
-        void draw(Graphics2D g)       { g.setColor(color); g.fill(new Ellipse2D.Double(x-R, y-R, R*2, R*2)); }
+        void update() {
+            x += dx;
+            y += dy;
+        }
+
+        void draw(Graphics g) {
+            g.setColor(color);
+            // Draw larger bullets to improve visibility
+            g.fillOval((int)x - size/2, (int)y - size/2, size, size);
+        }
+
+        // Add this method to check if bullet is off screen
+        boolean offScreen(int screenWidth, int screenHeight) {
+            return x < 0 || x > screenWidth || y < 0 || y > screenHeight;
+        }
 
         /* getters for collision */
         double getX() { return x; }

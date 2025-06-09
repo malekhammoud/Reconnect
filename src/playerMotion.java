@@ -49,10 +49,15 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         if (key == KeyEvent.VK_RIGHT) {mainMap.moveleft();menuMap.moveleft();dirX = 1;  dirY = 0;}
         /* SPACE: shoot along last movement vector */
         if (key == KeyEvent.VK_SPACE) {
-            double cx = player.x + player.width  / 2.0;
-            double cy = player.y + player.height / 2.0;
-            /* push aim point far enough so Bullet normalises direction */
-            player.shoot(cx + dirX * 1000, cy + dirY * 1000);
+            // Make sure we have valid direction vectors
+            if (dirX == 0 && dirY == 0) {
+                // Default to shooting up if no direction
+                dirX = 0;
+                dirY = -1;
+            }
+            player.shoot(dirX, dirY);
+            // Debug output
+            System.out.println("Shot bullet in direction: " + dirX + ", " + dirY);
         }
         if (key == KeyEvent.VK_P) {
             mainMap.payGate = true;
@@ -148,9 +153,16 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
             mainMap.vx[0] = 0;
             menuMap.vx[0] = 0;
         }
-        if (key == KeyEvent.VK_U) mainMap.payGate = false;
+        if (key == KeyEvent.VK_U) {
+            if (setMain == 2) { // If in highscores menu
+                setMain = 0; // Return to main menu
+                mainMap.payGate = false;
+            } else if (setMain == 0) { // Only start game if already on main menu
+                setMain = 1;
+                mainMap.payGate = false;
+            }
+        }
         if (key == KeyEvent.VK_I) mainMap.openGate = false;
-        if (key == KeyEvent.VK_U && setMain == 0) setMain = 1;
         if (key == KeyEvent.VK_I && setMain == 0) setMain = 2;
         if (key == KeyEvent.VK_O && setMain == 0) setMain = 3;
     }
@@ -253,23 +265,69 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
             //Title screen
 
            if(setMain == 0) {
-               g.setColor(Color.WHITE);
-               g.fillRect(0, 0, 1050, 785);
                g.setColor(Color.BLACK);
-               g.drawString("Reconnect :)", 100, 100);
-               g.drawString("Press U(a) to start game", 100, 120);
-               g.drawString("Press I(b) to see highscores", 100, 140);
+               g.setFont(new Font("Arial", Font.BOLD, 32));
+               g.drawString("Reconnect :)", 300, 50);
+               g.drawString("Press U(a) to start game", 300, 100);
+               g.drawString("Press I(b) to see highscores", 300,  150);
            }
 
            //Display highscores
            if(setMain == 2) {
+               g.setColor(Color.BLACK);
+               g.setFont(new Font("Arial", Font.BOLD, 32));
+               g.drawString("High Scores", 300, 50);
+               g.drawString("Press U to return to main menu", 300, 150);  // Changed instruction text
+               File scoreFile = new File("src/scores.txt");
+               FileReader in;
+               BufferedReader readFile;
 
+               String line;
+               String topScorer = "";
+               float highScore = 0;
+
+               try {
+                   in = new FileReader(scoreFile);
+                   readFile = new BufferedReader(in);
+
+                   while ((line = readFile.readLine()) != null) {
+                       String[] parts = line.split(" ");
+                       String name = parts[0];
+                       float score = Float.parseFloat(parts[1]);
+
+                       if (score > highScore) {
+                           highScore = score;
+                           topScorer = name;
+                       }
+                   }
+
+                   readFile.close();
+                   in.close();
+
+                   if (!topScorer.isEmpty()) {
+                       g.drawString("High score: " + topScorer + " with " + highScore, 300, 80);
+                   } else {
+                       System.out.println("No scores found.");
+                   }
+
+               } catch (FileNotFoundException e) {
+                   System.out.println("File not found.");
+                   System.err.println("FileNotFoundException: " + e.getMessage());
+               } catch (IOException e) {
+                   System.out.println("Problem reading file.");
+               }
            }
 
 
             if (panel == 1 && setMain == 1){
                 mainMap.draw(g, 1);
                 player.draw(g);
+                
+                // Add the bullets drawing here
+                for (Player.Bullet bullet : player.bullets) {
+                    bullet.draw(g);
+                }
+                
                 g.setColor(Color.BLACK);
                 g.fillRect(0, 0, 390, 1050);
                 g.fillRect(685, 0, 690, 1050);
@@ -298,49 +356,11 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 g.fillRect(30, 650, 80, 100);
                 if(mainMap.allOpen){
                     g.setColor(Color.GREEN);
-                    g.fillRect(0, 0, 1050, 785);
+                    g.fillRect(0, 0, 1, 785);
                     g.setColor(Color.BLACK);
                     g.drawString("You Win :)", 30, 35);
                     g.setColor(Color.BLACK);
                     g.drawString("Time :" + timeMin + ":" + timeSecString, 10, 60);
-                            File scoreFile = new File("src/scores.txt");
-                            FileReader in;
-                            BufferedReader readFile;
-
-                            String line;
-                            String topScorer = "";
-                            float highScore = 0;
-
-                            try {
-                                in = new FileReader(scoreFile);
-                                readFile = new BufferedReader(in);
-
-                                while ((line = readFile.readLine()) != null) {
-                                    String[] parts = line.split(" ");
-                                    String name = parts[0];
-                                    float score = Float.parseFloat(parts[1]);
-
-                                    if (score > highScore) {
-                                        highScore = score;
-                                        topScorer = name;
-                                    }
-                                }
-
-                                readFile.close();
-                                in.close();
-
-                                if (!topScorer.isEmpty()) {
-                                    g.drawString("High score: " + topScorer + " with " + highScore, 10, 80);
-                                } else {
-                                    System.out.println("No scores found.");
-                                }
-
-                            } catch (FileNotFoundException e) {
-                                System.out.println("File not found.");
-                                System.err.println("FileNotFoundException: " + e.getMessage());
-                            } catch (IOException e) {
-                                System.out.println("Problem reading file.");
-                            }
                 }
             }
             //Display material count
@@ -348,7 +368,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 //player.draw(g);
                 g.setColor(Color.BLACK);
                 g.setFont(font);
-                g.drawString("Materials Count: " + player.getInventory(), 220, 238);
+                g.drawString("Materials Count: " + player.getInventory(), 300, 238);
             }
 
             //Display minimap
