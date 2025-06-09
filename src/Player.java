@@ -116,7 +116,7 @@ public class Player extends Rectangle {
     static class Bullet {
         double x, y;
         private double vx, vy;
-        private static final int R = 20; // Much larger radius for better visibility
+        private static final int R = 40; // Much larger radius for better visibility
         private static final double SPEED = 3.0; // Even slower so bullets stay on screen longer
         private final Color color;
 

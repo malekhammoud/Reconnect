@@ -12,6 +12,8 @@ import java.util.ArrayList;
 // java.util.Queue and java.util.LinkedList are not used if using custom Queue
 // import java.util.LinkedList;
 // import java.util.Queue;
+import javax.imageio.ImageIO;
+import java.io.File;
 
 public class Map implements ActionListener {
     double v;
@@ -117,8 +119,8 @@ public class Map implements ActionListener {
         this.map = new int[][]{
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
+                {0, 1, 1, 8, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
+                {0, 1, 1, 8, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
@@ -671,87 +673,6 @@ public class Map implements ActionListener {
         return null; // Should ideally not be reached if a path was found
     }
 
-    ArrayList<Enemy> getSmartEnemy() {
-        ArrayList<Enemy> smartEnemiesList = new ArrayList<Enemy>();
-        ArrayList<int[]> enemyGridPositions = new ArrayList<>();
-
-        for (int row = 0; row < this.map.length; row++) {
-            for (int col = 0; col < this.map[row].length; col++) {
-                if (this.map[row][col] == 9) { // Smart enemy type
-                    enemyGridPositions.add(new int[]{col, row});
-                }
-            }
-        }
-
-        if ((this.counter % 50) == 0) {
-            for (int[] pos : enemyGridPositions) {
-                int currentCol = pos[0];
-                int currentRow = pos[1];
-
-                if (this.map[currentRow][currentCol] != 9) {
-                    continue;
-                }
-
-                double enemyScreenX = currentCol * size + this.x;
-                double enemyScreenY = currentRow * size + this.y;
-
-                int n_eX = 0;
-                int n_eY = 0;
-
-                if (enemyScreenX > 240) n_eX = -1;
-                else if (enemyScreenX < 240) n_eX = 1;
-
-                if (enemyScreenY > 240) n_eY = -1;
-                else if (enemyScreenY < 240) n_eY = 1;
-
-                if (currentCol + 1 < this.map[currentRow].length && this.map[currentRow][currentCol + 1] == 0) n_eX = -1;
-                if (currentCol - 1 >= 0 && this.map[currentRow][currentCol - 1] == 0) n_eX = 1;
-                if (currentRow + 1 < this.map.length && this.map[currentRow + 1][currentCol] == 0) n_eY = -1;
-                if (currentRow - 1 >= 0 && this.map[currentRow - 1][currentCol] == 0) n_eY = 1;
-
-                int targetCol = currentCol + n_eX;
-                int targetRow = currentRow + n_eY;
-
-                if (n_eX != 0 || n_eY != 0) {
-                    if (targetRow >= 0 && targetRow < this.map.length && targetCol >= 0 && targetCol < this.map[targetRow].length) {
-                        int contentOfTargetCell = this.map[targetRow][targetCol];
-                        if (contentOfTargetCell != 0 && contentOfTargetCell != 7 && contentOfTargetCell != 8 && contentOfTargetCell != 9) {
-                            this.map[targetRow][targetCol] = 9;
-                            this.map[currentRow][currentCol] = 1; // Old spot becomes empty path
-                        }
-                    }
-                }
-            }
-        }
-
-        smartEnemiesList.clear(); // Re-populate after movement
-        for (int row = 0; row < this.map.length; row++) {
-            for (int col = 0; col < this.map[row].length; col++) {
-                if (this.map[row][col] == 9) {
-                    smartEnemiesList.add(new Enemy((int) (col * size + this.x), (int) (row * size + this.y), size, size, 0, 0, 9));
-                }
-            }
-        }
-
-        Rectangle playerHitbox = new Rectangle(240 - size / 2, 240 - size / 2, size, size);
-        for (Enemy n : smartEnemiesList) {
-            Rectangle enemyRect = new Rectangle(n.x, n.y, n.width, n.height);
-            if (enemyRect.intersects(playerHitbox) && invinc == 0) {
-                if (playerMotion.hp > 0) playerMotion.hp--; // Check if playerMotion is not null
-                Map.damage = true;
-            }
-        }
-
-        if (Map.damage) {
-            invinc++;
-            if (invinc >= 150) { // Use >= for safety
-                invinc = 0;
-                Map.damage = false;
-            }
-        }
-        return smartEnemiesList;
-    }
-
     ArrayList<Enemy> getBFSEnemy() {
         int playerScreenX = 240;
         int playerScreenY = 240;
@@ -833,63 +754,54 @@ public class Map implements ActionListener {
 
     ArrayList<Enemy> getEnemy() {
         ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-        int ex = 0, ey = 0;
         for (int c = 0; c < this.map.length; c++) {
             for (int r = 0; r < this.map[c].length; r++) {
                 if (this.map[c][r] == 7) {
-                    if (enemies.size() < 0) {
-                        enemies.add(new Enemy((int) (r * size + this.x), (int) (c * size + this.y), size, size, 0, 0, 1));
+                    if (enemies.size() < 4) {
+                        enemies.add(new Enemy((int) (r * size + this.x), (int) (c * size + this.y), size, size, 0, 0, 0));
                     }
-
                     for (Enemy n : enemies) {
                         counter++;
 
-                        //Tracks tile enemy replaces
-                        n.prev = this.enemyMap[c + n.eY][r + n.eX];
-
                         //Enemy movement relative to player
-                        if (n.x > 240) n.eX = -1;
-                        if (n.x < 240) n.eX = 1;
-                        if (n.y > 240) n.eY = -1;
-                        else if (n.y < 240) n.eY = 1;
+                        if(counter % 100 == 0) {
+                            if (n.x > 550) n.eX = -1;
+                            if (n.x < 550) n.eX = 1;
+                            if (n.y > 392) n.eY = -1;
+                            if (n.y < 392) n.eY = 1;
+                        }
 
-                        //Wall collision
-                        if (this.enemyMap[c][r + 1] == 0) {n.eX = -1;}
-                        if (this.enemyMap[c][r - 1] == 0) {n.eX = 1;}
-                        if (this.enemyMap[c + 1][r] == 0) {n.eY = -1;}
-                        if (this.enemyMap[c - 1][r] == 0) {n.eY = 1;}
+                        //Tracks tile enemy replaces
+                        if(this.map[c + n.eY][r + n.eX] != 0 && counter % 100 == 0) {
+                            n.prev = this.map[c + n.eY][r + n.eX];
+                        } else if(this.map[c + n.eY][r + n.eX] == 0 && counter % 100 == 0){
+                            n.prev = this.map[c][r];
+                        }
 
                         //Removing and re-adding enemy
-                        if ((counter % 50) == 0) {
-                            if (this.enemyMap[c + n.eY][r + n.eX] != 0) {
-                                this.enemyMap[c + n.eY][r + n.eX] = 7;
-                                this.enemyMap[c][r] = n.prev;
-                            }
+                        if (this.map[c + n.eY][r + n.eX] != 0 && counter % 100 == 0) {
+                            this.map[c + n.eY][r + n.eX] = 7;
+                            this.map[c][r] = n.prev;
                         }
-                    }
-                    enemies.add(new Enemy((int) (r * size + this.x), (int) (c * size + this.y), size, size, 0, 0, 7));
+                    }}}}
+        for (Enemy n: enemies) {
+            //Lose hp if enemy is where player is
+            if (Player.intersect(enemies) && n.x >= 505 && n.x <= 585 && n.y >= 372 && n.y <= 440 && invinc == 0) {
+                playerMotion.hp--;
+                damage = true;
+            }
+            //Invincibility frames
+            if(damage) {
+                invinc++;
+                if(invinc == 150) {
+                    invinc = 0;
+                    damage = false;
                 }
             }
         }
-
-        Rectangle playerHitbox = new Rectangle(240 - size / 2, 240 - size / 2, size, size);
-        for (Enemy n : enemies) {
-            Rectangle enemyRect = new Rectangle(n.x, n.y, n.width, n.height);
-            if (enemyRect.intersects(playerHitbox) && invinc == 0) {
-                if (playerMotion.hp > 0) playerMotion.hp--;
-                Map.damage = true;
-            }
-        }
-        if (Map.damage) {
-            invinc++;
-            if (invinc >= 150) {
-                invinc = 0;
-                Map.damage = false;
-            }
-        }
         return enemies;
-    }
 
+    }
 
     void draw(Graphics g, int panel){
         counter++;
@@ -913,20 +825,6 @@ public class Map implements ActionListener {
                 g.setColor(Color.black);
                 g.fillRect(open.x, open.y, size, size);
             }
-            for(Rectangle n: getEnemy()) {
-                g.setColor(Color.red);
-                g.fillRect(n.x, n.y, n.width, n.height);
-            }
-
-            for (Enemy bfsEnemy : getBFSEnemy()) { // BFS enemies (type 8)
-                g.setColor(Color.orange);
-                g.fillRect(bfsEnemy.x, bfsEnemy.y, bfsEnemy.width, bfsEnemy.height);
-            }
-
-            for (Enemy smartEnemy : getSmartEnemy()) { // Smart enemies (type 9)
-                g.setColor(Color.MAGENTA);
-                g.fillRect(smartEnemy.x, smartEnemy.y, smartEnemy.width, smartEnemy.height);
-            }
 
             for (Rectangle powerup : getSquares(2)) {
                 g.setColor(Color.GREEN);
@@ -936,9 +834,13 @@ public class Map implements ActionListener {
                 g.setColor(Color.YELLOW);
                 g.fillRect(material.x, material.y, material.width, material.height);
             }
-            for (Rectangle powerup : getSquares(enemyMap, 8)) {
-                g.setColor(Color.pink);
-                g.fillRect(powerup.x, powerup.y, powerup.width, powerup.height);
+            for(Rectangle n: getEnemy()) {
+                g.setColor(Color.red);
+                g.fillRect(n.x, n.y, 20, 20);
+            }
+            for (Enemy bfsEnemy : getBFSEnemy()) { // BFS enemies (type 8)
+                g.setColor(Color.orange);
+                g.fillRect(bfsEnemy.x, bfsEnemy.y, 20, 20);
             }
 
         } else if (panel == 2) {
@@ -1035,5 +937,18 @@ public class Map implements ActionListener {
                 powerupcount = 0;
             }
         }
+    }
+    static BufferedImage loadImage(String filename) {
+        BufferedImage img = null;
+        try{
+            img = ImageIO.read(new File(filename));
+        } catch (IOException e) {
+            System.out.println(e.toString());
+            JOptionPane.showMessageDialog(null, "An image failed to load: " + filename, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        //DEBUG
+        //if (img == null) System.out.println("null");
+        //else System.out.printf("w=%d, h=%d%n",img.getWidth(), img.getHeight());
+        return img;
     }
 }

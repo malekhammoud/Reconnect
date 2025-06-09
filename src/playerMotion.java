@@ -27,7 +27,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
     Map menuMap = new Map(100, 74, 4, 0.1);
     // Adjust player starting position to be within the map bounds
-    Player player = new Player(525, 393, 2, 2, 0.3,
+    Player player = new Player(505, 240, 2, 2, 0.3,
                                 new Color(0, 0, 0),
                 new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
     Player Ghost = new Player(WIDTH / 2 - 10, HEIGHT / 2 - 10, 2, 2, 0.3,
@@ -167,7 +167,12 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         if (key == KeyEvent.VK_I) mainMap.openGate = false;
         if (key == KeyEvent.VK_I && setMain == 0) setMain = 2;
         if (key == KeyEvent.VK_O && setMain == 0) setMain = 3;
-    }
+        if(hp <= 0 && key == KeyEvent.VK_U) {
+            setMain = 0;
+            SwapMenuTo("MainGame");
+            timer.start();
+            resetGame();
+        }}
 
         @Override
         public void keyTyped(KeyEvent e) {}
@@ -240,7 +245,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     void resetGame() {
         mainMap = new Map(-40, -40, 25, 0.1);
         menuMap = new Map(128, 128, 4, 0.1);
-        player = new Player(525, 393, 2, 2, 0.3,
+        player = new Player(505, 240, 2, 2, 0.3,
                 new Color(0, 0, 0),
                 new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
         Ghost = new Player(WIDTH / 2 - 10, HEIGHT / 2 - 10, 2, 2, 0.3,
@@ -330,9 +335,8 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 g.setColor(Color.BLACK);
                 g.fillRect(0, 0, 390, 1050);
                 g.fillRect(685, 0, 690, 1050);
-                g.fillRect(0, 580, 1050, 520);
-                g.fillRect(0, 0, 1050, 260);
-
+                g.fillRect(0, 380, 1050, 520);
+                g.fillRect(0, 0, 1050, 160);
                 // Now draw the bullets ON TOP of everything else
                 for (Player.Bullet bullet : player.bullets) {
                     bullet.draw(g);
