@@ -66,6 +66,17 @@ public class Player extends Rectangle {
         bullets.add(new Bullet(cx, cy, mx, my));
     }
 
+    /* shoot using keyboard direction (-1, 0, 1) */
+    void shoot(int dirX, int dirY) {
+        double cx = x + width / 2.0, cy = y + height / 2.0;
+        // Scale the direction to be more visible
+        double scaleFactor = 20.0;
+        double targetX = cx + (dirX * scaleFactor);
+        double targetY = cy + (dirY * scaleFactor);
+        bullets.add(new Bullet(cx, cy, targetX - cx, targetY - cy));
+        System.out.println("Shooting from (" + cx + "," + cy + ") toward direction (" + dirX + "," + dirY + ")");
+    }
+
     void update(int w, int h, int mapScale) {
         Iterator<Bullet> it = bullets.iterator();
         while (it.hasNext()) {
@@ -103,37 +114,54 @@ public class Player extends Rectangle {
 
     /* very small inner class – just added simple getters */
     static class Bullet {
-        double x, y, dx, dy, speed;
-        int size = 8; // Increased size for better visibility
-        Color color = Color.RED; // Make bullets more visible
+        double x, y;
+        private double vx, vy;
+        private static final int R = 20; // Much larger radius for better visibility
+        private static final double SPEED = 3.0; // Even slower so bullets stay on screen longer
+        private final Color color;
 
-        Bullet(double x, double y, double dirX, double dirY) {
-            this.x = x;
-            this.y = y;
+        Bullet(double sx, double sy, double dx, double dy) {
+            this.x = sx;
+            this.y = sy;
+            color = Color.YELLOW; // Use a more visible color that stands out against the game
 
-            // Set speed and direction directly using the passed direction vector
-            speed = 10.0;
-            dx = dirX * speed;
-            dy = dirY * speed;
+            // Calculate velocity vector with normalized direction
+            double len = Math.sqrt(dx*dx + dy*dy);
+            if (len < 0.001) { // Prevent division by zero
+                // Default direction if input direction is too small
+                vx = 0;
+                vy = -SPEED; // Default to up
+            } else {
+                // Scale the direction by SPEED
+                vx = (dx / len) * SPEED;
+                vy = (dy / len) * SPEED;
+            }
+            System.out.println("Created bullet at (" + x + "," + y + ") with velocity (" + vx + "," + vy + ")");
         }
 
         void update() {
-            x += dx;
-            y += dy;
+            x += vx;
+            y += vy;
         }
 
         void draw(Graphics g) {
+            // Save the current color to restore it later
+            Color originalColor = g.getColor();
+
+
+            // Main bullet (bright color)
             g.setColor(color);
-            // Draw larger bullets to improve visibility
-            g.fillOval((int)x - size/2, (int)y - size/2, size, size);
+            g.fillOval((int)(x - R+ 10), (int)(y - R +10), R, R);
+
+            // Restore the original color
+            g.setColor(originalColor);
         }
 
-        // Add this method to check if bullet is off screen
-        boolean offScreen(int screenWidth, int screenHeight) {
-            return x < 0 || x > screenWidth || y < 0 || y > screenHeight;
+        boolean offScreen(int w, int h) {
+            // More forgiving off-screen check to ensure bullets don't disappear too quickly
+            return x < -R*4 || x > w+R*4 || y < -R*4 || y > h+R*4;
         }
 
-        /* getters for collision */
         double getX() { return x; }
         double getY() { return y; }
     }

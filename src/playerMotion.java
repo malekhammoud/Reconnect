@@ -22,15 +22,17 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     static int hp = 3, setMain = 0;
 
     JLayeredPane layeredPane; // Added JLayeredPane
+
     Map mainMap = new Map(-350, -650, 25, 0.1);
+
     Map menuMap = new Map(100, 74, 4, 0.1);
+    // Adjust player starting position to be within the map bounds
     Player player = new Player(525, 393, 2, 2, 0.3,
-            new Color(0, 0, 0),
-            new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
+                                new Color(0, 0, 0),
+                new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
     Player Ghost = new Player(WIDTH / 2 - 10, HEIGHT / 2 - 10, 2, 2, 0.3,
             new Color(253, 212, 6),
-            new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
-
+                new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
     /* track facing / shooting direction (-1/0/1) – default UP  */
     int dirX = 0, dirY = -1;
 
@@ -248,8 +250,6 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         timeSec=0;
         timeMin=0;
         hp = 3;
-
-
     }
 
     private class DrawingPanel extends JPanel {
@@ -320,26 +320,32 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
 
             if (panel == 1 && setMain == 1){
+                // First draw the map
                 mainMap.draw(g, 1);
-                player.draw(g);
-                
-                // Add the bullets drawing here
-                for (Player.Bullet bullet : player.bullets) {
-                    bullet.draw(g);
-                }
-                
+
+                // Draw the player
+                player.drawSingle(g); // Just draw the player without bullets
+
+                // Draw the black borders around the game area
                 g.setColor(Color.BLACK);
                 g.fillRect(0, 0, 390, 1050);
                 g.fillRect(685, 0, 690, 1050);
                 g.fillRect(0, 580, 1050, 520);
                 g.fillRect(0, 0, 1050, 260);
+
+                // Now draw the bullets ON TOP of everything else
+                for (Player.Bullet bullet : player.bullets) {
+                    bullet.draw(g);
+                }
+
+                // Draw UI elements
                 g.setColor(Color.WHITE);
                 g.drawString("Materials Count: " + player.getInventory(), 10, 15);
                 //Displays time
                 String timeSecString = String.format("%.2f", timeSec);
                 g.drawString("Time :" + timeMin + ":" + timeSecString, 10, 35);
 
-                //Display coloured rectangles dependent on amount of hp
+                // Draw HP indicator
                 if(hp == 3) {g.setColor(Color.GREEN);}
                 if(hp == 2) {g.setColor(Color.YELLOW);}
                 if(hp == 1) {g.setColor(Color.RED);}
@@ -378,10 +384,10 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
             }
 
             if (panel == 4 && setMain == 1){
-                g.drawString("press b to go back to menu", 525, 500);
-                g.drawString("press m to resume game", 525, 450);
+                g.drawString("press b to go back to menu", 300, 100);
+                g.drawString("press m to resume game", 300, 150);
                 g.setFont(font);
-                g.drawString("!! PAUSED !!", 525, 400);
+                g.drawString("!! PAUSED !!", 300, 200);
             }
         }
     }
