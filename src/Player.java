@@ -15,6 +15,8 @@ public class Player extends Rectangle {
     List<Bullet> bullets = new ArrayList<>();
     Color c;
     Rectangle centerBoundary, centerBoundarySm;
+    // sprite manager
+    SpriteManager spriteManager;
 
     public Player(double x, double y, int w, int h, double v, Color c) {
         super((int) x, (int) y, w, h);
@@ -27,6 +29,8 @@ public class Player extends Rectangle {
         this.c = c;
         this.centerBoundary = new Rectangle();
         this.centerBoundarySm = new Rectangle();
+        // init sprite manager
+        this.spriteManager = new SpriteManager();
     }
 
     public Player(double x, double y, int w, int h, double v,
@@ -63,7 +67,18 @@ public class Player extends Rectangle {
     /* shoot toward an arbitrary screen point */
     void shoot(double mx, double my) {
         double cx = x + width / 2.0, cy = y + height / 2.0;
-        bullets.add(new Bullet(cx, cy, mx - cx, my - cy, Color.ORANGE));
+        bullets.add(new Bullet(cx, cy, mx, my));
+    }
+
+    /* shoot using keyboard direction (-1, 0, 1) */
+    void shoot(int dirX, int dirY) {
+        double cx = x + width / 2.0, cy = y + height / 2.0;
+        // Scale the direction to be more visible
+        double scaleFactor = 20.0;
+        double targetX = cx + (dirX * scaleFactor);
+        double targetY = cy + (dirY * scaleFactor);
+        bullets.add(new Bullet(cx, cy, targetX - cx, targetY - cy));
+        System.out.println("Shooting from (" + cx + "," + cy + ") toward direction (" + dirX + "," + dirY + ")");
     }
 
     void update(int w, int h, int mapScale) {
@@ -77,18 +92,31 @@ public class Player extends Rectangle {
         // may be removable but will help if we ever resize the main map or minimap on the fly
         this.width = size * mapScale;
         this.height = size * mapScale;
+        // update sprite animation
+        spriteManager.updateAnimation();
     }
 
     void drawSingle(Graphics g) {
-        g.setColor(c);
-        g.fillRect((int) x, (int) y, width, height);
+        // use sprite if we have one, otherwise fallback to rectangle
+        if (spriteManager != null) {
+            spriteManager.drawSprite(g, (int) x, (int) y, width, height);
+        } else {
+            g.setColor(c);
+            g.fillRect((int) x, (int) y, width, height);
+        }
     }
 
     void draw(Graphics g) {
-        for (Bullet b : bullets) b.draw((Graphics2D) g);
+        for (Bullet b : bullets) b.draw(g);
         for (Player sh : shadows) sh.drawSingle(g);
-        g.setColor(c);
-        g.fillRect((int) x, (int) y, width, height);
+
+        // use sprite for main player
+        if (spriteManager != null) {
+            spriteManager.drawSprite(g, (int) x, (int) y, width, height);
+        } else {
+            g.setColor(c);
+            g.fillRect((int) x, (int) y, width, height);
+        }
     }
 
     Rectangle getTop()    { return new Rectangle((int) x + width/5,         (int) y,              width - width/5*2, height/2); }
@@ -103,26 +131,54 @@ public class Player extends Rectangle {
 
     /* very small inner class – just added simple getters */
     static class Bullet {
-        private double x, y;
-        private final double vx, vy;
-        private static final int    R = 6;
-        private static final double SPEED = 8;
+        double x, y;
+        private double vx, vy;
+        private static final int R = 40; // Much larger radius for better visibility
+        private static final double SPEED = 3.0; // Even slower so bullets stay on screen longer
         private final Color color;
 
-        Bullet(double sx, double sy, double dx, double dy, Color c) {
-            double len = Math.hypot(dx, dy);
-            vx = (dx / len) * SPEED;
-            vy = (dy / len) * SPEED;
-            x  = sx;
-            y  = sy;
-            color = c;
+        Bullet(double sx, double sy, double dx, double dy) {
+            this.x = sx;
+            this.y = sy;
+            color = Color.YELLOW; // Use a more visible color that stands out against the game
+
+            // Calculate velocity vector with normalized direction
+            double len = Math.sqrt(dx*dx + dy*dy);
+            if (len < 0.001) { // Prevent division by zero
+                // Default direction if input direction is too small
+                vx = 0;
+                vy = -SPEED; // Default to up
+            } else {
+                // Scale the direction by SPEED
+                vx = (dx / len) * SPEED;
+                vy = (dy / len) * SPEED;
+            }
+            System.out.println("Created bullet at (" + x + "," + y + ") with velocity (" + vx + "," + vy + ")");
         }
 
-        void update()                 { x += vx; y += vy; }
-        boolean offScreen(int w,int h){ return x < -R || x > w+R || y < -R || y > h+R; }
-        void draw(Graphics2D g)       { g.setColor(color); g.fill(new Ellipse2D.Double(x-R, y-R, R*2, R*2)); }
+        void update() {
+            x += vx;
+            y += vy;
+        }
 
-        /* getters for collision */
+        void draw(Graphics g) {
+            // Save the current color to restore it later
+            Color originalColor = g.getColor();
+
+
+            // Main bullet (bright color)
+            g.setColor(color);
+            g.fillOval((int)(x - R+ 10), (int)(y - R +10), R, R);
+
+            // Restore the original color
+            g.setColor(originalColor);
+        }
+
+        boolean offScreen(int w, int h) {
+            // More forgiving off-screen check to ensure bullets don't disappear too quickly
+            return x < -R*4 || x > w+R*4 || y < -R*4 || y > h+R*4;
+        }
+
         double getX() { return x; }
         double getY() { return y; }
     }
