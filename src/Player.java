@@ -60,9 +60,18 @@ public class Player extends Rectangle {
         return true;
     }
 
-    void addInventory()       { inventory++; }
-    void removeInventory()    { inventory--; }
-    int  getInventory()       { return inventory; }
+    void addInventory(){
+        inventory++;
+    }
+    void addInventory(int amount ){
+        inventory += amount;
+    }
+    void removeInventory() {
+        inventory--;
+    }
+    int getInventory() {
+        return inventory;
+    }
 
     /* shoot toward an arbitrary screen point */
     void shoot(double mx, double my) {

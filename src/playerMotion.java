@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.io.*;
 import java.util.Scanner;
 
-public class playerMotion extends JFrame implements KeyListener, MouseMotionListener, ActionListener{             // ← added MouseMotionListener
+public class playerMotion extends JFrame implements KeyListener, MouseMotionListener, ActionListener {
     public int WIDTH = 500;
     public int HEIGHT = 500;
     static final int bounds = 70;
@@ -26,14 +26,12 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
     Map mainMap = new Map(-350, -650, 25, 0.1);
 
-    Map menuMap = new Map(100, 74, 4, 0.1);
-    // Adjust player starting position to be within the map bounds
     Player player = new Player(505, 240, 2, 2, 0.3,
-                                new Color(0, 0, 0),
-                new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
+            new Color(0, 0, 0),
+            new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
     Player Ghost = new Player(WIDTH / 2 - 10, HEIGHT / 2 - 10, 2, 2, 0.3,
             new Color(253, 212, 6),
-                new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
+            new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
     /* track facing / shooting direction (-1/0/1) – default UP  */
     int dirX = 0, dirY = -1;
 
@@ -41,76 +39,73 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     int mouseX = WIDTH / 2, mouseY = HEIGHT / 2;
 
     public static void main(String[] args) {
-        new playerMotion(); }
+        new playerMotion();
+    }
 
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
-        if (currentMenu.equals("MainGame")){
-        if (key == KeyEvent.VK_UP) {
-            mainMap.movedown();
-            menuMap.movedown();
-            dirX = 0;
-            dirY = -1;
-            // update sprite direction
-            player.spriteManager.setDirection(dirX, dirY);
-        }
-        if (key == KeyEvent.VK_LEFT) {
-            mainMap.moveright();
-            menuMap.moveright();
-            dirX = -1;
-            dirY = 0;
-            // update sprite direction
-            player.spriteManager.setDirection(dirX, dirY);
-        }
-        if (key == KeyEvent.VK_DOWN) {
-            mainMap.moveup();
-            menuMap.moveup();
-            dirX = 0;
-            dirY = 1;
-            // update sprite direction
-            player.spriteManager.setDirection(dirX, dirY);
-        }
-        if (key == KeyEvent.VK_RIGHT) {
-            mainMap.moveleft();
-            menuMap.moveleft();
-            dirX = 1;
-            dirY = 0;
-            // update sprite direction
-            player.spriteManager.setDirection(dirX, dirY);
-        }
-        /* SPACE: shoot along last movement vector */
-        if (key == KeyEvent.VK_SPACE) {
-            // Make sure we have valid direction vectors
-            if (dirX == 0 && dirY == 0) {
-                // Default to shooting up if no direction
+        if (currentMenu.equals("MainGame")) {
+            if (key == KeyEvent.VK_UP) {
+                mainMap.movedown();
                 dirX = 0;
                 dirY = -1;
+                // update sprite direction
+                player.spriteManager.setDirection(dirX, dirY);
             }
-            player.shoot(dirX, dirY);
-            // Debug output
-            System.out.println("Shot bullet in direction: " + dirX + ", " + dirY);
-        }
-        if (key == KeyEvent.VK_P) {
-            mainMap.payGate = true;
-            menuMap.payGate = true;
-        }
-        if (key == KeyEvent.VK_O) {
-            mainMap.openGate = true;
-            menuMap.openGate = true;
-        }
-        if (key == KeyEvent.VK_N) {
-            SwapMenuTo("Map");
-        }
-        if (key == KeyEvent.VK_H) {
-            SwapMenuTo("Pause");
-            timer.stop();
-        }
-        if (key == KeyEvent.VK_M) {
-            SwapMenuTo("MainGame");
-        }
-        if (key == KeyEvent.VK_B) {
-            SwapMenuTo("Inventory");
-        }
+            if (key == KeyEvent.VK_LEFT) {
+                mainMap.moveright();
+                dirX = -1;
+                dirY = 0;
+                // update sprite direction
+                player.spriteManager.setDirection(dirX, dirY);
+            }
+            if (key == KeyEvent.VK_DOWN) {
+                mainMap.moveup();
+                dirX = 0;
+                dirY = 1;
+                // update sprite direction
+                player.spriteManager.setDirection(dirX, dirY);
+            }
+            if (key == KeyEvent.VK_RIGHT) {
+                mainMap.moveleft();
+                dirX = 1;
+                dirY = 0;
+                // update sprite direction
+                player.spriteManager.setDirection(dirX, dirY);
+            }
+            /* SPACE: shoot along last movement vector */
+            if (key == KeyEvent.VK_SPACE) {
+                // Make sure we have valid direction vectors
+                if (dirX == 0 && dirY == 0) {
+                    // Default to shooting up if no direction
+                    dirX = 0;
+                    dirY = -1;
+                }
+                player.shoot(dirX, dirY);
+                // Debug output
+                System.out.println("Shot bullet in direction: " + dirX + ", " + dirY);
+            }
+            if (key == KeyEvent.VK_P) {
+                mainMap.payGate = true;
+            }
+            if (key == KeyEvent.VK_O) {
+                mainMap.openGate = true;
+            }
+            if (key == KeyEvent.VK_N) {
+                SwapMenuTo("Map");
+                timer.stop();
+            }
+            if (key == KeyEvent.VK_H) {
+                SwapMenuTo("Pause");
+                timer.stop();
+            }
+            if (key == KeyEvent.VK_M) {
+                SwapMenuTo("MainGame");
+                timer.start();
+            }
+            if (key == KeyEvent.VK_B) {
+                SwapMenuTo("Inventory");
+            }
             if (key == KeyEvent.VK_Z) {
                 mainMap.Menusize += 2;
             }
@@ -118,7 +113,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 mainMap.Menusize -= 2;
             }
         }
-        if (currentMenu.equals("Inventory")){
+        if (currentMenu.equals("Inventory")) {
             if (key == KeyEvent.VK_N) {
                 SwapMenuTo("Map");
             }
@@ -129,7 +124,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 SwapMenuTo("Inventory");
             }
         }
-        if (currentMenu.equals("Map")){
+        if (currentMenu.equals("Map")) {
             if (key == KeyEvent.VK_N) {
                 SwapMenuTo("Map");
             }
@@ -147,7 +142,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
             }
 
         }
-        if (currentMenu.equals("Pause")){
+        if (currentMenu.equals("Pause")) {
 
             if (key == KeyEvent.VK_M) {
                 SwapMenuTo("MainGame");
@@ -170,19 +165,15 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_UP) {
             mainMap.vy[1] = 0;
-            menuMap.vy[1] = 0;
         }
         if (key == KeyEvent.VK_LEFT) {
             mainMap.vx[1] = 0;
-            menuMap.vx[1] = 0;
         }
         if (key == KeyEvent.VK_DOWN) {
             mainMap.vy[0] = 0;
-            menuMap.vy[0] = 0;
         }
         if (key == KeyEvent.VK_RIGHT) {
             mainMap.vx[0] = 0;
-            menuMap.vx[0] = 0;
         }
         if (key == KeyEvent.VK_U) {
             if (setMain == 2) { // If in highscores menu
@@ -196,15 +187,16 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         if (key == KeyEvent.VK_I) mainMap.openGate = false;
         if (key == KeyEvent.VK_I && setMain == 0) setMain = 2;
         if (key == KeyEvent.VK_O && setMain == 0) setMain = 3;
-        if(hp <= 0 && key == KeyEvent.VK_U) {
+        if (hp <= 0 && key == KeyEvent.VK_U) {
             setMain = 0;
             SwapMenuTo("MainGame");
             timer.start();
             resetGame();
-        }}
+        }
+    }
 
-        @Override
-        public void keyTyped(KeyEvent e) {}
+    @Override
+    public void keyTyped(KeyEvent e) {}
 
     playerMotion() {
         setTitle("Reconnect");
@@ -239,8 +231,6 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         DrawingPanel Drawing_b = new DrawingPanel(3);
         DrawingPanel Drawing_d = new DrawingPanel(4);
 
-        menuMap.mapScrub();
-
         panel.add(Drawing_p);
         inventoryMenu.add(Drawing_q);
         mapMenu.add(Drawing_b);
@@ -264,7 +254,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         this.timer.start();
         setVisible(true); // Call setVisible at the end
 
-       playAnimation();
+        playAnimation();
     }
 
     public void pause(int ms) {
@@ -273,7 +263,6 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
     void resetGame() {
         mainMap = new Map(-40, -40, 25, 0.1);
-        menuMap = new Map(128, 128, 4, 0.1);
         player = new Player(505, 240, 2, 2, 0.3,
                 new Color(0, 0, 0),
                 new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
@@ -389,59 +378,59 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
             //Title screen
 
-           if(setMain == 0) {
-               g.setColor(Color.BLACK);
-               g.setFont(new Font("Arial", Font.BOLD, 32));
-               g.drawString("Reconnect :)", 300, 50);
-               g.drawString("Press U(a) to start game", 300, 100);
-               g.drawString("Press I(b) to see highscores", 300,  150);
-           }
+            if(setMain == 0) {
+                g.setColor(Color.BLACK);
+                g.setFont(new Font("Arial", Font.BOLD, 32));
+                g.drawString("Reconnect :)", 300, 50);
+                g.drawString("Press U(a) to start game", 300, 100);
+                g.drawString("Press I(b) to see highscores", 300,  150);
+            }
 
-           //Display highscores
-           if(setMain == 2) {
-               g.setColor(Color.BLACK);
-               g.setFont(new Font("Arial", Font.BOLD, 32));
-               g.drawString("High Scores", 300, 50);
-               g.drawString("Press U to return to main menu", 300, 150);  // Changed instruction text
-               File scoreFile = new File("src/scores.txt");
-               FileReader in;
-               BufferedReader readFile;
+            //Display highscores
+            if(setMain == 2) {
+                g.setColor(Color.BLACK);
+                g.setFont(new Font("Arial", Font.BOLD, 32));
+                g.drawString("High Scores", 300, 50);
+                g.drawString("Press U to return to main menu", 300, 150);  // Changed instruction text
+                File scoreFile = new File("src/scores.txt");
+                FileReader in;
+                BufferedReader readFile;
 
-               String line;
-               String topScorer = "";
-               float highScore = 0;
+                String line;
+                String topScorer = "";
+                float highScore = 0;
 
-               try {
-                   in = new FileReader(scoreFile);
-                   readFile = new BufferedReader(in);
+                try {
+                    in = new FileReader(scoreFile);
+                    readFile = new BufferedReader(in);
 
-                   while ((line = readFile.readLine()) != null) {
-                       String[] parts = line.split(" ");
-                       String name = parts[0];
-                       float score = Float.parseFloat(parts[1]);
+                    while ((line = readFile.readLine()) != null) {
+                        String[] parts = line.split(" ");
+                        String name = parts[0];
+                        float score = Float.parseFloat(parts[1]);
 
-                       if (score > highScore) {
-                           highScore = score;
-                           topScorer = name;
-                       }
-                   }
+                        if (score > highScore) {
+                            highScore = score;
+                            topScorer = name;
+                        }
+                    }
 
-                   readFile.close();
-                   in.close();
+                    readFile.close();
+                    in.close();
 
-                   if (!topScorer.isEmpty()) {
-                       g.drawString("High score: " + topScorer + " with " + highScore, 300, 80);
-                   } else {
-                       System.out.println("No scores found.");
-                   }
+                    if (!topScorer.isEmpty()) {
+                        g.drawString("High score: " + topScorer + " with " + highScore, 300, 80);
+                    } else {
+                        System.out.println("No scores found.");
+                    }
 
-               } catch (FileNotFoundException e) {
-                   System.out.println("File not found.");
-                   System.err.println("FileNotFoundException: " + e.getMessage());
-               } catch (IOException e) {
-                   System.out.println("Problem reading file.");
-               }
-           }
+                } catch (FileNotFoundException e) {
+                    System.out.println("File not found.");
+                    System.err.println("FileNotFoundException: " + e.getMessage());
+                } catch (IOException e) {
+                    System.out.println("Problem reading file.");
+                }
+            }
 
 
             if (panel == 1 && setMain == 1){
@@ -484,7 +473,6 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                     g.setColor(Color.RED);
 
                 }
-                g.fillRect(310, 425, 40, 40);
                 healthUI.updateCurrentSprite();
                 healthUI.drawSprite(g,280,350,160,160);
 
@@ -506,9 +494,13 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
             }
 
             //Display minimap
-            if (panel == 3 && setMain == 1){
-                menuMap.draw(g,1);
-                Ghost.draw(g);
+            if (panel == 3 && setMain == 1) {
+                // Draw the main map at a smaller scale instead of menuMap
+                mainMap.draw(g, 2);  // Using the new scaled draw method
+
+                g.setColor(Color.BLACK);
+                g.setFont(font);
+                g.drawString("Map View", 400, 40);
             }
 
             if (panel == 4 && setMain == 1){
@@ -533,7 +525,6 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 GateUi.setVisible(false);
             }
             mainMap.move(player);
-            menuMap.move(Ghost);
             if (currentMenu.equals("MainGame")){
                 player.update(WIDTH, HEIGHT, mainMap.size);     // ← advance bullets and update player size to map
                 /* quick bullet-vs-enemy check – remove bullet + enemy cell */
@@ -544,9 +535,10 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 }
             }
 
-
-
-            if (currentMenu.equals("Map"))Ghost.update(WIDTH, HEIGHT, menuMap.size);
+            if (currentMenu.equals("Map")) {
+                // Update Ghost using mainMap size instead of menuMap
+                Ghost.update(WIDTH, HEIGHT, mainMap.size);
+            }
             Toolkit.getDefaultToolkit().sync();
             GateUi.repaint();
             repaint();
@@ -614,4 +606,3 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         }
     }
 }
-

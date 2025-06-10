@@ -380,18 +380,7 @@ public class Map implements ActionListener {
                        this.v += 3;
                        System.out.println("speed up");
                    }else if (randint == 1){
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
+                       player.addInventory(10);
                        System.out.println("Inventory up");
                    } else if (randint == 2){
                        this.gothoughwalls = true;
@@ -699,8 +688,7 @@ public class Map implements ActionListener {
             }
         }
 
-        // Move enemies more frequently (every 5 frames instead of 50)
-        if (counter % 15 == 0) {
+        if (counter % 35 == 0) {
             for (int[] enemyPos : currentEnemyGridPositions) {
                 int enemyCol = enemyPos[0];
                 int enemyRow = enemyPos[1];
@@ -770,56 +758,84 @@ public class Map implements ActionListener {
         return enemiesToReturn;
     }
 
-
     ArrayList<Enemy> getEnemy() {
         ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+
+        // Find and create enemy objects
         for (int c = 0; c < this.enemyMap.length; c++) {
             for (int r = 0; r < this.enemyMap[c].length; r++) {
                 if (this.enemyMap[c][r] == 7) {
                     if (enemies.size() < 4) {
-                        enemies.add(new Enemy((int) (r * size + this.x), (int) (c * size + this.y), size, size, 0, 0, 0));
+                        enemies.add(new Enemy((int) (r * size + this.x), (int) (c * size + this.y),
+                                size, size, 0, 0, 7));
+                        enemies.get(enemies.size()-1).gridX = r;
+                        enemies.get(enemies.size()-1).gridY = c;
                     }
-                    for (Enemy n : enemies) {
-                        //Enemy movement relative to player
-                        if(counter % 100 == 0) {
-                            if (n.x > 550) n.eX = -1;
-                            if (n.x < 550) n.eX = 1;
-                            if (n.y > 392) n.eY = -1;
-                            if (n.y < 392) n.eY = 1;
-                        }
-
-                        //Tracks tile enemy replaces
-                        /*
-                        if(this.enemyMap[c + n.eY][r + n.eX] != 0 && counter % 100 == 0) {
-                            n.prev = this.enemyMap[c + n.eY][r + n.eX];
-                        } else if(this.enemyMap[c + n.eY][r + n.eX] == 0 && counter % 100 == 0){
-                            n.prev = this.enemyMap[c][r];
-                        }
-                         */
-
-                        //Removing and re-adding enemy
-                        if (this.enemyMap[c + n.eY][r + n.eX] != 0 && counter % 100 == 0) {
-                            this.enemyMap[c + n.eY][r + n.eX] = 7;
-                            this.enemyMap[c][r] = 1;
-                        }
-                    }}}}
-        for (Enemy n: enemies) {
-            //Lose hp if enemy is where player is
-            if (Player.intersect(enemies) && n.x >= 505 && n.x <= 585 && n.y >= 372 && n.y <= 440 && invinc == 0) {
-                playerMotion.hp--;
-                damage = true;
-            }
-            //Invincibility frames
-            if(damage) {
-                invinc++;
-                if(invinc == 150) {
-                    invinc = 0;
-                    damage = false;
                 }
             }
         }
-        return enemies;
 
+        // Update enemy movement (more frequently - every 30 frames)
+        if (counter % 30 == 0) {
+            for (Enemy enemy : enemies) {
+                // Calculate grid positions
+                int gridY = enemy.gridY;
+                int gridX = enemy.gridX;
+
+                // Determine movement direction toward player (targeting higher on player)
+                if (enemy.x > 550) enemy.eX = -1;
+                else if (enemy.x < 550) enemy.eX = 1;
+                else enemy.eX = 0;
+
+                // Change this value from 392 to 250 to target higher on the player
+                if (enemy.y > 250) enemy.eY = -1;
+                else if (enemy.y < 250) enemy.eY = 1;
+                else enemy.eY = 0;
+
+                // Calculate new position
+                int newGridY = gridY + enemy.eY;
+                int newGridX = gridX + enemy.eX;
+
+                // Check bounds and wall collision
+                if (newGridY >= 0 && newGridY < enemyMap.length &&
+                        newGridX >= 0 && newGridX < enemyMap[0].length &&
+                        enemyMap[newGridY][newGridX] != 0) {
+
+                    // Move enemy in grid
+                    enemyMap[gridY][gridX] = 1; // Clear old position
+                    enemyMap[newGridY][newGridX] = 7; // Set new position
+
+                    // Update enemy's grid tracking variables
+                    enemy.gridX = newGridX;
+                    enemy.gridY = newGridY;
+
+                    // Update rendered position
+                    enemy.x = (int)(newGridX * size + this.x);
+                    enemy.y = (int)(newGridY * size + this.y);
+                }
+            }
+        }
+
+        // Check for player collision with enemies
+        Rectangle playerHitbox = new Rectangle(520, 250, size, size);
+        for (Enemy enemy : enemies) {
+            Rectangle enemyRect = new Rectangle(enemy.x, enemy.y, enemy.width, enemy.height);
+            if (enemyRect.intersects(playerHitbox) && invinc == 0) {
+                playerMotion.hp--;
+                damage = true;
+            }
+        }
+
+        // Handle invincibility frames
+        if (damage) {
+            invinc++;
+            if (invinc >= 150) {
+                invinc = 0;
+                damage = false;
+            }
+        }
+
+        return enemies;
     }
 
     void draw(Graphics g, int panel){
@@ -861,9 +877,91 @@ public class Map implements ActionListener {
                 g.setColor(Color.orange);
                 g.fillRect(bfsEnemy.x, bfsEnemy.y, 20, 20);
             }
-
         } else if (panel == 2) {
-            // Panel 2 drawing logic
+            // Panel 2 - Static Minimap (fixed overview of entire map)
+            int minimapX = 300;
+            int minimapY = 55;
+            int minimapWidth = 430;
+            int minimapHeight = 430;
+
+            // Calculate scale based on map size to fit the entire map in minimap
+            int mapCols = map[0].length;
+            int mapRows = map.length;
+            float scaleX = (float)minimapWidth / (mapCols * size);
+            float scaleY = (float)minimapHeight / (mapRows * size);
+            float scale = Math.min(scaleX, scaleY);  // Use the smaller scale to ensure entire map fits
+
+            // Draw all map elements directly from the map array
+            int tileSize = Math.max(1, Math.round(size * scale));
+
+            // Draw walls, paths, circuits directly from the map array
+            for (int row = 0; row < map.length; row++) {
+                for (int col = 0; col < map[row].length; col++) {
+                    int miniX = minimapX + Math.round(col * size * scale);
+                    int miniY = minimapY + Math.round(row * size * scale);
+
+                    switch (map[row][col]) {
+                        case 0: // Wall
+                            g.setColor(Color.BLACK);
+                            g.fillRect(miniX, miniY, tileSize, tileSize);
+                            break;
+                        case 1: // Path
+                            g.setColor(Color.BLACK);
+                            g.fillRect(miniX, miniY, tileSize, tileSize);
+                            break;
+                        case 3: // Circuit
+                            g.setColor(circuitColor.darker());
+                            g.fillRect(miniX, miniY, tileSize, tileSize);
+                            break;
+                    }
+                }
+            }
+
+            // Draw gates directly from their coordinates
+            for (Gate gate : gates) {
+                int miniX = minimapX + Math.round(gate.x * size * scale);
+                int miniY = minimapY + Math.round(gate.y * size * scale);
+                g.setColor(gate.working ? Color.GREEN.darker() : Color.RED.darker());
+                g.fillRect(miniX, miniY, tileSize, tileSize);
+            }
+
+            // Draw enemies from the enemyMap array
+            for (int row = 0; row < enemyMap.length; row++) {
+                for (int col = 0; col < enemyMap[row].length; col++) {
+                    if (enemyMap[row][col] == 7) { // Basic enemy
+                        int miniX = minimapX + Math.round(col * size * scale);
+                        int miniY = minimapY + Math.round(row * size * scale);
+                        g.setColor(Color.RED);
+                        g.fillRect(miniX, miniY, tileSize, tileSize);
+                    } else if (enemyMap[row][col] == 8) { // BFS enemy
+                        int miniX = minimapX + Math.round(col * size * scale);
+                        int miniY = minimapY + Math.round(row * size * scale);
+                        g.setColor(Color.ORANGE);
+                        g.fillRect(miniX, miniY, tileSize, tileSize);
+                    }
+                }
+            }
+
+            // Calculate and draw player position (player is at center of screen)
+            int playerGridCol = (int)((520 - x) / size);
+            int playerGridRow = (int)((250 - y) / size);
+
+            int playerMiniX = minimapX + Math.round(playerGridCol * size * scale);
+            int playerMiniY = minimapY + Math.round(playerGridRow * size * scale);
+
+            g.setColor(Color.CYAN);
+            g.fillOval(playerMiniX, playerMiniY, tileSize, tileSize);
+
+            // Optional: draw viewable area rectangle
+            int viewWidthCells = 100 / size;
+            int viewHeightCells = 100 / size;
+            int viewX = minimapX + Math.round(playerGridCol * size * scale) - Math.round(viewWidthCells * size * scale / 2) + viewWidthCells/2;
+            int viewY = minimapY + Math.round(playerGridRow * size * scale) - Math.round(viewHeightCells * size * scale / 2) + viewHeightCells/2;
+            int viewWidth = Math.round(viewWidthCells * size * scale);
+            int viewHeight = Math.round(viewHeightCells * size * scale);
+
+            g.setColor(Color.RED);
+            g.drawRect(viewX, viewY, viewWidth, viewHeight);
         } else if (panel == 3) {
             // Panel 3 drawing logic, e.g., game over screen
             g.setColor(Color.red);
@@ -876,9 +974,9 @@ public class Map implements ActionListener {
         int gridX = (int) ((bx - this.x) / size);
         int gridY = (int) ((by - this.y) / size);
 
-        if (gridY >= 0 && gridY < map.length && gridX >= 0 && gridX < map[0].length) {
-            if (map[gridY][gridX] == 7 || map[gridY][gridX] == 8 || map[gridY][gridX] == 9) {
-                map[gridY][gridX] = 1; // Turn into empty path
+        if (gridY >= 0 && gridY < enemyMap.length && gridX >= 0 && gridX < enemyMap[0].length) {
+            if (enemyMap[gridY][gridX] == 7 || enemyMap[gridY][gridX] == 8) {
+                enemyMap[gridY][gridX] = 1; // Turn into empty path
                 return true;
             }
         }
