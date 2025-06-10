@@ -30,7 +30,7 @@ public class Player extends Rectangle {
         this.centerBoundary = new Rectangle();
         this.centerBoundarySm = new Rectangle();
         // init sprite manager
-        this.spriteManager = new SpriteManager();
+        this.spriteManager = new SpriteManager(512, 320, "src/resources/sprites/spritesheetBob.png");
     }
 
     public Player(double x, double y, int w, int h, double v,
