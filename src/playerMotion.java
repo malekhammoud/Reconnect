@@ -45,10 +45,38 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if (currentMenu.equals("MainGame")){
-        if (key == KeyEvent.VK_UP) {mainMap.movedown();menuMap.movedown(); dirX = 0;  dirY = -1; }
-        if (key == KeyEvent.VK_LEFT) {mainMap.moveright();menuMap.moveright();dirX = -1; dirY = 0;}
-        if (key == KeyEvent.VK_DOWN) {mainMap.moveup();menuMap.moveup();dirX = 0;  dirY = 1; }
-        if (key == KeyEvent.VK_RIGHT) {mainMap.moveleft();menuMap.moveleft();dirX = 1;  dirY = 0;}
+        if (key == KeyEvent.VK_UP) {
+            mainMap.movedown();
+            menuMap.movedown();
+            dirX = 0;
+            dirY = -1;
+            // update sprite direction
+            player.spriteManager.setDirection(dirX, dirY);
+        }
+        if (key == KeyEvent.VK_LEFT) {
+            mainMap.moveright();
+            menuMap.moveright();
+            dirX = -1;
+            dirY = 0;
+            // update sprite direction
+            player.spriteManager.setDirection(dirX, dirY);
+        }
+        if (key == KeyEvent.VK_DOWN) {
+            mainMap.moveup();
+            menuMap.moveup();
+            dirX = 0;
+            dirY = 1;
+            // update sprite direction
+            player.spriteManager.setDirection(dirX, dirY);
+        }
+        if (key == KeyEvent.VK_RIGHT) {
+            mainMap.moveleft();
+            menuMap.moveleft();
+            dirX = 1;
+            dirY = 0;
+            // update sprite direction
+            player.spriteManager.setDirection(dirX, dirY);
+        }
         /* SPACE: shoot along last movement vector */
         if (key == KeyEvent.VK_SPACE) {
             // Make sure we have valid direction vectors

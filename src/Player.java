@@ -15,6 +15,8 @@ public class Player extends Rectangle {
     List<Bullet> bullets = new ArrayList<>();
     Color c;
     Rectangle centerBoundary, centerBoundarySm;
+    // sprite manager
+    SpriteManager spriteManager;
 
     public Player(double x, double y, int w, int h, double v, Color c) {
         super((int) x, (int) y, w, h);
@@ -27,6 +29,8 @@ public class Player extends Rectangle {
         this.c = c;
         this.centerBoundary = new Rectangle();
         this.centerBoundarySm = new Rectangle();
+        // init sprite manager
+        this.spriteManager = new SpriteManager();
     }
 
     public Player(double x, double y, int w, int h, double v,
@@ -88,18 +92,31 @@ public class Player extends Rectangle {
         // may be removable but will help if we ever resize the main map or minimap on the fly
         this.width = size * mapScale;
         this.height = size * mapScale;
+        // update sprite animation
+        spriteManager.updateAnimation();
     }
 
     void drawSingle(Graphics g) {
-        g.setColor(c);
-        g.fillRect((int) x, (int) y, width, height);
+        // use sprite if we have one, otherwise fallback to rectangle
+        if (spriteManager != null) {
+            spriteManager.drawSprite(g, (int) x, (int) y, width, height);
+        } else {
+            g.setColor(c);
+            g.fillRect((int) x, (int) y, width, height);
+        }
     }
 
     void draw(Graphics g) {
         for (Bullet b : bullets) b.draw(g);
         for (Player sh : shadows) sh.drawSingle(g);
-        g.setColor(c);
-        g.fillRect((int) x, (int) y, width, height);
+
+        // use sprite for main player
+        if (spriteManager != null) {
+            spriteManager.drawSprite(g, (int) x, (int) y, width, height);
+        } else {
+            g.setColor(c);
+            g.fillRect((int) x, (int) y, width, height);
+        }
     }
 
     Rectangle getTop()    { return new Rectangle((int) x + width/5,         (int) y,              width - width/5*2, height/2); }
