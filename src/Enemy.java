@@ -1,20 +1,17 @@
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Enemy extends Rectangle{
-    int eX;
-    int eY;
-    int prev;
-    int size;
+public class Enemy extends Rectangle {
+    int eX, eY;  // Direction
+    int gridX, gridY;  // Grid position
+    int type;
 
-
-    public Enemy(int x, int y, int width, int length, int height, int eX, int eY) {
+    // Your existing constructor plus:
+    Enemy(int x, int y, int width, int height, int eX, int eY, int type) {
+        super(x, y, width, height);
         this.eX = eX;
         this.eY = eY;
-        this.prev = prev;
-        this.x = x;
-        this.y = y;
-        this.size = length;
+        this.type = type;
     }
 }
 

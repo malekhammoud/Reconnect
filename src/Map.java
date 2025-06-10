@@ -380,18 +380,7 @@ public class Map implements ActionListener {
                        this.v += 3;
                        System.out.println("speed up");
                    }else if (randint == 1){
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
-                       player.addInventory();
+                       player.addInventory(10);
                        System.out.println("Inventory up");
                    } else if (randint == 2){
                        this.gothoughwalls = true;
@@ -699,8 +688,7 @@ public class Map implements ActionListener {
             }
         }
 
-        // Move enemies more frequently (every 5 frames instead of 50)
-        if (counter % 15 == 0) {
+        if (counter % 35 == 0) {
             for (int[] enemyPos : currentEnemyGridPositions) {
                 int enemyCol = enemyPos[0];
                 int enemyRow = enemyPos[1];
@@ -770,56 +758,84 @@ public class Map implements ActionListener {
         return enemiesToReturn;
     }
 
-
     ArrayList<Enemy> getEnemy() {
         ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+
+        // Find and create enemy objects
         for (int c = 0; c < this.enemyMap.length; c++) {
             for (int r = 0; r < this.enemyMap[c].length; r++) {
                 if (this.enemyMap[c][r] == 7) {
                     if (enemies.size() < 4) {
-                        enemies.add(new Enemy((int) (r * size + this.x), (int) (c * size + this.y), size, size, 0, 0, 0));
+                        enemies.add(new Enemy((int) (r * size + this.x), (int) (c * size + this.y),
+                                size, size, 0, 0, 7));
+                        enemies.get(enemies.size()-1).gridX = r;
+                        enemies.get(enemies.size()-1).gridY = c;
                     }
-                    for (Enemy n : enemies) {
-                        //Enemy movement relative to player
-                        if(counter % 100 == 0) {
-                            if (n.x > 550) n.eX = -1;
-                            if (n.x < 550) n.eX = 1;
-                            if (n.y > 392) n.eY = -1;
-                            if (n.y < 392) n.eY = 1;
-                        }
-
-                        //Tracks tile enemy replaces
-                        /*
-                        if(this.enemyMap[c + n.eY][r + n.eX] != 0 && counter % 100 == 0) {
-                            n.prev = this.enemyMap[c + n.eY][r + n.eX];
-                        } else if(this.enemyMap[c + n.eY][r + n.eX] == 0 && counter % 100 == 0){
-                            n.prev = this.enemyMap[c][r];
-                        }
-                         */
-
-                        //Removing and re-adding enemy
-                        if (this.enemyMap[c + n.eY][r + n.eX] != 0 && counter % 100 == 0) {
-                            this.enemyMap[c + n.eY][r + n.eX] = 7;
-                            this.enemyMap[c][r] = 1;
-                        }
-                    }}}}
-        for (Enemy n: enemies) {
-            //Lose hp if enemy is where player is
-            if (Player.intersect(enemies) && n.x >= 505 && n.x <= 585 && n.y >= 372 && n.y <= 440 && invinc == 0) {
-                playerMotion.hp--;
-                damage = true;
-            }
-            //Invincibility frames
-            if(damage) {
-                invinc++;
-                if(invinc == 150) {
-                    invinc = 0;
-                    damage = false;
                 }
             }
         }
-        return enemies;
 
+        // Update enemy movement (more frequently - every 30 frames)
+        if (counter % 30 == 0) {
+            for (Enemy enemy : enemies) {
+                // Calculate grid positions
+                int gridY = enemy.gridY;
+                int gridX = enemy.gridX;
+
+                // Determine movement direction toward player (targeting higher on player)
+                if (enemy.x > 550) enemy.eX = -1;
+                else if (enemy.x < 550) enemy.eX = 1;
+                else enemy.eX = 0;
+
+                // Change this value from 392 to 250 to target higher on the player
+                if (enemy.y > 250) enemy.eY = -1;
+                else if (enemy.y < 250) enemy.eY = 1;
+                else enemy.eY = 0;
+
+                // Calculate new position
+                int newGridY = gridY + enemy.eY;
+                int newGridX = gridX + enemy.eX;
+
+                // Check bounds and wall collision
+                if (newGridY >= 0 && newGridY < enemyMap.length &&
+                        newGridX >= 0 && newGridX < enemyMap[0].length &&
+                        enemyMap[newGridY][newGridX] != 0) {
+
+                    // Move enemy in grid
+                    enemyMap[gridY][gridX] = 1; // Clear old position
+                    enemyMap[newGridY][newGridX] = 7; // Set new position
+
+                    // Update enemy's grid tracking variables
+                    enemy.gridX = newGridX;
+                    enemy.gridY = newGridY;
+
+                    // Update rendered position
+                    enemy.x = (int)(newGridX * size + this.x);
+                    enemy.y = (int)(newGridY * size + this.y);
+                }
+            }
+        }
+
+        // Check for player collision with enemies
+        Rectangle playerHitbox = new Rectangle(520, 250, size, size);
+        for (Enemy enemy : enemies) {
+            Rectangle enemyRect = new Rectangle(enemy.x, enemy.y, enemy.width, enemy.height);
+            if (enemyRect.intersects(playerHitbox) && invinc == 0) {
+                playerMotion.hp--;
+                damage = true;
+            }
+        }
+
+        // Handle invincibility frames
+        if (damage) {
+            invinc++;
+            if (invinc >= 150) {
+                invinc = 0;
+                damage = false;
+            }
+        }
+
+        return enemies;
     }
 
     void draw(Graphics g, int panel){
@@ -876,9 +892,9 @@ public class Map implements ActionListener {
         int gridX = (int) ((bx - this.x) / size);
         int gridY = (int) ((by - this.y) / size);
 
-        if (gridY >= 0 && gridY < map.length && gridX >= 0 && gridX < map[0].length) {
-            if (map[gridY][gridX] == 7 || map[gridY][gridX] == 8 || map[gridY][gridX] == 9) {
-                map[gridY][gridX] = 1; // Turn into empty path
+        if (gridY >= 0 && gridY < enemyMap.length && gridX >= 0 && gridX < enemyMap[0].length) {
+            if (enemyMap[gridY][gridX] == 7 || enemyMap[gridY][gridX] == 8) {
+                enemyMap[gridY][gridX] = 1; // Turn into empty path
                 return true;
             }
         }
