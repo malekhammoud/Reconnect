@@ -12,6 +12,8 @@ import java.util.ArrayList;
 // java.util.Queue and java.util.LinkedList are not used if using custom Queue
 // import java.util.LinkedList;
 // import java.util.Queue;
+import javax.imageio.ImageIO;
+import java.io.File;
 
 public class Map implements ActionListener {
     double v;
@@ -117,8 +119,8 @@ public class Map implements ActionListener {
         this.map = new int[][]{
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 0, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
@@ -144,12 +146,12 @@ public class Map implements ActionListener {
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -182,7 +184,7 @@ public class Map implements ActionListener {
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0},
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0},
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0},
@@ -193,7 +195,7 @@ public class Map implements ActionListener {
         this.enemyMap = new int[][]{
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
+                {0, 1, 1, 8, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
@@ -614,10 +616,15 @@ public class Map implements ActionListener {
         BFSNode destNode = null;
 
         int[] dCol = {0, 0, 1, -1}; // Change in col for neighbors (Right, Left)
-        int[] dRow = {1, -1, 0, 0}; // Change in row for neighbors (Down, Up) - standard cartesian order often (0,1) (0,-1) (1,0) (-1,0)
+        int[] dRow = {1, -1, 0, 0}; // Change in row for neighbors (Down, Up)
 
         while (!queue.isEmpty()) {
             BFSNode current = queue.dequeue();
+
+            // Add null check to prevent NullPointerException
+            if (current == null) {
+                break;
+            }
 
             if (current.x == endX && current.y == endY) {
                 destNode = current;
@@ -633,8 +640,6 @@ public class Map implements ActionListener {
 
                     int cellType = map[newRow][newCol];
                     boolean isTargetCell = (newCol == endX && newRow == endY);
-                    // Traversable if not a wall (0).
-                    // Avoid other enemies (7, 8, 9) UNLESS it's the player's target cell.
                     boolean canTraverse = (cellType != 0); // Must not be a wall
 
                     if (canTraverse) {
@@ -657,7 +662,7 @@ public class Map implements ActionListener {
         }
 
         BFSNode pathNode = destNode;
-        if (pathNode.parent == null) { // Should only happen if start == end, handled at the beginning
+        if (pathNode.parent == null) {
             return startCoords;
         }
 
@@ -671,97 +676,20 @@ public class Map implements ActionListener {
         return null; // Should ideally not be reached if a path was found
     }
 
-    ArrayList<Enemy> getSmartEnemy() {
-        ArrayList<Enemy> smartEnemiesList = new ArrayList<Enemy>();
-        ArrayList<int[]> enemyGridPositions = new ArrayList<>();
-
-        for (int row = 0; row < this.map.length; row++) {
-            for (int col = 0; col < this.map[row].length; col++) {
-                if (this.map[row][col] == 9) { // Smart enemy type
-                    enemyGridPositions.add(new int[]{col, row});
-                }
-            }
-        }
-
-        if ((this.counter % 50) == 0) {
-            for (int[] pos : enemyGridPositions) {
-                int currentCol = pos[0];
-                int currentRow = pos[1];
-
-                if (this.map[currentRow][currentCol] != 9) {
-                    continue;
-                }
-
-                double enemyScreenX = currentCol * size + this.x;
-                double enemyScreenY = currentRow * size + this.y;
-
-                int n_eX = 0;
-                int n_eY = 0;
-
-                if (enemyScreenX > 240) n_eX = -1;
-                else if (enemyScreenX < 240) n_eX = 1;
-
-                if (enemyScreenY > 240) n_eY = -1;
-                else if (enemyScreenY < 240) n_eY = 1;
-
-                if (currentCol + 1 < this.map[currentRow].length && this.map[currentRow][currentCol + 1] == 0) n_eX = -1;
-                if (currentCol - 1 >= 0 && this.map[currentRow][currentCol - 1] == 0) n_eX = 1;
-                if (currentRow + 1 < this.map.length && this.map[currentRow + 1][currentCol] == 0) n_eY = -1;
-                if (currentRow - 1 >= 0 && this.map[currentRow - 1][currentCol] == 0) n_eY = 1;
-
-                int targetCol = currentCol + n_eX;
-                int targetRow = currentRow + n_eY;
-
-                if (n_eX != 0 || n_eY != 0) {
-                    if (targetRow >= 0 && targetRow < this.map.length && targetCol >= 0 && targetCol < this.map[targetRow].length) {
-                        int contentOfTargetCell = this.map[targetRow][targetCol];
-                        if (contentOfTargetCell != 0 && contentOfTargetCell != 7 && contentOfTargetCell != 8 && contentOfTargetCell != 9) {
-                            this.map[targetRow][targetCol] = 9;
-                            this.map[currentRow][currentCol] = 1; // Old spot becomes empty path
-                        }
-                    }
-                }
-            }
-        }
-
-        smartEnemiesList.clear(); // Re-populate after movement
-        for (int row = 0; row < this.map.length; row++) {
-            for (int col = 0; col < this.map[row].length; col++) {
-                if (this.map[row][col] == 9) {
-                    smartEnemiesList.add(new Enemy((int) (col * size + this.x), (int) (row * size + this.y), size, size, 0, 0, 9));
-                }
-            }
-        }
-
-        Rectangle playerHitbox = new Rectangle(240 - size / 2, 240 - size / 2, size, size);
-        for (Enemy n : smartEnemiesList) {
-            Rectangle enemyRect = new Rectangle(n.x, n.y, n.width, n.height);
-            if (enemyRect.intersects(playerHitbox) && invinc == 0) {
-                if (playerMotion.hp > 0) playerMotion.hp--; // Check if playerMotion is not null
-                Map.damage = true;
-            }
-        }
-
-        if (Map.damage) {
-            invinc++;
-            if (invinc >= 150) { // Use >= for safety
-                invinc = 0;
-                Map.damage = false;
-            }
-        }
-        return smartEnemiesList;
-    }
-
     ArrayList<Enemy> getBFSEnemy() {
-        int playerScreenX = 240;
-        int playerScreenY = 240;
+        // Fixed player position in screen coordinates
+        int playerScreenX = 520;
+        int playerScreenY = 250;
 
+        // Calculate player position in grid coordinates accounting for map movement
         int playerGridCol = (int) ((playerScreenX - this.x) / this.size);
         int playerGridRow = (int) ((playerScreenY - this.y) / this.size);
 
+        // Make sure coordinates are within bounds
         playerGridCol = Math.max(0, Math.min(enemyMap[0].length - 1, playerGridCol));
         playerGridRow = Math.max(0, Math.min(enemyMap.length - 1, playerGridRow));
 
+        // Find all BFS enemies in the map
         ArrayList<int[]> currentEnemyGridPositions = new ArrayList<>();
         for (int r = 0; r < enemyMap.length; r++) {
             for (int c = 0; c < enemyMap[r].length; c++) {
@@ -771,55 +699,67 @@ public class Map implements ActionListener {
             }
         }
 
-        if ((this.counter % 50) == 0) {
+        // Move enemies more frequently (every 5 frames instead of 50)
+        if (counter % 15 == 0) {
             for (int[] enemyPos : currentEnemyGridPositions) {
                 int enemyCol = enemyPos[0];
                 int enemyRow = enemyPos[1];
 
-                if (enemyMap[enemyRow][enemyCol] != 8) { // Check if enemy is still there
+                // Skip if enemy is no longer at this position
+                if (enemyMap[enemyRow][enemyCol] != 8) {
                     continue;
                 }
 
-                int[] nextStep = findNextStepBFS(new int[]{enemyCol, enemyRow}, new int[]{playerGridCol, playerGridRow});
+                // Find next step toward player
+                int[] nextStep = findNextStepBFS(
+                        new int[]{enemyCol, enemyRow},
+                        new int[]{playerGridCol, playerGridRow}
+                );
 
                 if (nextStep != null) {
                     int nextCol = nextStep[0];
                     int nextRow = nextStep[1];
 
+                    // Check if the enemy can move to this position
                     if ((nextCol != enemyCol || nextRow != enemyRow) &&
-                            nextRow >= 0 && nextRow < enemyMap.length && nextCol >= 0 && nextCol < enemyMap[0].length) {
+                            nextRow >= 0 && nextRow < enemyMap.length &&
+                            nextCol >= 0 && nextCol < enemyMap[0].length) {
 
                         int targetCellContent = enemyMap[nextRow][nextCol];
-                        if (targetCellContent != 0 && targetCellContent != 7 && targetCellContent != 8 && targetCellContent != 9 || (nextCol == playerGridCol && nextRow == playerGridRow)) {
-                           enemyMap[enemyRow][enemyCol] = 99;
-                           enemyMap[nextRow][nextCol] = 8;
+
+                        // Move if target cell is empty path (1) or player's position
+                        if (targetCellContent == 1 ||
+                                (nextCol == playerGridCol && nextRow == playerGridRow)) {
+                            // Move enemy to new position
+                            enemyMap[enemyRow][enemyCol] = 1;  // Set old position to empty path
+                            enemyMap[nextRow][nextCol] = 8;    // Move enemy to new position
                         }
                     }
                 }
             }
         }
 
+        // Create enemy objects for rendering
         ArrayList<Enemy> enemiesToReturn = new ArrayList<>();
-        for (int r = 0; r < map.length; r++) {
-            for (int c = 0; c < map[r].length; c++) {
-                if (map[r][c] == 8) {
+        for (int r = 0; r < enemyMap.length; r++) {
+            for (int c = 0; c < enemyMap[r].length; c++) {
+                if (enemyMap[r][c] == 8) {
                     enemiesToReturn.add(new Enemy((int) (c * size + this.x), (int) (r * size + this.y), size, size, 0, 0, 8));
                 }
             }
         }
 
+        // Handle player collision with enemies
         Rectangle playerHitbox = new Rectangle(playerScreenX - size / 2, playerScreenY - size / 2, size, size);
         for (Enemy n : enemiesToReturn) {
             Rectangle enemyRect = new Rectangle(n.x, n.y, n.width, n.height);
             if (enemyRect.intersects(playerHitbox) && invinc == 0) {
-                 if (playerMotion.hp > 0) playerMotion.hp--;
+                if (playerMotion.hp > 0) playerMotion.hp--;
                 Map.damage = true;
             }
         }
 
-        if (Map.damage && invinc == 0) {
-
-        }
+        // Handle invincibility frames after damage
         if (Map.damage) {
             invinc++;
             if (invinc >= 150) {
@@ -833,63 +773,54 @@ public class Map implements ActionListener {
 
     ArrayList<Enemy> getEnemy() {
         ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-        int ex = 0, ey = 0;
-        for (int c = 0; c < this.map.length; c++) {
-            for (int r = 0; r < this.map[c].length; r++) {
-                if (this.map[c][r] == 7) {
-                    if (enemies.size() < 0) {
-                        enemies.add(new Enemy((int) (r * size + this.x), (int) (c * size + this.y), size, size, 0, 0, 1));
+        for (int c = 0; c < this.enemyMap.length; c++) {
+            for (int r = 0; r < this.enemyMap[c].length; r++) {
+                if (this.enemyMap[c][r] == 7) {
+                    if (enemies.size() < 4) {
+                        enemies.add(new Enemy((int) (r * size + this.x), (int) (c * size + this.y), size, size, 0, 0, 0));
                     }
-
                     for (Enemy n : enemies) {
-                        counter++;
+                        //Enemy movement relative to player
+                        if(counter % 100 == 0) {
+                            if (n.x > 550) n.eX = -1;
+                            if (n.x < 550) n.eX = 1;
+                            if (n.y > 392) n.eY = -1;
+                            if (n.y < 392) n.eY = 1;
+                        }
 
                         //Tracks tile enemy replaces
-                        n.prev = this.enemyMap[c + n.eY][r + n.eX];
-
-                        //Enemy movement relative to player
-                        if (n.x > 240) n.eX = -1;
-                        if (n.x < 240) n.eX = 1;
-                        if (n.y > 240) n.eY = -1;
-                        else if (n.y < 240) n.eY = 1;
-
-                        //Wall collision
-                        if (this.enemyMap[c][r + 1] == 0) {n.eX = -1;}
-                        if (this.enemyMap[c][r - 1] == 0) {n.eX = 1;}
-                        if (this.enemyMap[c + 1][r] == 0) {n.eY = -1;}
-                        if (this.enemyMap[c - 1][r] == 0) {n.eY = 1;}
+                        /*
+                        if(this.enemyMap[c + n.eY][r + n.eX] != 0 && counter % 100 == 0) {
+                            n.prev = this.enemyMap[c + n.eY][r + n.eX];
+                        } else if(this.enemyMap[c + n.eY][r + n.eX] == 0 && counter % 100 == 0){
+                            n.prev = this.enemyMap[c][r];
+                        }
+                         */
 
                         //Removing and re-adding enemy
-                        if ((counter % 50) == 0) {
-                            if (this.enemyMap[c + n.eY][r + n.eX] != 0) {
-                                this.enemyMap[c + n.eY][r + n.eX] = 7;
-                                this.enemyMap[c][r] = n.prev;
-                            }
+                        if (this.enemyMap[c + n.eY][r + n.eX] != 0 && counter % 100 == 0) {
+                            this.enemyMap[c + n.eY][r + n.eX] = 7;
+                            this.enemyMap[c][r] = 1;
                         }
-                    }
-                    enemies.add(new Enemy((int) (r * size + this.x), (int) (c * size + this.y), size, size, 0, 0, 7));
+                    }}}}
+        for (Enemy n: enemies) {
+            //Lose hp if enemy is where player is
+            if (Player.intersect(enemies) && n.x >= 505 && n.x <= 585 && n.y >= 372 && n.y <= 440 && invinc == 0) {
+                playerMotion.hp--;
+                damage = true;
+            }
+            //Invincibility frames
+            if(damage) {
+                invinc++;
+                if(invinc == 150) {
+                    invinc = 0;
+                    damage = false;
                 }
             }
         }
-
-        Rectangle playerHitbox = new Rectangle(240 - size / 2, 240 - size / 2, size, size);
-        for (Enemy n : enemies) {
-            Rectangle enemyRect = new Rectangle(n.x, n.y, n.width, n.height);
-            if (enemyRect.intersects(playerHitbox) && invinc == 0) {
-                if (playerMotion.hp > 0) playerMotion.hp--;
-                Map.damage = true;
-            }
-        }
-        if (Map.damage) {
-            invinc++;
-            if (invinc >= 150) {
-                invinc = 0;
-                Map.damage = false;
-            }
-        }
         return enemies;
-    }
 
+    }
 
     void draw(Graphics g, int panel){
         counter++;
@@ -913,20 +844,6 @@ public class Map implements ActionListener {
                 g.setColor(Color.black);
                 g.fillRect(open.x, open.y, size, size);
             }
-            for(Rectangle n: getEnemy()) {
-                g.setColor(Color.red);
-                g.fillRect(n.x, n.y, n.width, n.height);
-            }
-
-            for (Enemy bfsEnemy : getBFSEnemy()) { // BFS enemies (type 8)
-                g.setColor(Color.orange);
-                g.fillRect(bfsEnemy.x, bfsEnemy.y, bfsEnemy.width, bfsEnemy.height);
-            }
-
-            for (Enemy smartEnemy : getSmartEnemy()) { // Smart enemies (type 9)
-                g.setColor(Color.MAGENTA);
-                g.fillRect(smartEnemy.x, smartEnemy.y, smartEnemy.width, smartEnemy.height);
-            }
 
             for (Rectangle powerup : getSquares(2)) {
                 g.setColor(Color.GREEN);
@@ -936,9 +853,13 @@ public class Map implements ActionListener {
                 g.setColor(Color.YELLOW);
                 g.fillRect(material.x, material.y, material.width, material.height);
             }
-            for (Rectangle powerup : getSquares(enemyMap, 8)) {
-                g.setColor(Color.pink);
-                g.fillRect(powerup.x, powerup.y, powerup.width, powerup.height);
+            for(Rectangle n: getEnemy()) {
+                g.setColor(Color.red);
+                g.fillRect(n.x, n.y, 20, 20);
+            }
+            for (Enemy bfsEnemy : getBFSEnemy()) { // BFS enemies (type 8)
+                g.setColor(Color.orange);
+                g.fillRect(bfsEnemy.x, bfsEnemy.y, 20, 20);
             }
 
         } else if (panel == 2) {
@@ -1035,5 +956,18 @@ public class Map implements ActionListener {
                 powerupcount = 0;
             }
         }
+    }
+    static BufferedImage loadImage(String filename) {
+        BufferedImage img = null;
+        try{
+            img = ImageIO.read(new File(filename));
+        } catch (IOException e) {
+            System.out.println(e.toString());
+            JOptionPane.showMessageDialog(null, "An image failed to load: " + filename, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        //DEBUG
+        //if (img == null) System.out.println("null");
+        //else System.out.printf("w=%d, h=%d%n",img.getWidth(), img.getHeight());
+        return img;
     }
 }

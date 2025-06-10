@@ -17,3 +17,4 @@ public class Enemy extends Rectangle{
         this.size = length;
     }
 }
+
