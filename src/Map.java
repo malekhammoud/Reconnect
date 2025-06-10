@@ -119,8 +119,8 @@ public class Map implements ActionListener {
         this.map = new int[][]{
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
-                {0, 1, 1, 8, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
-                {0, 1, 1, 8, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 0, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
@@ -146,12 +146,12 @@ public class Map implements ActionListener {
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -184,7 +184,7 @@ public class Map implements ActionListener {
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0},
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0},
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0},
@@ -195,7 +195,7 @@ public class Map implements ActionListener {
         this.enemyMap = new int[][]{
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
+                {0, 1, 1, 8, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
@@ -616,10 +616,15 @@ public class Map implements ActionListener {
         BFSNode destNode = null;
 
         int[] dCol = {0, 0, 1, -1}; // Change in col for neighbors (Right, Left)
-        int[] dRow = {1, -1, 0, 0}; // Change in row for neighbors (Down, Up) - standard cartesian order often (0,1) (0,-1) (1,0) (-1,0)
+        int[] dRow = {1, -1, 0, 0}; // Change in row for neighbors (Down, Up)
 
         while (!queue.isEmpty()) {
             BFSNode current = queue.dequeue();
+
+            // Add null check to prevent NullPointerException
+            if (current == null) {
+                break;
+            }
 
             if (current.x == endX && current.y == endY) {
                 destNode = current;
@@ -635,8 +640,6 @@ public class Map implements ActionListener {
 
                     int cellType = map[newRow][newCol];
                     boolean isTargetCell = (newCol == endX && newRow == endY);
-                    // Traversable if not a wall (0).
-                    // Avoid other enemies (7, 8, 9) UNLESS it's the player's target cell.
                     boolean canTraverse = (cellType != 0); // Must not be a wall
 
                     if (canTraverse) {
@@ -659,7 +662,7 @@ public class Map implements ActionListener {
         }
 
         BFSNode pathNode = destNode;
-        if (pathNode.parent == null) { // Should only happen if start == end, handled at the beginning
+        if (pathNode.parent == null) {
             return startCoords;
         }
 
@@ -674,15 +677,19 @@ public class Map implements ActionListener {
     }
 
     ArrayList<Enemy> getBFSEnemy() {
-        int playerScreenX = 240;
-        int playerScreenY = 240;
+        // Fixed player position in screen coordinates
+        int playerScreenX = 520;
+        int playerScreenY = 250;
 
+        // Calculate player position in grid coordinates accounting for map movement
         int playerGridCol = (int) ((playerScreenX - this.x) / this.size);
         int playerGridRow = (int) ((playerScreenY - this.y) / this.size);
 
+        // Make sure coordinates are within bounds
         playerGridCol = Math.max(0, Math.min(enemyMap[0].length - 1, playerGridCol));
         playerGridRow = Math.max(0, Math.min(enemyMap.length - 1, playerGridRow));
 
+        // Find all BFS enemies in the map
         ArrayList<int[]> currentEnemyGridPositions = new ArrayList<>();
         for (int r = 0; r < enemyMap.length; r++) {
             for (int c = 0; c < enemyMap[r].length; c++) {
@@ -692,55 +699,67 @@ public class Map implements ActionListener {
             }
         }
 
-        if ((this.counter % 50) == 0) {
+        // Move enemies more frequently (every 5 frames instead of 50)
+        if (counter % 15 == 0) {
             for (int[] enemyPos : currentEnemyGridPositions) {
                 int enemyCol = enemyPos[0];
                 int enemyRow = enemyPos[1];
 
-                if (enemyMap[enemyRow][enemyCol] != 8) { // Check if enemy is still there
+                // Skip if enemy is no longer at this position
+                if (enemyMap[enemyRow][enemyCol] != 8) {
                     continue;
                 }
 
-                int[] nextStep = findNextStepBFS(new int[]{enemyCol, enemyRow}, new int[]{playerGridCol, playerGridRow});
+                // Find next step toward player
+                int[] nextStep = findNextStepBFS(
+                        new int[]{enemyCol, enemyRow},
+                        new int[]{playerGridCol, playerGridRow}
+                );
 
                 if (nextStep != null) {
                     int nextCol = nextStep[0];
                     int nextRow = nextStep[1];
 
+                    // Check if the enemy can move to this position
                     if ((nextCol != enemyCol || nextRow != enemyRow) &&
-                            nextRow >= 0 && nextRow < enemyMap.length && nextCol >= 0 && nextCol < enemyMap[0].length) {
+                            nextRow >= 0 && nextRow < enemyMap.length &&
+                            nextCol >= 0 && nextCol < enemyMap[0].length) {
 
                         int targetCellContent = enemyMap[nextRow][nextCol];
-                        if (targetCellContent != 0 && targetCellContent != 7 && targetCellContent != 8 && targetCellContent != 9 || (nextCol == playerGridCol && nextRow == playerGridRow)) {
-                           enemyMap[enemyRow][enemyCol] = 99;
-                           enemyMap[nextRow][nextCol] = 8;
+
+                        // Move if target cell is empty path (1) or player's position
+                        if (targetCellContent == 1 ||
+                                (nextCol == playerGridCol && nextRow == playerGridRow)) {
+                            // Move enemy to new position
+                            enemyMap[enemyRow][enemyCol] = 1;  // Set old position to empty path
+                            enemyMap[nextRow][nextCol] = 8;    // Move enemy to new position
                         }
                     }
                 }
             }
         }
 
+        // Create enemy objects for rendering
         ArrayList<Enemy> enemiesToReturn = new ArrayList<>();
-        for (int r = 0; r < map.length; r++) {
-            for (int c = 0; c < map[r].length; c++) {
-                if (map[r][c] == 8) {
+        for (int r = 0; r < enemyMap.length; r++) {
+            for (int c = 0; c < enemyMap[r].length; c++) {
+                if (enemyMap[r][c] == 8) {
                     enemiesToReturn.add(new Enemy((int) (c * size + this.x), (int) (r * size + this.y), size, size, 0, 0, 8));
                 }
             }
         }
 
+        // Handle player collision with enemies
         Rectangle playerHitbox = new Rectangle(playerScreenX - size / 2, playerScreenY - size / 2, size, size);
         for (Enemy n : enemiesToReturn) {
             Rectangle enemyRect = new Rectangle(n.x, n.y, n.width, n.height);
             if (enemyRect.intersects(playerHitbox) && invinc == 0) {
-                 if (playerMotion.hp > 0) playerMotion.hp--;
+                if (playerMotion.hp > 0) playerMotion.hp--;
                 Map.damage = true;
             }
         }
 
-        if (Map.damage && invinc == 0) {
-
-        }
+        // Handle invincibility frames after damage
         if (Map.damage) {
             invinc++;
             if (invinc >= 150) {
@@ -754,15 +773,13 @@ public class Map implements ActionListener {
 
     ArrayList<Enemy> getEnemy() {
         ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-        for (int c = 0; c < this.map.length; c++) {
-            for (int r = 0; r < this.map[c].length; r++) {
-                if (this.map[c][r] == 7) {
+        for (int c = 0; c < this.enemyMap.length; c++) {
+            for (int r = 0; r < this.enemyMap[c].length; r++) {
+                if (this.enemyMap[c][r] == 7) {
                     if (enemies.size() < 4) {
                         enemies.add(new Enemy((int) (r * size + this.x), (int) (c * size + this.y), size, size, 0, 0, 0));
                     }
                     for (Enemy n : enemies) {
-                        counter++;
-
                         //Enemy movement relative to player
                         if(counter % 100 == 0) {
                             if (n.x > 550) n.eX = -1;
@@ -772,16 +789,18 @@ public class Map implements ActionListener {
                         }
 
                         //Tracks tile enemy replaces
-                        if(this.map[c + n.eY][r + n.eX] != 0 && counter % 100 == 0) {
-                            n.prev = this.map[c + n.eY][r + n.eX];
-                        } else if(this.map[c + n.eY][r + n.eX] == 0 && counter % 100 == 0){
-                            n.prev = this.map[c][r];
+                        /*
+                        if(this.enemyMap[c + n.eY][r + n.eX] != 0 && counter % 100 == 0) {
+                            n.prev = this.enemyMap[c + n.eY][r + n.eX];
+                        } else if(this.enemyMap[c + n.eY][r + n.eX] == 0 && counter % 100 == 0){
+                            n.prev = this.enemyMap[c][r];
                         }
+                         */
 
                         //Removing and re-adding enemy
-                        if (this.map[c + n.eY][r + n.eX] != 0 && counter % 100 == 0) {
-                            this.map[c + n.eY][r + n.eX] = 7;
-                            this.map[c][r] = n.prev;
+                        if (this.enemyMap[c + n.eY][r + n.eX] != 0 && counter % 100 == 0) {
+                            this.enemyMap[c + n.eY][r + n.eX] = 7;
+                            this.enemyMap[c][r] = 1;
                         }
                     }}}}
         for (Enemy n: enemies) {

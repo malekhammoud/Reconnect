@@ -45,10 +45,38 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if (currentMenu.equals("MainGame")){
-        if (key == KeyEvent.VK_UP) {mainMap.movedown();menuMap.movedown(); dirX = 0;  dirY = -1; }
-        if (key == KeyEvent.VK_LEFT) {mainMap.moveright();menuMap.moveright();dirX = -1; dirY = 0;}
-        if (key == KeyEvent.VK_DOWN) {mainMap.moveup();menuMap.moveup();dirX = 0;  dirY = 1; }
-        if (key == KeyEvent.VK_RIGHT) {mainMap.moveleft();menuMap.moveleft();dirX = 1;  dirY = 0;}
+        if (key == KeyEvent.VK_UP) {
+            mainMap.movedown();
+            menuMap.movedown();
+            dirX = 0;
+            dirY = -1;
+            // update sprite direction
+            player.spriteManager.setDirection(dirX, dirY);
+        }
+        if (key == KeyEvent.VK_LEFT) {
+            mainMap.moveright();
+            menuMap.moveright();
+            dirX = -1;
+            dirY = 0;
+            // update sprite direction
+            player.spriteManager.setDirection(dirX, dirY);
+        }
+        if (key == KeyEvent.VK_DOWN) {
+            mainMap.moveup();
+            menuMap.moveup();
+            dirX = 0;
+            dirY = 1;
+            // update sprite direction
+            player.spriteManager.setDirection(dirX, dirY);
+        }
+        if (key == KeyEvent.VK_RIGHT) {
+            mainMap.moveleft();
+            menuMap.moveleft();
+            dirX = 1;
+            dirY = 0;
+            // update sprite direction
+            player.spriteManager.setDirection(dirX, dirY);
+        }
         /* SPACE: shoot along last movement vector */
         if (key == KeyEvent.VK_SPACE) {
             // Make sure we have valid direction vectors
@@ -257,6 +285,92 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         hp = 3;
     }
 
+    // Method to draw a cartoon motherboard pattern background that moves with the map
+    private void drawMotherboardBackground(Graphics g) {
+        // Get the current map offset to make background move with the map
+        int offsetX = (int)mainMap.x;
+        int offsetY = (int)mainMap.y;
+
+        // Base background color (dark green/blue typical of circuit boards)
+        g.setColor(new Color(0, 50, 30));
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        // Draw circuit traces (lighter green lines)
+        g.setColor(new Color(0, 200, 100));
+
+        // Horizontal traces - adjust position based on map offset
+        for (int y = 20; y < getHeight() + Math.abs(offsetY); y += 80) {
+            int drawY = (y + offsetY) % getHeight();
+            if (drawY < 0) drawY += getHeight();
+            g.fillRect(0, drawY, getWidth(), 3);
+        }
+
+        // Vertical traces - adjust position based on map offset
+        for (int x = 25; x < getWidth() + Math.abs(offsetX); x += 75) {
+            int drawX = (x + offsetX) % getWidth();
+            if (drawX < 0) drawX += getWidth();
+            g.fillRect(drawX, 0, 2, getHeight());
+        }
+
+        // Add some diagonal traces
+        g.setColor(new Color(0, 180, 80));
+        for (int i = 0; i < 15; i++) {
+            int x1 = ((i * 100) + offsetX) % getWidth();
+            if (x1 < 0) x1 += getWidth();
+            int y1 = (i * 50 + offsetY) % getHeight();
+            if (y1 < 0) y1 += getHeight();
+            int x2 = ((i * 100 + 200) + offsetX) % getWidth();
+            if (x2 < 0) x2 += getWidth();
+            int y2 = ((i * 50 + 200) + offsetY) % getHeight();
+            if (y2 < 0) y2 += getHeight();
+            g.drawLine(x1, y1, x2, y2);
+        }
+
+        // Add circuit "pads" (small circles) - adjust position based on map offset
+        g.setColor(new Color(220, 220, 0));
+        for (int x = 0; x < getWidth() + 100; x += 100) {
+            for (int y = 0; y < getHeight() + 100; y += 100) {
+                int drawX = (x + offsetX) % getWidth();
+                if (drawX < 0) drawX += getWidth();
+                int drawY = (y + offsetY) % getHeight();
+                if (drawY < 0) drawY += getHeight();
+                g.fillOval(drawX, drawY, 10, 10);
+            }
+        }
+
+        // Add some IC chips - adjust position based on map offset
+        g.setColor(new Color(50, 50, 50));
+        for (int i = 0; i < 8; i++) {
+            int x = ((150 + i * 180) + offsetX) % getWidth();
+            if (x < 0) x += getWidth();
+            int y = ((120 + (i % 3) * 160) + offsetY) % getHeight();
+            if (y < 0) y += getHeight();
+
+            // Only draw chips if they're in the visible area
+            if (x < getWidth() - 60 && y < getHeight() - 30) {
+                g.fillRect(x, y, 60, 30);
+
+                // Pins on chips
+                g.setColor(new Color(200, 200, 200));
+                for (int p = 0; p < 8; p++) {
+                    if (y - 3 >= 0) g.fillRect(x + 5 + p * 7, y - 3, 2, 3);
+                    if (y + 30 < getHeight()) g.fillRect(x + 5 + p * 7, y + 30, 2, 3);
+                }
+                g.setColor(new Color(50, 50, 50));
+            }
+        }
+
+        // Add connections between components
+        g.setColor(new Color(0, 150, 70));
+        for (int i = 0; i < 15; i++) {
+            int x1 = (int)(Math.random() * getWidth());
+            int y1 = (int)(Math.random() * getHeight());
+            int x2 = x1 + (int)(Math.random() * 200) - 100;
+            int y2 = y1 + (int)(Math.random() * 200) - 100;
+            g.drawLine(x1, y1, x2, y2);
+        }
+    }
+
     private class DrawingPanel extends JPanel {
         int panel;
         Font font = new Font("Serif", Font.BOLD, 24);
@@ -266,6 +380,11 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
             super.paintComponent(g);
             //Graphics2D g2 = (Graphics2D)g;
             //g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            // Draw motherboard background pattern when in game mode
+            if (panel == 1 && setMain == 1) {
+                drawMotherboardBackground(g);
+            }
 
             //Title screen
 
@@ -490,3 +609,4 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         }
     }
 }
+
