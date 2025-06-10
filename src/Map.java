@@ -877,9 +877,91 @@ public class Map implements ActionListener {
                 g.setColor(Color.orange);
                 g.fillRect(bfsEnemy.x, bfsEnemy.y, 20, 20);
             }
-
         } else if (panel == 2) {
-            // Panel 2 drawing logic
+            // Panel 2 - Static Minimap (fixed overview of entire map)
+            int minimapX = 300;
+            int minimapY = 55;
+            int minimapWidth = 430;
+            int minimapHeight = 430;
+
+            // Calculate scale based on map size to fit the entire map in minimap
+            int mapCols = map[0].length;
+            int mapRows = map.length;
+            float scaleX = (float)minimapWidth / (mapCols * size);
+            float scaleY = (float)minimapHeight / (mapRows * size);
+            float scale = Math.min(scaleX, scaleY);  // Use the smaller scale to ensure entire map fits
+
+            // Draw all map elements directly from the map array
+            int tileSize = Math.max(1, Math.round(size * scale));
+
+            // Draw walls, paths, circuits directly from the map array
+            for (int row = 0; row < map.length; row++) {
+                for (int col = 0; col < map[row].length; col++) {
+                    int miniX = minimapX + Math.round(col * size * scale);
+                    int miniY = minimapY + Math.round(row * size * scale);
+
+                    switch (map[row][col]) {
+                        case 0: // Wall
+                            g.setColor(Color.BLACK);
+                            g.fillRect(miniX, miniY, tileSize, tileSize);
+                            break;
+                        case 1: // Path
+                            g.setColor(Color.BLACK);
+                            g.fillRect(miniX, miniY, tileSize, tileSize);
+                            break;
+                        case 3: // Circuit
+                            g.setColor(circuitColor.darker());
+                            g.fillRect(miniX, miniY, tileSize, tileSize);
+                            break;
+                    }
+                }
+            }
+
+            // Draw gates directly from their coordinates
+            for (Gate gate : gates) {
+                int miniX = minimapX + Math.round(gate.x * size * scale);
+                int miniY = minimapY + Math.round(gate.y * size * scale);
+                g.setColor(gate.working ? Color.GREEN.darker() : Color.RED.darker());
+                g.fillRect(miniX, miniY, tileSize, tileSize);
+            }
+
+            // Draw enemies from the enemyMap array
+            for (int row = 0; row < enemyMap.length; row++) {
+                for (int col = 0; col < enemyMap[row].length; col++) {
+                    if (enemyMap[row][col] == 7) { // Basic enemy
+                        int miniX = minimapX + Math.round(col * size * scale);
+                        int miniY = minimapY + Math.round(row * size * scale);
+                        g.setColor(Color.RED);
+                        g.fillRect(miniX, miniY, tileSize, tileSize);
+                    } else if (enemyMap[row][col] == 8) { // BFS enemy
+                        int miniX = minimapX + Math.round(col * size * scale);
+                        int miniY = minimapY + Math.round(row * size * scale);
+                        g.setColor(Color.ORANGE);
+                        g.fillRect(miniX, miniY, tileSize, tileSize);
+                    }
+                }
+            }
+
+            // Calculate and draw player position (player is at center of screen)
+            int playerGridCol = (int)((520 - x) / size);
+            int playerGridRow = (int)((250 - y) / size);
+
+            int playerMiniX = minimapX + Math.round(playerGridCol * size * scale);
+            int playerMiniY = minimapY + Math.round(playerGridRow * size * scale);
+
+            g.setColor(Color.CYAN);
+            g.fillOval(playerMiniX, playerMiniY, tileSize, tileSize);
+
+            // Optional: draw viewable area rectangle
+            int viewWidthCells = 100 / size;
+            int viewHeightCells = 100 / size;
+            int viewX = minimapX + Math.round(playerGridCol * size * scale) - Math.round(viewWidthCells * size * scale / 2) + viewWidthCells/2;
+            int viewY = minimapY + Math.round(playerGridRow * size * scale) - Math.round(viewHeightCells * size * scale / 2) + viewHeightCells/2;
+            int viewWidth = Math.round(viewWidthCells * size * scale);
+            int viewHeight = Math.round(viewHeightCells * size * scale);
+
+            g.setColor(Color.RED);
+            g.drawRect(viewX, viewY, viewWidth, viewHeight);
         } else if (panel == 3) {
             // Panel 3 drawing logic, e.g., game over screen
             g.setColor(Color.red);
