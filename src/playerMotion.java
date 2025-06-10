@@ -484,7 +484,6 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                     g.setColor(Color.RED);
 
                 }
-                g.fillRect(310, 425, 40, 40);
                 healthUI.updateCurrentSprite();
                 healthUI.drawSprite(g,280,350,160,160);
 
