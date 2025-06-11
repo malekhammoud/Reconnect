@@ -137,6 +137,8 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
+        
+        // Movement key handling
         if (key == KeyEvent.VK_W) {
             mainMap.vy[1] = 0;
         }
@@ -149,6 +151,8 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         if (key == KeyEvent.VK_D) {
             mainMap.vx[0] = 0;
         }
+        
+        // Menu navigation
         if (key == KeyEvent.VK_U) {
             if (setMain == 2) { // If in highscores menu
                 setMain = 0; // Return to main menu
@@ -156,16 +160,29 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
             } else if (setMain == 0) { // Only start game if already on main menu
                 setMain = 1;
                 mainMap.payGate = false;
+                // Make sure timer is running when starting a new game
+                timer.start();
             }
         }
         if (key == KeyEvent.VK_I) mainMap.openGate = false;
         if (key == KeyEvent.VK_I && setMain == 0) setMain = 2;
         if (key == KeyEvent.VK_O && setMain == 0) setMain = 3;
+        
+        // Game over restart handling
         if (hp <= 0 && key == KeyEvent.VK_U) {
             setMain = 0;
             SwapMenuTo("MainGame");
-            timer.start();
             resetGame();
+            timer.start(); // Make sure to restart the timer
+        }
+        
+        // Victory screen restart handling
+        if (mainMap.allOpen && key == KeyEvent.VK_U) {
+            setMain = 0;
+            SwapMenuTo("MainGame");
+            resetGame();
+            highscore_saved = false;
+            timer.start(); // Make sure to restart the timer
         }
     }
 
@@ -193,7 +210,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         JPanel pauseMenu = new JPanel();
         JPanel title = new JPanel();
 
-        panel.setBackground(new Color(20, 20, 50));
+        panel.setBackground(Color.BLACK);
         GateUi = mainMap.getGateUi(); // Use a layout manager
 
 
@@ -244,9 +261,6 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         player = new Player(505, 240, 2, 2, 0.3,
                 new Color(0, 0, 0),
                 new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
-        Ghost = new Player(WIDTH / 2 - 10, HEIGHT / 2 - 10, 2, 2, 0.3,
-                new Color(253, 212, 6),
-                new Rectangle(WIDTH / 2 - bounds / 2, HEIGHT / 2 - bounds / 2, bounds, bounds));
         timer.restart();
         timeSec=0;
         timeMin=0;
@@ -295,25 +309,28 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         BackgroundPanel(int pan) {
             setOpaque(true);
             this.panel = pan;
-            setBackground(new Color(20, 20, 50)); // Set a dark background color
+            setBackground(Color.BLACK); // Set a dark background color
         }
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
 
             if (panel == 1 && setMain == 0) {
-            }else if(setMain == 1){
+                // Title screen - no special background needed
+            } else if(setMain == 1) {
                 if(hp <= 0) {
+                    // Make sure background is black for game over
                     setBackground(Color.BLACK);
-                }else {
+                } else if(mainMap.allOpen) {
+                    // Make sure background is green for win screen
+                    setBackground(Color.BLACK);
+                    g.setColor(Color.BLACK);
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                } else {
                     g.setColor(Color.WHITE);
                     g.setFont(new Font("Monospaced", Font.BOLD, 24));
                     g.drawString("Inventory: " + player.getInventory(), 50, 50);
                 }
-            }
-            if(mainMap.allOpen){
-                g.setColor(Color.GREEN);
-                g.fillRect(0, 0, getWidth(), getHeight());
             }
         }
     }
@@ -325,17 +342,13 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-            //Graphics2D g2 = (Graphics2D)g;
-            //g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             // Draw motherboard background pattern when in game mode
             if (panel == 1 && setMain == 1) {
                 drawMotherboardBackground(g);
-                setBackground(new Color(20, 20, 50));
             }
 
             //Title screen
-
             if(setMain == 0) {
                 BufferedImage title = loadImage("resources/sprites/Title.png");
                 g.drawImage(title, 280, 0, 500, 500, null);
@@ -344,6 +357,9 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
             //Display highscores
             if(setMain == 2) {
                 g.setColor(Color.BLACK);
+                g.fillRect(0, 0, getWidth(), getHeight());
+
+                g.setColor(Color.WHITE);
                 g.setFont(new Font("Arial", Font.BOLD, 32));
                 g.drawString("High Scores", 300, 50);
                 g.drawString("Press U to return to main menu", 300, 150);  // Changed instruction text
@@ -374,7 +390,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                     in.close();
 
                     if (!topScorer.isEmpty()) {
-                        g.drawString("High score: " + topScorer + " with " + highScore, 300, 80);
+                        g.drawString("High score: " + highScore, 300, 80);
                     } else {
                         System.out.println("No scores found.");
                     }
@@ -396,11 +412,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 player.drawSingle(g); // Just draw the player without bullets
 
                 // Draw the black borders around the game area
-                if(hp>0){
-                    g.setColor(new Color(20, 20, 50));}
-                if(hp<=0){
-                    g.setColor(Color.BLACK);
-                }
+                g.setColor(Color.BLACK);
                 g.fillRect(0, 0, 390, 1050);
                 g.fillRect(685, 0, 690, 1050);
                 g.fillRect(0, 380, 1050, 520);
@@ -421,24 +433,52 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 if(hp == 3) {healthUI.updateState(0);}
                 if(hp == 2) {healthUI.updateState(1);}
                 if(hp == 1) {healthUI.updateState(2);}
+                
+                // Game over screen with improved visibility
                 if(hp <= 0) {
-                    // Gameover
                     healthUI.updateState(3);
-                    BufferedImage gameOver= loadImage("resources/sprites/GameOver.png");
-                    g.drawImage(gameOver, 250, -20, 550, 550, null);
-                    setBackground(Color.BLACK);
-                }
-                healthUI.updateCurrentSprite();
-                healthUI.drawSprite(g,280,400,160,160);
-                if(mainMap.allOpen){
-                    g.setColor(Color.GREEN);
+                    
+                    // Fill the entire panel with black background
+                    g.setColor(Color.BLACK);
                     g.fillRect(0, 0, getWidth(), getHeight());
+                    
+                    // Draw game over image
+                    BufferedImage gameOver = loadImage("resources/sprites/GameOver.png");
+                    if (gameOver != null) {
+                        g.drawImage(gameOver, 250, -20, 550, 550, null);
+                    }
+                    
+                    // Draw instructions
+                    g.setFont(new Font("Arial", Font.BOLD, 24));
+                    g.drawString("Press U to restart game", 380, 550);
+                    
+                    // Draw final stats
+                    g.setFont(new Font("Arial", Font.PLAIN, 20));
+                    g.drawString("Time: " + timeMin + ":" + timeSecString, 380, 600);
+                    g.drawString("Materials Collected: " + player.getInventory(), 380, 630);
+                }
+                
+                if (hp > 0) {
+                    healthUI.updateCurrentSprite();
+                    healthUI.drawSprite(g, 280, 400, 160, 160);
+                }
+                
+                // Win screen - fix the full screen issue
+                if(mainMap.allOpen) {
+                    // Fill the entire component with green
                     g.setColor(Color.BLACK);
-                    g.drawString("You Win :)", 30, 35);
-                    g.setColor(Color.BLACK);
-                    g.drawString("Time :" + timeMin + ":" + timeSecString, 10, 60);
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                    
+                    g.setColor(Color.WHITE);
+                    Font winFont = new Font("Consolas", Font.BOLD, 48);
+                    g.setFont(winFont);
+                    g.drawString("YOU WIN!", getWidth()/2 - 120, getHeight()/4);
+                    
+                    g.setFont(new Font("Arial", Font.PLAIN, 24));
+                    g.drawString("Time: " + timeMin + ":" + timeSecString, getWidth()/2 - 100, getHeight()/4 + 50);
                 }
             }
+            
             //Display material count
             if (panel == 2 && setMain == 1){
                 //player.draw(g);
@@ -468,8 +508,11 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
     public void playAnimation() {
         while (true) {
-            if(counter%10  == 0) {
-                if (mainMap.gateUiClose()) {
+            // Stop game updates if game over or win screen is active
+            boolean gameActive = setMain == 1 && hp > 0 && !mainMap.allOpen;
+            
+            if(counter%10 == 0) {
+                if (mainMap.gateUiClose() && !mainMap.allOpen) {
                     layeredPane.remove(GateUi);
                     GateUi = mainMap.getGateUi();
                     GateUi.setBounds(100, 100, 150, 130);
@@ -480,27 +523,32 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                     GateUi.setVisible(false);
                 }
             }
-            mainMap.move(player);
-            if (currentMenu.equals("MainGame")){
-                player.update(WIDTH, HEIGHT, mainMap.size);     // ← advance bullets and update player size to map
-                /* quick bullet-vs-enemy check – remove bullet + enemy cell */
-                Iterator<Player.Bullet> it = player.bullets.iterator();
-                while (it.hasNext()) {
-                    Player.Bullet b = it.next();
-                    if (mainMap.killEnemyAt(b.getX(), b.getY())) it.remove();
+            
+            // Only process game movement if game is active
+            if (gameActive) {
+                mainMap.move(player);
+                if (currentMenu.equals("MainGame")) {
+                    player.update(WIDTH, HEIGHT, mainMap.size);     // ← advance bullets and update player size to map
+                    /* quick bullet-vs-enemy check – remove bullet + enemy cell */
+                    Iterator<Player.Bullet> it = player.bullets.iterator();
+                    while (it.hasNext()) {
+                        Player.Bullet b = it.next();
+                        if (mainMap.killEnemyAt(b.getX(), b.getY())) it.remove();
+                    }
+                }
+
+                if (currentMenu.equals("Map")) {
+                    // Update Ghost using mainMap size instead of menuMap
+                    Ghost.update(WIDTH, HEIGHT, mainMap.size);
                 }
             }
-
-            if (currentMenu.equals("Map")) {
-                // Update Ghost using mainMap size instead of menuMap
-                Ghost.update(WIDTH, HEIGHT, mainMap.size);
-            }
+            
             Toolkit.getDefaultToolkit().sync();
-            GateUi.repaint();
+            if (GateUi != null) {
+                GateUi.repaint();
+            }
             repaint();
             pause(5);
-
-
         }
     }
 
@@ -525,41 +573,51 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     boolean highscore_saved = false;
 	@Override
 	public void actionPerformed(ActionEvent e) {
-        //Timer goes until all gates open
-        counter ++;
-        if(!mainMap.allOpen) {
+        //Timer goes until all gates open or game ends
+        counter++;
+        
+        // Only update game time if the game is active
+        if (!mainMap.allOpen && hp > 0 && setMain == 1) {
             if (timeSec >= 60) {
                 timeMin++;
                 timeSec = 0;
             }
             timeSec += 0.02;
-        }if(mainMap.allOpen){
-            if(!highscore_saved) {
-                System.out.println("HI");
-                highscore_saved = true;
-                File dataFile = new File("scores.txt");
-                FileWriter out;
-                BufferedWriter writeFile;
-                Scanner input = new Scanner(System.in);
-                String name;
-                int score;
+        }
+        
+        // Handle game completion
+        if (mainMap.allOpen && !highscore_saved) {
+            // Stop the timer to prevent further updates
+            timer.stop();
+            
+            System.out.println("HI");
+            highscore_saved = true;
+            File dataFile = new File("scores.txt");
+            FileWriter out;
+            BufferedWriter writeFile;
+            Scanner input = new Scanner(System.in);
+            String name;
 
-                try {
-                    out = new FileWriter(dataFile);  // Overwrites the file; use 'true' as second arg to append instead
-                    writeFile = new BufferedWriter(out);
+            try {
+                out = new FileWriter(dataFile);  // Overwrites the file; use 'true' as second arg to append instead
+                writeFile = new BufferedWriter(out);
 
-                    name = "Joe";
-                    writeFile.write(name + " " + timeSec);
-                    writeFile.newLine();
+                name = "Joe";
+                writeFile.write(name + " " + timeSec);
+                writeFile.newLine();
 
-                    writeFile.close();
-                    out.close();
-                    System.out.println("High scores written to file.");
-                } catch (IOException err) {
-                    System.out.println("Problem writing to file.");
-                    System.err.println("IOException: " + err.getMessage());
-                }
+                writeFile.close();
+                out.close();
+                System.out.println("High scores written to file.");
+            } catch (IOException err) {
+                System.out.println("Problem writing to file.");
+                System.err.println("IOException: " + err.getMessage());
             }
+        }
+        
+        // Also stop the timer when the game is over
+        if (hp <= 0 && setMain == 1) {
+            timer.stop();
         }
     }
     static BufferedImage loadImage(String filename) {
