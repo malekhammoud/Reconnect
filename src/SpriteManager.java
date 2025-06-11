@@ -25,16 +25,19 @@ public class SpriteManager {
         SPRITE_WIDTH = sw;
         SPRITE_HEIGHT = sh;
         try {
-            // load sprite sheet
-            spriteSheet = ImageIO.read(new File(path));
-            // set initial sprite (down direction, first frame)
-            updateCurrentSprite();
-        } catch (IOException e) {
+            // Use the loadImage method from playerMotion class
+            spriteSheet = playerMotion.loadImage(path);
+            if (spriteSheet == null) {
+                System.err.println("Failed to load sprite sheet: " + path);
+            } else {
+                // set initial sprite (down direction, first frame)
+                updateCurrentSprite();
+            }
+        } catch (Exception e) {
             System.err.println("Error loading sprite sheet: " + e.getMessage());
         }
     }
-
-    // update direction based on player movement
+        // update direction based on player movement
     public void setDirection(int dirX, int dirY) {
         // determine direction based on movement vector
         if (dirY > 0) currentState = 0;      // down

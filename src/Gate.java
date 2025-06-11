@@ -80,7 +80,6 @@ public class Gate {
     }
     JPanel getPanel() {
         drawing.updateState(this.materialsNeeded, this.working, this.open, this.playersMaterials);
-        System.out.println(this.working);
         panel.repaint();
         return panel;
     }

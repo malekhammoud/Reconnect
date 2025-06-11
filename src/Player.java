@@ -30,7 +30,7 @@ public class Player extends Rectangle {
         this.centerBoundary = new Rectangle();
         this.centerBoundarySm = new Rectangle();
         // init sprite manager
-        this.spriteManager = new SpriteManager(512, 320, "src/resources/sprites/spritesheetBob.png");
+        this.spriteManager = new SpriteManager(512, 320, "resources/sprites/spritesheetBob.png");
     }
 
     public Player(double x, double y, int w, int h, double v,
@@ -145,7 +145,7 @@ public class Player extends Rectangle {
     static class Bullet {
         double x, y;
         private double vx, vy;
-        private static final int R = 40; // Much larger radius for better visibility
+        private static final int R = 10; // Much larger radius for better visibility
         private static final double SPEED = 3.0; // Even slower so bullets stay on screen longer
         private final Color color;
 

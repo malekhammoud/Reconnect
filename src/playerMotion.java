@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
+import java.net.URL;
 
 public class playerMotion extends JFrame implements KeyListener, MouseMotionListener, ActionListener {
     public int WIDTH = 500;
@@ -24,7 +25,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     int counter = 0;
     int timeMin;
     static int hp = 3, setMain = 0;
-    SpriteManager healthUI = new SpriteManager(256,256, "src/resources/sprites/HealthUISprites.png");
+    SpriteManager healthUI = new SpriteManager(256,256, "resources/sprites/HealthUISprites.png");
 
 
     JLayeredPane layeredPane; // Added JLayeredPane
@@ -50,36 +51,36 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if (currentMenu.equals("MainGame")) {
-            if (key == KeyEvent.VK_UP) {
+            if (key == KeyEvent.VK_W) {
                 mainMap.movedown();
                 dirX = 0;
                 dirY = -1;
                 // update sprite direction
                 player.spriteManager.setDirection(dirX, dirY);
             }
-            if (key == KeyEvent.VK_LEFT) {
+            if (key == KeyEvent.VK_A) {
                 mainMap.moveright();
                 dirX = -1;
                 dirY = 0;
                 // update sprite direction
                 player.spriteManager.setDirection(dirX, dirY);
             }
-            if (key == KeyEvent.VK_DOWN) {
+            if (key == KeyEvent.VK_S) {
                 mainMap.moveup();
                 dirX = 0;
                 dirY = 1;
                 // update sprite direction
                 player.spriteManager.setDirection(dirX, dirY);
             }
-            if (key == KeyEvent.VK_RIGHT) {
+            if (key == KeyEvent.VK_D) {
                 mainMap.moveleft();
                 dirX = 1;
                 dirY = 0;
                 // update sprite direction
                 player.spriteManager.setDirection(dirX, dirY);
             }
-            /* SPACE: shoot along last movement vector */
-            if (key == KeyEvent.VK_SPACE) {
+            /* Shoot along last movement vector */
+            if (key == KeyEvent.VK_J) {
                 // Make sure we have valid direction vectors
                 if (dirX == 0 && dirY == 0) {
                     // Default to shooting up if no direction
@@ -90,17 +91,17 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 // Debug output
                 System.out.println("Shot bullet in direction: " + dirX + ", " + dirY);
             }
-            if (key == KeyEvent.VK_P) {
+            if (key == KeyEvent.VK_I) {
                 mainMap.payGate = true;
             }
             if (key == KeyEvent.VK_O) {
                 mainMap.openGate = true;
             }
-            if (key == KeyEvent.VK_N) {
+            if (key == KeyEvent.VK_L) {
                 SwapMenuTo("Map");
                 timer.stop();
             }
-            if (key == KeyEvent.VK_H) {
+            if (key == KeyEvent.VK_K) {
                 SwapMenuTo("Pause");
                 timer.stop();
             }
@@ -108,76 +109,44 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 SwapMenuTo("MainGame");
                 timer.start();
             }
-            if (key == KeyEvent.VK_B) {
-                SwapMenuTo("Inventory");
-            }
-            if (key == KeyEvent.VK_Z) {
-                mainMap.Menusize += 2;
-            }
-            if (key == KeyEvent.VK_X) {
-                mainMap.Menusize -= 2;
-            }
-        }
-        if (currentMenu.equals("Inventory")) {
-            if (key == KeyEvent.VK_N) {
-                SwapMenuTo("Map");
-            }
-            if (key == KeyEvent.VK_M) {
-                SwapMenuTo("MainGame");
-            }
-            if (key == KeyEvent.VK_B) {
-                SwapMenuTo("Inventory");
-            }
         }
         if (currentMenu.equals("Map")) {
-            if (key == KeyEvent.VK_N) {
-                SwapMenuTo("Map");
-            }
-            if (key == KeyEvent.VK_M) {
+            if (key == KeyEvent.VK_U) {
                 SwapMenuTo("MainGame");
             }
-            if (key == KeyEvent.VK_B) {
-                SwapMenuTo("Inventory");
-            }
-            if (key == KeyEvent.VK_Z) {
-                SwapMenuTo("Inventory");
-            }
-            if (key == KeyEvent.VK_X) {
-                SwapMenuTo("Inventory");
-            }
-
         }
         if (currentMenu.equals("Pause")) {
-
-            if (key == KeyEvent.VK_M) {
+            if (key == KeyEvent.VK_U) {
                 SwapMenuTo("MainGame");
                 timer.start();
             }
-            if (key == KeyEvent.VK_B) {
+            if (key == KeyEvent.VK_J) {
                 setMain = 0;
                 SwapMenuTo("MainGame");
                 timer.start();
                 resetGame();
             }
-            if (key == KeyEvent.VK_X) {
-
+            if (key == KeyEvent.VK_L) {
+                // Clean up resources
+                dispose();
+                // Exit the application with status code 0 (normal termination)
+                System.exit(0);
             }
-
         }
     }
 
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_UP) {
+        if (key == KeyEvent.VK_W) {
             mainMap.vy[1] = 0;
         }
-        if (key == KeyEvent.VK_LEFT) {
+        if (key == KeyEvent.VK_A) {
             mainMap.vx[1] = 0;
         }
-        if (key == KeyEvent.VK_DOWN) {
+        if (key == KeyEvent.VK_S) {
             mainMap.vy[0] = 0;
         }
-        if (key == KeyEvent.VK_RIGHT) {
+        if (key == KeyEvent.VK_D) {
             mainMap.vx[0] = 0;
         }
         if (key == KeyEvent.VK_U) {
@@ -204,6 +173,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     public void keyTyped(KeyEvent e) {}
 
     playerMotion() {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setTitle("Reconnect");
         setSize(500, 500);                    // frame stays 500×500
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -211,9 +181,10 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         setLocationRelativeTo(null);
 
         layeredPane = new JLayeredPane();
-        layeredPane.setBackground(Color.BLACK);
+        /*
+        layeredPane.setBackground(new Color(20, 20, 50));
         layeredPane.setOpaque(true);
-        //layeredPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+         */
 
         menus = new JPanel(card);
         JPanel panel = new JPanel();
@@ -222,7 +193,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         JPanel pauseMenu = new JPanel();
         JPanel title = new JPanel();
 
-        panel.setBackground(Color.BLACK);
+        panel.setBackground(new Color(20, 20, 50));
         GateUi = mainMap.getGateUi(); // Use a layout manager
 
 
@@ -239,12 +210,15 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         inventoryMenu.add(Drawing_q);
         mapMenu.add(Drawing_b);
         pauseMenu.add(Drawing_d);
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screenSize.width - WIDTH) / 2;
         int y = (screenSize.height - HEIGHT)/ 2;
         menus.setBounds(x, y, WIDTH, HEIGHT);
-        layeredPane.add(menus, JLayeredPane.DEFAULT_LAYER);
+        layeredPane.add(menus, JLayeredPane.PALETTE_LAYER);
 
+        // The main game panel
+        BackgroundPanel background = new BackgroundPanel(1);
+        background.setBounds(0, 0, screenSize.width, screenSize.height);
+        layeredPane.add(background, JLayeredPane.DEFAULT_LAYER);
         setContentPane(layeredPane);
         SwapMenuTo("MainGame");
 
@@ -306,62 +280,41 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
             g.fillRect(drawX, 0, 2, getHeight());
         }
 
-        // Add some diagonal traces
-        g.setColor(new Color(0, 180, 80));
-        for (int i = 0; i < 15; i++) {
-            int x1 = ((i * 100) + offsetX) % getWidth();
-            if (x1 < 0) x1 += getWidth();
-            int y1 = (i * 50 + offsetY) % getHeight();
-            if (y1 < 0) y1 += getHeight();
-            int x2 = ((i * 100 + 200) + offsetX) % getWidth();
-            if (x2 < 0) x2 += getWidth();
-            int y2 = ((i * 50 + 200) + offsetY) % getHeight();
-            if (y2 < 0) y2 += getHeight();
-            g.drawLine(x1, y1, x2, y2);
+        // Draw a circuit board pattern in the background
+        g.setColor(new Color(0, 80, 40));
+        for (int i = 0; i < getWidth(); i += 50) {
+            g.drawLine(i, 0, i, getHeight());
+        }
+        for (int i = 0; i < getHeight(); i += 50) {
+            g.drawLine(0, i, getWidth(), i);
         }
 
-        // Add circuit "pads" (small circles) - adjust position based on map offset
-        g.setColor(new Color(220, 220, 0));
-        for (int x = 0; x < getWidth() + 100; x += 100) {
-            for (int y = 0; y < getHeight() + 100; y += 100) {
-                int drawX = (x + offsetX) % getWidth();
-                if (drawX < 0) drawX += getWidth();
-                int drawY = (y + offsetY) % getHeight();
-                if (drawY < 0) drawY += getHeight();
-                g.fillOval(drawX, drawY, 10, 10);
-            }
+    }
+    private class BackgroundPanel extends JPanel{
+        int panel;
+        BackgroundPanel(int pan) {
+            setOpaque(true);
+            this.panel = pan;
+            setBackground(new Color(20, 20, 50)); // Set a dark background color
         }
+        @Override
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
 
-        // Add some IC chips - adjust position based on map offset
-        g.setColor(new Color(50, 50, 50));
-        for (int i = 0; i < 8; i++) {
-            int x = ((150 + i * 180) + offsetX) % getWidth();
-            if (x < 0) x += getWidth();
-            int y = ((120 + (i % 3) * 160) + offsetY) % getHeight();
-            if (y < 0) y += getHeight();
-
-            // Only draw chips if they're in the visible area
-            if (x < getWidth() - 60 && y < getHeight() - 30) {
-                g.fillRect(x, y, 60, 30);
-
-                // Pins on chips
-                g.setColor(new Color(200, 200, 200));
-                for (int p = 0; p < 8; p++) {
-                    if (y - 3 >= 0) g.fillRect(x + 5 + p * 7, y - 3, 2, 3);
-                    if (y + 30 < getHeight()) g.fillRect(x + 5 + p * 7, y + 30, 2, 3);
+            if (panel == 1 && setMain == 0) {
+            }else if(setMain == 1){
+                if(hp <= 0) {
+                    setBackground(Color.BLACK);
+                }else {
+                    g.setColor(Color.WHITE);
+                    g.setFont(new Font("Monospaced", Font.BOLD, 24));
+                    g.drawString("Inventory: " + player.getInventory(), 50, 50);
                 }
-                g.setColor(new Color(50, 50, 50));
             }
-        }
-
-        // Add connections between components
-        g.setColor(new Color(0, 150, 70));
-        for (int i = 0; i < 15; i++) {
-            int x1 = (int)(Math.random() * getWidth());
-            int y1 = (int)(Math.random() * getHeight());
-            int x2 = x1 + (int)(Math.random() * 200) - 100;
-            int y2 = y1 + (int)(Math.random() * 200) - 100;
-            g.drawLine(x1, y1, x2, y2);
+            if(mainMap.allOpen){
+                g.setColor(Color.GREEN);
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
         }
     }
 
@@ -378,12 +331,13 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
             // Draw motherboard background pattern when in game mode
             if (panel == 1 && setMain == 1) {
                 drawMotherboardBackground(g);
+                setBackground(new Color(20, 20, 50));
             }
 
             //Title screen
 
             if(setMain == 0) {
-                BufferedImage title = loadImage("src/resources/sprites/Title.png");
+                BufferedImage title = loadImage("resources/sprites/Title.png");
                 g.drawImage(title, 280, 0, 500, 500, null);
             }
 
@@ -393,7 +347,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 g.setFont(new Font("Arial", Font.BOLD, 32));
                 g.drawString("High Scores", 300, 50);
                 g.drawString("Press U to return to main menu", 300, 150);  // Changed instruction text
-                File scoreFile = new File("src/scores.txt");
+                File scoreFile = new File("scores.txt");
                 FileReader in;
                 BufferedReader readFile;
 
@@ -442,7 +396,11 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 player.drawSingle(g); // Just draw the player without bullets
 
                 // Draw the black borders around the game area
-                g.setColor(Color.BLACK);
+                if(hp>0){
+                    g.setColor(new Color(20, 20, 50));}
+                if(hp<=0){
+                    g.setColor(Color.BLACK);
+                }
                 g.fillRect(0, 0, 390, 1050);
                 g.fillRect(685, 0, 690, 1050);
                 g.fillRect(0, 380, 1050, 520);
@@ -464,16 +422,17 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 if(hp == 2) {healthUI.updateState(1);}
                 if(hp == 1) {healthUI.updateState(2);}
                 if(hp <= 0) {
+                    // Gameover
                     healthUI.updateState(3);
-                    //Gameover
-                    BufferedImage gameOver= loadImage("src/resources/sprites/GameOver.png");
-                    g.drawImage(gameOver, 280, 0, 500, 500, null);
+                    BufferedImage gameOver= loadImage("resources/sprites/GameOver.png");
+                    g.drawImage(gameOver, 250, -20, 550, 550, null);
+                    setBackground(Color.BLACK);
                 }
                 healthUI.updateCurrentSprite();
                 healthUI.drawSprite(g,280,400,160,160);
                 if(mainMap.allOpen){
                     g.setColor(Color.GREEN);
-                    g.fillRect(0, 0, 1, 785);
+                    g.fillRect(0, 0, getWidth(), getHeight());
                     g.setColor(Color.BLACK);
                     g.drawString("You Win :)", 30, 35);
                     g.setColor(Color.BLACK);
@@ -578,7 +537,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
             if(!highscore_saved) {
                 System.out.println("HI");
                 highscore_saved = true;
-                File dataFile = new File("src/scores.txt");
+                File dataFile = new File("scores.txt");
                 FileWriter out;
                 BufferedWriter writeFile;
                 Scanner input = new Scanner(System.in);
@@ -606,19 +565,31 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     static BufferedImage loadImage(String filename) {
         BufferedImage img = null;
         try {
-            // Try first as a resource
-            InputStream is = playerMotion.class.getResourceAsStream("/resources/sprites/" + filename);
-            if (is != null) {
-                img = ImageIO.read(is);
+            // Use Class.getResource which handles resource folders properly
+            URL resourceUrl = playerMotion.class.getResource("/" + filename);
+            if (resourceUrl != null) {
+                img = ImageIO.read(resourceUrl);
             } else {
-                // Fall back to file path
-                img = ImageIO.read(new File(filename));
+                System.out.println("Resource not found: " + filename);
+                // Try alternative loading methods
+                // 1. Try using ClassLoader
+                resourceUrl = playerMotion.class.getClassLoader().getResource(filename);
+                if (resourceUrl != null) {
+                    img = ImageIO.read(resourceUrl);
+                } else {
+                    // 2. Fall back to file path as last resort
+                    File file = new File(filename);
+                    if (file.exists()) {
+                        img = ImageIO.read(file);
+                    } else {
+                        System.out.println("File not found: " + file.getAbsolutePath());
+                    }
+                }
             }
         } catch (IOException e) {
             System.out.println("Failed to load image: " + filename + " - " + e.getMessage());
-            JOptionPane.showMessageDialog(null, "An image failed to load: " + filename, "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
         return img;
     }
-
 }
