@@ -208,8 +208,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         setLocationRelativeTo(null);
 
         layeredPane = new JLayeredPane();
-        //chaning to grey for debugging
-        layeredPane.setBackground(Color.GRAY);
+        layeredPane.setBackground(Color.BLACK);
         layeredPane.setOpaque(true);
         //layeredPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
@@ -381,7 +380,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
             //Title screen
 
             if(setMain == 0) {
-                BufferedImage title = loadImage("C:\\Users\\Carson\\IdeaProjects\\Reconnect\\src\\resources\\sprites\\Title.png");
+                BufferedImage title = loadImage("src/resources/sprites/Title.png");
                 g.drawImage(title, 280, 0, 500, 500, null);
             }
 
@@ -463,7 +462,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 if(hp == 1) {g.setColor(Color.RED);}
                 if(hp <= 0) {
                     //Gameover
-                    BufferedImage gameOver = loadImage("C:\\Users\\Carson\\IdeaProjects\\Reconnect\\src\\resources\\sprites\\GameOver.png");
+                    BufferedImage gameOver= loadImage("src/resources/sprites/GameOver.png");
                     g.drawImage(gameOver, 280, 0, 500, 500, null);
                 } else {
                     g.fillRect(290, 350, 80, 100);
@@ -600,17 +599,20 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     }
     static BufferedImage loadImage(String filename) {
         BufferedImage img = null;
-        try{
-            img = ImageIO.read(new File(filename));
+        try {
+            // Try first as a resource
+            InputStream is = playerMotion.class.getResourceAsStream("/resources/sprites/" + filename);
+            if (is != null) {
+                img = ImageIO.read(is);
+            } else {
+                // Fall back to file path
+                img = ImageIO.read(new File(filename));
+            }
         } catch (IOException e) {
-            System.out.println(e.toString());
+            System.out.println("Failed to load image: " + filename + " - " + e.getMessage());
             JOptionPane.showMessageDialog(null, "An image failed to load: " + filename, "Error", JOptionPane.ERROR_MESSAGE);
         }
-        //DEBUG
-        //if (img == null) System.out.println("null");
-        //else System.out.printf("w=%d, h=%d%n",img.getWidth(), img.getHeight());
         return img;
-
     }
 
 }
