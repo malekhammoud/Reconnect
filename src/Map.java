@@ -34,6 +34,7 @@ public class Map implements ActionListener {
     int eX = 1, eY;
     int prev = 1;
     boolean gothoughwalls = false;
+    private BufferedImage materialSprite;
 
     Timer powerupTimer;
     int POWERUPSPEED = 1;
@@ -275,6 +276,13 @@ public class Map implements ActionListener {
                     gatesFake.add(new Gate(r, c, this.size,Math.round((long)(Math.random()*10))));
                 }
             }
+        }
+        try {
+            // load sprite sheet
+            materialSprite = ImageIO.read(new File("src/resources/sprites/MaterialChipSpriteSmall.png"));
+
+        } catch (IOException e) {
+            System.err.println("Error loading sprite sheet: " + e.getMessage());
         }
     }
 
@@ -854,8 +862,9 @@ public class Map implements ActionListener {
             }
 
             for (Rectangle powerup : getSquares(2)) {
-                g.setColor(Color.GREEN);
-                g.fillRect(powerup.x, powerup.y, powerup.width, powerup.height);
+                //g.setColor(Color.GREEN);
+                //g.fillRect(powerup.x, powerup.y, powerup.width, powerup.height);
+                g.drawImage(materialSprite,powerup.x-(powerup.width/2), powerup.y-(powerup.height/2), powerup.width+powerup.width, powerup.height+powerup.height, null);
             }
             for (Rectangle material : getMaterials()) {
                 g.setColor(Color.YELLOW);
