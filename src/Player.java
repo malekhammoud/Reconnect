@@ -69,6 +69,9 @@ public class Player extends Rectangle {
     void removeInventory() {
         inventory--;
     }
+    void removeInventory(int amount ) {
+        inventory-= amount;
+    }
     int getInventory() {
         return inventory;
     }
