@@ -24,6 +24,8 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     int counter = 0;
     int timeMin;
     static int hp = 3, setMain = 0;
+    SpriteManager healthUI = new SpriteManager(256,256, "src/resources/sprites/HealthUISprites.png");
+
 
     JLayeredPane layeredPane; // Added JLayeredPane
 
@@ -458,17 +460,17 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 g.drawString("Time :" + timeMin + ":" + timeSecString, 10, 35);
 
                 // Draw HP indicator
-                if(hp == 3) {g.setColor(Color.GREEN);}
-                if(hp == 2) {g.setColor(Color.YELLOW);}
-                if(hp == 1) {g.setColor(Color.RED);}
+                if(hp == 3) {healthUI.updateState(0);}
+                if(hp == 2) {healthUI.updateState(1);}
+                if(hp == 1) {healthUI.updateState(2);}
                 if(hp <= 0) {
+                    healthUI.updateState(3);
                     //Gameover
                     BufferedImage gameOver= loadImage("src/resources/sprites/GameOver.png");
                     g.drawImage(gameOver, 280, 0, 500, 500, null);
-                } else {
-                    g.fillRect(290, 350, 80, 100);
                 }
-
+                healthUI.updateCurrentSprite();
+                healthUI.drawSprite(g,280,400,160,160);
                 if(mainMap.allOpen){
                     g.setColor(Color.GREEN);
                     g.fillRect(0, 0, 1, 785);
