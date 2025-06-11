@@ -106,15 +106,14 @@ public class Map implements ActionListener {
         this.v = v * this.size;
         /*
          * 0 = wall
-         * 1 = empty path
-         * 2 = gate (general, might be used for drawing if not 4/5)
+         * 1 = empty path(colored in)
+         * 2 = material
          * 3 = circuit
          * 4 = actual gate (specific type for logic)
          * 5 = "dumb" gate (specific type for logic)
          * 7 = enemy (basic)
          * 8 = BFS enemy
-         * 9 = smart enemy
-         * 10 = cookie
+         * 10 = powerup
          */
         this.map = new int[][]{
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
@@ -140,10 +139,10 @@ public class Map implements ActionListener {
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -399,35 +398,41 @@ public class Map implements ActionListener {
                 if(this.checkInRect(player, gate.getCollisionRect(this.x, this.y, this.size))){
                     this.GateCollision = true;
                     if (this.payGate){
-                        player.removeInventory();
+                        if(! gate.getWorking() && player.getInventory() >= gate.getMaterialsNeeded()){
+                            player.removeInventory(gate.getMaterialsNeeded());
+                        }
                         this.payGate = false;
-                        gate.working = true;
+                        gate.setWorking(true);
                     }
                     else if(this.openGate){
                         this.openGate = false;
                         if (gate.open){
-                            gate.open = false;
+                            gate.setOpen(false);
                         }else{
-                            gate.open = true;
+                            gate.setOpen(true);
                         }
                     }
                 }
             }
+            int count = -1;
             for(Gate gate: gates) {
+                count ++;
+                gate.setPlayersMaterials(player.getInventory());
                 this.checkCollision(player, gate.getrect(this.x, this.y, this.size));
                 if(this.checkInRect(player, gate.getCollisionRect(this.x, this.y, this.size))){
                     this.GateCollision = true;
                     if (this.payGate){
-                        player.removeInventory();
+                        player.removeInventory(gate.getMaterialsNeeded());
                         this.payGate = false;
-                        gate.working = true;
+                        gate.setWorking(true);
+                        //gates.set(count, gate);
                     }
                     else if(this.openGate){
                         this.openGate = false;
                         if (gate.open){
-                            gate.open = false;
+                            gate.setOpen(false);
                         }else{
-                            gate.open = true;
+                            gate.setOpen(true);
                         }
                     }
                 }
@@ -571,19 +576,6 @@ public class Map implements ActionListener {
                 this.map[gate.y][gate.x] = 1;
             }
         }
-    }
-
-    // Original BFS, likely incompatible with Queue<BFSNode> if not updated.
-    // Kept for reference, but findNextStepBFS is used by new enemies.
-    int[] bfs(int[] start, int[] end) {
-        boolean[][] visited = new boolean[map.length][map[0].length];
-        Queue queue = new Queue(map.length * map[0].length); // Custom Queue
-
-        // This method needs to be adapted if it's to be used with Queue<BFSNode>
-        // For now, it will cause issues if called directly because Queue expects BFSNode.
-        // queue.enqueue(start); // ERROR: Queue expects BFSNode
-        System.out.println("Warning: Original 'bfs' method is likely incompatible with current Queue implementation.");
-        return null; // Returning null as it's not functional with current Queue
     }
 
     private int[] findNextStepBFS(int[] startCoords, int[] endCoords) {
@@ -921,7 +913,11 @@ public class Map implements ActionListener {
             for (Gate gate : gates) {
                 int miniX = minimapX + Math.round(gate.x * size * scale);
                 int miniY = minimapY + Math.round(gate.y * size * scale);
-                g.setColor(gate.working ? Color.GREEN.darker() : Color.RED.darker());
+                if(gate.working){
+                    g.setColor(Color.GREEN.darker());
+                }else{
+                    g.setColor(Color.RED.darker());
+                }
                 g.fillRect(miniX, miniY, tileSize, tileSize);
             }
 
@@ -1021,27 +1017,14 @@ public class Map implements ActionListener {
         return false;
     }
     boolean gateUiClose(){
-        /*
-        for(Gate gate : gates) {
-            if (gate.getSquare(this.x, this.y).x > 100 && gate.getSquare(this.x, this.y).x < 280 && gate.getSquare(this.x, this.y).y > 100 && gate.getSquare(this.x, this.y).y < 280) {
-                return true;
-            }
-        }
-
-        return false;
-         */
         return this.GateCollision;
     }
     JPanel getGateUi() {
         for(Gate gate : gates) {
-            //if (gate.getSquare(this.x, this.y).x > 100 && gate.getSquare(this.x, this.y).x < 280 && gate.getSquare(this.x, this.y).y > 100 && gate.getSquare(this.x, this.y).y < 280) {
             if (this.GateCollision){
-                System.out.println("Gate UI found at current position.");
                 return gate.getPanel();
             }
         }
-        System.out.println("No gate UI found at current position.");
-        //return gates.getFirst().getPanel();
         return new JPanel();
     }
     @Override

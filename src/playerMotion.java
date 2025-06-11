@@ -18,6 +18,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     Timer timer;
     static int TIMESPEED = 10;
     double timeSec;
+    int counter = 0;
     int timeMin;
     static int hp = 3, setMain = 0;
     SpriteManager healthUI = new SpriteManager(256,256, "src/resources/sprites/HealthUISprites.png");
@@ -514,15 +515,17 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 
     public void playAnimation() {
         while (true) {
-            if (mainMap.gateUiClose())  {
-                layeredPane.remove(GateUi);
-                GateUi = mainMap.getGateUi();
-                GateUi.setBounds(100, 100, 150, 130);
-                layeredPane.add(GateUi, JLayeredPane.POPUP_LAYER);
-                GateUi.setVisible(true);
-                layeredPane.repaint();
-            }else{
-                GateUi.setVisible(false);
+            if(counter%10  == 0) {
+                if (mainMap.gateUiClose()) {
+                    layeredPane.remove(GateUi);
+                    GateUi = mainMap.getGateUi();
+                    GateUi.setBounds(100, 100, 150, 130);
+                    layeredPane.add(GateUi, JLayeredPane.POPUP_LAYER);
+                    GateUi.setVisible(true);
+                    layeredPane.repaint();
+                } else {
+                    GateUi.setVisible(false);
+                }
             }
             mainMap.move(player);
             if (currentMenu.equals("MainGame")){
@@ -570,6 +573,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
 	@Override
 	public void actionPerformed(ActionEvent e) {
         //Timer goes until all gates open
+        counter ++;
         if(!mainMap.allOpen) {
             if (timeSec >= 60) {
                 timeMin++;
