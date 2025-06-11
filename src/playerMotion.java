@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.io.*;
 import java.util.Scanner;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.File;
 
 public class playerMotion extends JFrame implements KeyListener, MouseMotionListener, ActionListener {
     public int WIDTH = 500;
@@ -20,7 +23,6 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     double timeSec;
     int timeMin;
     static int hp = 3, setMain = 0;
-    SpriteManager healthUI = new SpriteManager(256,256, "src/resources/sprites/HealthUISprites.png");
 
     JLayeredPane layeredPane; // Added JLayeredPane
 
@@ -379,11 +381,8 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
             //Title screen
 
             if(setMain == 0) {
-                g.setColor(Color.BLACK);
-                g.setFont(new Font("Arial", Font.BOLD, 32));
-                g.drawString("Reconnect :)", 300, 50);
-                g.drawString("Press U(a) to start game", 300, 100);
-                g.drawString("Press I(b) to see highscores", 300,  150);
+                BufferedImage title = loadImage("C:\\Users\\Carson\\IdeaProjects\\Reconnect\\src\\resources\\sprites\\Title.png");
+                g.drawImage(title, 280, 0, 500, 500, null);
             }
 
             //Display highscores
@@ -459,22 +458,16 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 g.drawString("Time :" + timeMin + ":" + timeSecString, 10, 35);
 
                 // Draw HP indicator
-                if(hp == 3) {healthUI.updateState(0);}
-                if(hp == 2) {healthUI.updateState(1);}
-                if(hp == 1) {healthUI.updateState(2);}
+                if(hp == 3) {g.setColor(Color.GREEN);}
+                if(hp == 2) {g.setColor(Color.YELLOW);}
+                if(hp == 1) {g.setColor(Color.RED);}
                 if(hp <= 0) {
-                    healthUI.updateState(3);
                     //Gameover
-                    g.setColor(Color.RED);
-                    g.fillRect(0, 0, 1050, 785);
-                    g.setColor(Color.BLACK);
-                    g.drawString("Game Over :(", 400, 400);
-                    g.drawString("Press U(a) to return to title screen", 30, 60);
-                    g.setColor(Color.RED);
-
+                    BufferedImage gameOver = loadImage("C:\\Users\\Carson\\IdeaProjects\\Reconnect\\src\\resources\\sprites\\GameOver.png");
+                    g.drawImage(gameOver, 280, 0, 500, 500, null);
+                } else {
+                    g.fillRect(290, 350, 80, 100);
                 }
-                healthUI.updateCurrentSprite();
-                healthUI.drawSprite(g,280,350,160,160);
 
                 if(mainMap.allOpen){
                     g.setColor(Color.GREEN);
@@ -605,4 +598,19 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
             }
         }
     }
+    static BufferedImage loadImage(String filename) {
+        BufferedImage img = null;
+        try{
+            img = ImageIO.read(new File(filename));
+        } catch (IOException e) {
+            System.out.println(e.toString());
+            JOptionPane.showMessageDialog(null, "An image failed to load: " + filename, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        //DEBUG
+        //if (img == null) System.out.println("null");
+        //else System.out.printf("w=%d, h=%d%n",img.getWidth(), img.getHeight());
+        return img;
+
+    }
+
 }
