@@ -1,5 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 public class Gate {
     Boolean working;
@@ -12,6 +17,7 @@ public class Gate {
     int materialsNeeded;
     int playersMaterials = 0; // Materials available to the player
     static int boundary = 30; // Boundary for collision detection
+    private BufferedImage gateImage; // Image for gate UI
 
     DrawingPanel drawing;
     Gate(int x, int y, int size, int materialsNeeded) {
@@ -23,8 +29,38 @@ public class Gate {
         this.color = Color.blue;
         this.materialsNeeded = materialsNeeded;
         this.panel = new JPanel(new BorderLayout());
+        
+        // Load the gate image
+        loadGateImage();
+        
         drawing = new DrawingPanel(this.materialsNeeded, this.working, this.open, this.playersMaterials);
         this.panel.add(drawing); // Add DrawingPanel to center
+    }
+
+    private void loadGateImage() {
+        try {
+            // Try different ways to load the image
+            URL resourceUrl = getClass().getResource("/resources/sprites/Gate.png");
+            if (resourceUrl != null) {
+                gateImage = ImageIO.read(resourceUrl);
+            } else {
+                // Try alternative loading methods
+                resourceUrl = getClass().getClassLoader().getResource("resources/sprites/Gate.png");
+                if (resourceUrl != null) {
+                    gateImage = ImageIO.read(resourceUrl);
+                } else {
+                    // Fall back to direct file path
+                    File file = new File("resources/sprites/Gate.png");
+                    if (file.exists()) {
+                        gateImage = ImageIO.read(file);
+                    } else {
+                        System.out.println("Gate image not found");
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Failed to load gate image: " + e.getMessage());
+        }
     }
 
     void draw(Graphics g, double x, double y, int size) {
@@ -106,27 +142,34 @@ public class Gate {
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-            g.setColor(Color.BLACK);
-           // if(!working) {
-            //    g.drawString("Gate is not working", 10, 15);
-                g.drawString("Materials needed: " + this.materialsNeeded, 10, 25);
-                if (playersMaterials >= this.materialsNeeded) {
-                    g.drawString("C = Pay " + this.materialsNeeded + " materials", 10, 45);
-                } else {
-                    g.drawString("C = Not enough materials!!!", 10, 45);
-                }
-            g.drawString("o to open/close", 10, 60);
-                /*
-            }else {
-                g.drawString("Gate is working!!!!", 10, 15);
-                if (open) {
-                    g.drawString("Gate is open, o to close", 10, 60);
-                } else {
-                    g.drawString("Gate is closed o to open", 10, 60);
-                }
+            
+            // Draw the background image
+            if (gateImage != null) {
+                g.drawImage(gateImage, 0, 0, getWidth(), getHeight(), this);
             }
+            
+            // Draw text with higher contrast for better visibility over the image
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", Font.BOLD, 12));
+            
+            // Draw with black outline for better visibility
+            drawStringWithOutline(g, "Materials needed: " + this.materialsNeeded, 30, 40);
+            
+            drawStringWithOutline(g, "B = Pay Up Materials", 30, 80);
 
-                 */
+            drawStringWithOutline(g, "O to Open/Close Gate", 30, 100);
+        }
+        
+        // Helper method to draw text with an outline for better visibility on image background
+        private void drawStringWithOutline(Graphics g, String text, int x, int y) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setColor(Color.BLACK);
+            g2.drawString(text, x-1, y-1);
+            g2.drawString(text, x-1, y+1);
+            g2.drawString(text, x+1, y-1);
+            g2.drawString(text, x+1, y+1);
+            g2.setColor(Color.WHITE);
+            g2.drawString(text, x, y);
         }
     }
 }
