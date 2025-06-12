@@ -56,7 +56,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
                 // update sprite direction
                 player.spriteManager.setDirection(dirX, dirY);
             }
-            if (key == KeyEvent.VK_L) {
+            if (key == KeyEvent.VK_L && (setMain == 0 || setMain == 2 || setMain == 3 || setMain == 4 || mainMap.allOpen || hp <= 0)) {
                 dispose();
                 System.exit(0);
             }
@@ -115,6 +115,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         }
         if (currentMenu.equals("Map")) {
             if (key == KeyEvent.VK_U) {
+                timer.start();
                 SwapMenuTo("MainGame");
             }
         }
@@ -198,7 +199,7 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(this.MAXIMIZED_BOTH);
         setLocationRelativeTo(null);
-        //setUndecorated(true);
+        setUndecorated(true);
 
         layeredPane = new JLayeredPane();
         /*

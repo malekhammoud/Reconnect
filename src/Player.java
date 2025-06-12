@@ -145,14 +145,14 @@ public class Player extends Rectangle {
     static class Bullet {
         double x, y;
         private double vx, vy;
-        private static final int R = 10; // Much larger radius for better visibility
-        private static final double SPEED = 3.0; // Even slower so bullets stay on screen longer
+        private static final int R = 10; // Bullet radius
+        private static final double SPEED = 3.0; // Bullet speed
         private final Color color;
 
         Bullet(double sx, double sy, double dx, double dy) {
             this.x = sx;
             this.y = sy;
-            color = Color.YELLOW; // Use a more visible color that stands out against the game
+            color = Color.YELLOW; // Bright color for visibility
 
             // Calculate velocity vector with normalized direction
             double len = Math.sqrt(dx*dx + dy*dy);
@@ -177,10 +177,9 @@ public class Player extends Rectangle {
             // Save the current color to restore it later
             Color originalColor = g.getColor();
 
-
-            // Main bullet (bright color)
+            // Main bullet (bright color) - Fix the offset issue
             g.setColor(color);
-            g.fillOval((int)(x - R+ 10), (int)(y - R +10), R, R);
+            g.fillOval((int)(x - R/2), (int)(y - R/2), R, R);
 
             // Restore the original color
             g.setColor(originalColor);
@@ -188,7 +187,7 @@ public class Player extends Rectangle {
 
         boolean offScreen(int w, int h) {
             // More forgiving off-screen check to ensure bullets don't disappear too quickly
-            return x < -R*4 || x > w+R*4 || y < -R*4 || y > h+R*4;
+            return x < -R*4 + 100 || x > w+R*4+300 || y < -R*4 || y > h+R*4;
         }
 
         double getX() { return x; }
