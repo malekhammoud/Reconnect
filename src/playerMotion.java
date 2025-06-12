@@ -202,6 +202,10 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         setUndecorated(true);
 
         layeredPane = new JLayeredPane();
+        setCursor(getToolkit().createCustomCursor(
+                new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB),
+                new Point(0, 0),
+                "invisible"));
         /*
         layeredPane.setBackground(new Color(20, 20, 50));
         layeredPane.setOpaque(true);
