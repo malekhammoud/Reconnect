@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.net.URL;
+import javax.sound.sampled.*; // Added for audio playback
 
 public class playerMotion extends JFrame implements KeyListener, MouseMotionListener, ActionListener {
     public int WIDTH = 500;
@@ -24,6 +25,12 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
     int timeMin;
     static int hp = 3, setMain = 0;
     SpriteManager healthUI = new SpriteManager(256,256, "resources/sprites/HealthUISprites.png");
+
+    // Audio player for background music
+    private Clip startingMusic;
+    private Clip gameMusic;
+    private Clip endingMusic;
+    private String currentMusic = "none"; // which track playing now
 
 
     JLayeredPane layeredPane; // Added JLayeredPane
@@ -257,6 +264,9 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
         this.timer = new Timer(TIMESPEED, this); // Initialize the class member timer
         this.timer.start();
         setVisible(true); // Call setVisible at the end
+
+        // Load and initialize background music
+        loadBackgroundMusic();
 
         playAnimation();
     }
@@ -530,6 +540,9 @@ public class playerMotion extends JFrame implements KeyListener, MouseMotionList
             // Stop game updates if game over or win screen is active
             boolean gameActive = setMain == 1 && hp > 0 && !mainMap.allOpen;
 
+            // Update background music based on game state
+            updateBackgroundMusic();
+
             if(counter%10 == 0) {
                 if (mainMap.gateUiClose() && !mainMap.allOpen && hp>0) {
                     layeredPane.remove(GateUi);
@@ -703,4 +716,119 @@ if (mainMap.allOpen && !highscore_saved) {
         }
         return img;
     }
+
+    // Audio player methods
+    private void loadBackgroundMusic() {
+        try {
+            // Load the three music tracks with corrected paths
+            startingMusic = loadAudioClip("resources/music/startingMusic.wav");
+            gameMusic = loadAudioClip("resources/music/gameMusic.wav");
+            endingMusic = loadAudioClip("resources/music/endingMusic.wav");
+
+            // Configure the clips for looping
+            if (startingMusic != null) {
+                startingMusic.loop(Clip.LOOP_CONTINUOUSLY);
+            }
+            if (gameMusic != null) {
+                gameMusic.loop(Clip.LOOP_CONTINUOUSLY);
+            }
+            if (endingMusic != null) {
+                endingMusic.loop(Clip.LOOP_CONTINUOUSLY);
+            }
+
+            // Start with all clips stopped
+            if (startingMusic != null) startingMusic.stop();
+            if (gameMusic != null) gameMusic.stop();
+            if (endingMusic != null) endingMusic.stop();
+
+        } catch (Exception e) {
+            System.out.println("Error loading background music: " + e.getMessage());
+            e.printStackTrace(); // Added stack trace for better debugging
+        }
+    }
+
+    // Helper method to load an audio clip
+    private Clip loadAudioClip(String filename) {
+        try {
+            // First try loading as a resource using the same approach as image loading
+            URL resourceUrl = playerMotion.class.getResource("/" + filename);
+
+            if (resourceUrl == null) {
+                // Try alternative loading methods
+                resourceUrl = playerMotion.class.getClassLoader().getResource(filename);
+
+                if (resourceUrl == null) {
+                    // Fall back to file path
+                    File file = new File(filename);
+                    if (!file.exists()) {
+                        System.out.println("Audio file not found: " + filename);
+                        return null;
+                    }
+                    resourceUrl = file.toURI().toURL();
+                }
+            }
+
+            // Attempt to get audio from the URL
+            System.out.println("Attempting to load audio from: " + resourceUrl);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(resourceUrl);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            System.out.println("Successfully loaded audio: " + filename);
+            return clip;
+
+        } catch (UnsupportedAudioFileException e) {
+            System.out.println("Error: Unsupported audio format for " + filename);
+            System.out.println("Java's built-in audio system may not support MP3 directly.");
+            System.out.println("Try converting your MP3 files to WAV format.");
+            e.printStackTrace();
+            return null;
+        } catch (IOException | LineUnavailableException e) {
+            System.out.println("Error loading audio clip " + filename + ": " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Method to switch between music tracks
+    private void updateBackgroundMusic() {
+        // Check the current game state
+        boolean isGameActive = setMain == 1 && hp > 0 && !mainMap.allOpen;
+        boolean isGameOver = hp <= 0 || mainMap.allOpen;
+        boolean isTitleScreen = setMain == 0 || setMain == 2 || setMain == 3 || setMain == 4;
+
+        // Play the appropriate music based on the game state
+        if (isTitleScreen && !currentMusic.equals("starting")) {
+            // Switch to title screen music
+            stopAllMusic();
+            if (startingMusic != null) {
+                startingMusic.setFramePosition(0); // Reset to beginning
+                startingMusic.start();
+                currentMusic = "starting";
+            }
+        } else if (isGameActive && !currentMusic.equals("game")) {
+            // Switch to gameplay music
+            stopAllMusic();
+            if (gameMusic != null) {
+                gameMusic.setFramePosition(0); // Reset to beginning
+                gameMusic.start();
+                currentMusic = "game";
+            }
+        } else if (isGameOver && !currentMusic.equals("ending")) {
+            // Switch to ending/game over music
+            stopAllMusic();
+            if (endingMusic != null) {
+                endingMusic.setFramePosition(0); // Reset to beginning
+                endingMusic.start();
+                currentMusic = "ending";
+            }
+        }
+    }
+
+    // Helper method to stop all music
+    private void stopAllMusic() {
+        if (startingMusic != null) startingMusic.stop();
+        if (gameMusic != null) gameMusic.stop();
+        if (endingMusic != null) endingMusic.stop();
+    }
 }
+
