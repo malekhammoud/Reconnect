@@ -35,6 +35,7 @@ public class Map implements ActionListener {
     int prev = 1;
     boolean gothoughwalls = false;
     private BufferedImage materialSprite;
+    private SpriteManager gateManager;
 
     Timer powerupTimer;
     int POWERUPSPEED = 1;
@@ -872,6 +873,7 @@ public class Map implements ActionListener {
             for (Rectangle powerup : getSquares(2)) {
                 //g.setColor(Color.GREEN);
                 //g.fillRect(powerup.x, powerup.y, powerup.width, powerup.height);
+
                 g.drawImage(materialSprite,powerup.x-(powerup.width/2), powerup.y-(powerup.height/2), powerup.width+powerup.width, powerup.height+powerup.height, null);
             }
             for (Rectangle material : getMaterials()) {
