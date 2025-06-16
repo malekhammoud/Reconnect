@@ -35,6 +35,8 @@ public class Map implements ActionListener {
     int prev = 1;
     boolean gothoughwalls = false;
     private BufferedImage materialSprite;
+    private BufferedImage bug;
+    private BufferedImage virus;
 
     Timer powerupTimer;
     int POWERUPSPEED = 1;
@@ -278,6 +280,8 @@ public class Map implements ActionListener {
             }
         }
         materialSprite = playerMotion.loadImage("resources/sprites/MaterialChipSpriteSmall.png");
+        bug = playerMotion.loadImage("resources/sprites/bug.png");
+        virus = playerMotion.loadImage("resources/sprites/virus.png");
     }
 
     private static int[] convert_to_int(String[] arr) {
@@ -872,11 +876,11 @@ public class Map implements ActionListener {
             }
             for(Rectangle n: getEnemy()) {
                 g.setColor(Color.red);
-                g.fillRect(n.x, n.y, 20, 20);
+                g.drawImage(bug,n.x, n.y, 20,20, null);
             }
             for (Enemy bfsEnemy : getBFSEnemy()) { // BFS enemies (type 8)
                 g.setColor(Color.orange);
-                g.fillRect(bfsEnemy.x, bfsEnemy.y, 20, 20);
+                g.drawImage(virus,bfsEnemy.x, bfsEnemy.y, 20,20, null);
             }
         } else if (panel == 2) {
             // Panel 2 - Static Minimap (fixed overview of entire map)
