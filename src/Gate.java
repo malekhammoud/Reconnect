@@ -18,8 +18,28 @@ public class Gate {
     int playersMaterials = 0; // Materials available to the player
     static int boundary = 30; // Boundary for collision detection
     private BufferedImage gateImage; // Image for gate UI
+    private SpriteManager gateManager;
 
+    boolean fake = false;
     DrawingPanel drawing;
+    Gate(int x, int y, int size, int materialsNeeded, boolean fake) {
+        this.working = false;
+        this.open = false;
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.color = Color.blue;
+        this.materialsNeeded = materialsNeeded;
+        this.panel = new JPanel(new BorderLayout());
+        this.fake = fake;
+        // Load the gate image
+        loadGateImage();
+
+        drawing = new DrawingPanel(this.materialsNeeded, this.working, this.open, this.playersMaterials);
+        this.panel.add(drawing); // Add DrawingPanel to center
+        this.gateManager = new SpriteManager(32, 32, "resources/sprites/GateSpriteSheet.png");
+        this.gateManager.updateState(1);
+    }
     Gate(int x, int y, int size, int materialsNeeded) {
         this.working = false;
         this.open = false;
@@ -29,12 +49,12 @@ public class Gate {
         this.color = Color.blue;
         this.materialsNeeded = materialsNeeded;
         this.panel = new JPanel(new BorderLayout());
-        
         // Load the gate image
         loadGateImage();
         
         drawing = new DrawingPanel(this.materialsNeeded, this.working, this.open, this.playersMaterials);
         this.panel.add(drawing); // Add DrawingPanel to center
+        this.gateManager = new SpriteManager(32, 32, "resources/sprites/GateSpriteSheet.png");
     }
 
     private void loadGateImage() {
@@ -64,16 +84,34 @@ public class Gate {
     }
 
     void draw(Graphics g, double x, double y, int size) {
-        if (this.working) {
-            this.color = Color.ORANGE;
-            if (this.open) {
-                this.color = Color.green;
+        if (fake) {
+            if(this.working){
+                if (this.open)
+                    gateManager.updateState(4); // Open state
+                else
+                    gateManager.updateState(1); // Closed state
+            }else{
+                if (this.open)
+                    gateManager.updateState(1); // Open state
+                else
+                    gateManager.updateState(0); // Closed state
             }
-        } else {
-            this.color = Color.red;
+        }else{
+            if(this.working){
+                if (this.open)
+                    gateManager.updateState(3); // Open state
+                else
+                    gateManager.updateState(2); // Closed state
+            }else{
+                if (this.open)
+                    gateManager.updateState(4); // Open state
+                else
+                    gateManager.updateState(5); // Closed state
+            }
         }
-        g.setColor(color);
-        g.fillRect((int) (this.x * size + x), (int) (this.y * size + y), this.size, this.size);
+        //g.setColor(color);
+        //g.fillRect((int) (this.x * size + x), (int) (this.y * size + y), this.size, this.size);
+        gateManager.drawSprite(g, (int) (this.x * size + x - this.size/2), (int) (this.y * size + y - this.size/2), (int)(this.size*1.5), (int)(this.size*1.5));
     }
     public void updateUI() {
         drawing.updateState(this.materialsNeeded, this.working, this.open, this.playersMaterials);
