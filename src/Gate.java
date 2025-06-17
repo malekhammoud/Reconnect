@@ -87,26 +87,26 @@ public class Gate {
         if (fake) {
             if(this.working){
                 if (this.open)
-                    gateManager.updateState(4); // Open state
+                    gateManager.updateState(2); // Open state
                 else
-                    gateManager.updateState(1); // Closed state
+                    gateManager.updateState(4); // Closed state
             }else{
-                if (this.open)
-                    gateManager.updateState(1); // Open state
-                else
+                //if (this.open)
+                    //gateManager.updateState(2); // Open state
+                //else
                     gateManager.updateState(0); // Closed state
             }
         }else{
             if(this.working){
                 if (this.open)
-                    gateManager.updateState(3); // Open state
+                    gateManager.updateState(1); // Open state
                 else
-                    gateManager.updateState(2); // Closed state
+                    gateManager.updateState(3); // Closed state
             }else{
-                if (this.open)
-                    gateManager.updateState(4); // Open state
-                else
-                    gateManager.updateState(5); // Closed state
+                ///if (this.open)
+                    //gateManager.updateState(4); // Open state
+                //else
+                    gateManager.updateState(0); // Closed state
             }
         }
         //g.setColor(color);
