@@ -195,7 +195,7 @@ public class Gate {
             
             drawStringWithOutline(g, "B = Pay Up Materials", 30, 80);
 
-            drawStringWithOutline(g, "O to Open/Close Gate", 30, 100);
+            drawStringWithOutline(g, "C to Open/Close Gate", 30, 100);
         }
         
         // Helper method to draw text with an outline for better visibility on image background
