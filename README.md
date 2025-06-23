@@ -1,7 +1,6 @@
 # Reconnect
 A top-down shooter game where players must fix a broken computer by completing its circuit. To do so, players explore the map to find broken pieces and collect necessary materials while avoiding enemies scattered across the map
+![image](https://github.com/user-attachments/assets/2be657df-e3ff-45ee-b315-6a7dc8a3ec99)
+![image](https://github.com/user-attachments/assets/2426eacb-efdc-416a-b00d-c30a2b4daa97)
 
-## Flow charts here:
-https://lucid.app/lucidspark/72a6abf9-21b2-4731-aedd-c9a39518d24f/edit?invitationId=inv_97f4b2e7-c940-46ee-b11c-d0d98d7db53d&page=3B0CRSot8otI#
-
-hi
+![image](https://github.com/user-attachments/assets/09eea289-4eb7-4a31-bdf7-3b02251ea16e)
